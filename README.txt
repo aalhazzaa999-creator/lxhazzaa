@@ -1,0 +1,1 @@
+LXHAZZAA starter for Netlify. This is a static landing page and temporary atlas route only. It does not contain the full atlas dataset, search, maps or authentication. Upload the CONTENTS of this folder as a manual deploy in the existing Netlify project. Do not treat as the finished application.
