@@ -646,3 +646,61 @@ body:has(.atlas-layout) .atlas-brand-title{display:flex;flex-direction:column;ga
 body:has(.atlas-layout) .atlas-brand-title>span{font-size:13px}
 .home-brand-wordmark{display:inline-block;color:#E3C992;font-weight:900;letter-spacing:2px;white-space:nowrap}
 @media(max-width:700px){body:has(.atlas-layout) .atlas-nav-logo{width:65px;height:48px}body:has(.atlas-layout) .atlas-brand-wordmark{font-size:18px}body:has(.atlas-layout) .atlas-brand-title>span{font-size:11px}body:has(.atlas-layout) .atlas-brand-title small{display:none}.home-brand-wordmark{font-size:17px;letter-spacing:1px}}
+
+
+/* LXHAZZAA master universe: orbit-centered brand home */
+body:has(.universe-main){background:#080b10;color:#f1e8d7}
+body:has(.universe-main) .topbar{background:#080b10e8;border-color:#caa07155}
+body:has(.universe-main) .topinner{min-height:80px}
+body:has(.universe-main) .brand{display:flex;align-items:baseline;gap:12px;letter-spacing:normal}
+.header-lx{font-family:Georgia,Times New Roman,serif;font-size:47px;font-weight:500;letter-spacing:-5px;line-height:1;background:linear-gradient(145deg,#fff0d0,#d4af7c 46%,#805132 75%,#f4d7a5);color:transparent;background-clip:text;-webkit-background-clip:text}
+.header-hazzaa{font-family:Georgia,serif;font-size:14px;letter-spacing:3px;color:#d4af7c}
+body:has(.universe-main) .nav{gap:16px}
+body:has(.universe-main) .nav button,body:has(.universe-main) .nav select{border:1px solid #b18b62;border-radius:28px;padding:10px 17px;background:#0c1016;color:#f1e8d7}
+.universe-main{width:100%;overflow:hidden}
+.universe-stage{position:relative;isolation:isolate;min-height:1160px;max-width:1700px;margin:auto;padding:28px 20px 55px;background:radial-gradient(ellipse at 51% 45%,#1a2b3b 0%,#0b1723 28%,#080b10 70%)}
+.universe-stars{position:absolute;inset:0;z-index:-1;opacity:.48;background-image:radial-gradient(1px 1px at 8% 20%,#ffe1ac 99%,transparent),radial-gradient(1px 1px at 28% 8%,#fff 99%,transparent),radial-gradient(2px 2px at 78% 18%,#e2c393 99%,transparent),radial-gradient(1px 1px at 87% 61%,#fff 99%,transparent),radial-gradient(1px 1px at 16% 83%,#e8cda6 99%,transparent),radial-gradient(2px 2px at 62% 92%,#fff 99%,transparent);background-size:370px 340px}
+.universe-intro{text-align:center;position:relative;z-index:3}
+.universe-intro .eyebrow{font-size:11px;letter-spacing:4px;color:#d4af7c}
+.universe-intro #heroTitle{font-size:22px;color:#e9d2a9;margin:12px 0 4px}
+.universe-intro #heroDesc{font-size:13px;color:#b7a996;margin:0}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.universe-orbit{position:relative;width:min(1060px,100%);height:920px;margin:0 auto}
+.universe-ring{position:absolute;pointer-events:none;border:1px solid #d4af7c55;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 28px #c28c4b12,inset 0 0 28px #c28c4b08}
+.ring-one{width:84%;aspect-ratio:1}
+.ring-two{width:68%;aspect-ratio:1;border-color:#d4af7c33;transform:translate(-50%,-50%) rotate(20deg)}
+.universe-globe{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(65%,680px);aspect-ratio:1;border-radius:50%;overflow:hidden;border:1px solid #c7a16c99;box-shadow:inset -65px -45px 100px #000c,0 0 80px #d8a36933,0 0 8px #ffe1a180;background:radial-gradient(circle at 72% 20%,#ffe7b49c 0%,transparent 25%),radial-gradient(ellipse at 45% 32%,#425b66 0%,#172b40 38%,#0c1826 67%,#05070d 90%);z-index:1}
+.universe-globe:before{content:"";position:absolute;inset:0;border-radius:50%;opacity:.5;background:url('/assets/atlas-banner.webp') center/cover no-repeat;mix-blend-mode:screen}
+.universe-globe:after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 74% 22%,#fff5d855,transparent 35%),linear-gradient(110deg,transparent 40%,#02050a66 78%)}
+.globe-shine{position:absolute;inset:4%;border:1px solid #d4af7c44;border-radius:50%;transform:rotate(-22deg);z-index:2}
+.globe-brand{position:absolute;z-index:3;top:49%;left:50%;transform:translate(-50%,-35%);display:flex;flex-direction:column;align-items:center;white-space:nowrap;text-shadow:0 3px 20px #000,0 0 18px #000}
+.globe-lx{font-family:Georgia,Times New Roman,serif;font-size:clamp(100px,14vw,185px);font-weight:400;letter-spacing:-18px;line-height:.85;padding-right:18px;background:linear-gradient(150deg,#fff2d9,#d5a76d 50%,#7c4a2e 72%,#ffe2a6);background-clip:text;-webkit-background-clip:text;color:transparent}
+.globe-hazzaa{font:25px Georgia,serif;letter-spacing:11px;color:#f0c994;margin:15px 0}
+.globe-slogan{font-size:14px;color:#f2e1c8}
+.globe-brand small{font:9px Georgia,serif;letter-spacing:3px;color:#d4af7c;margin-top:7px}
+.orbit-node{position:absolute;z-index:4;width:175px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;transform:translate(-50%,-50%);color:#f6e8d2}
+.orbit-icon{width:116px;height:116px;border-radius:50%;display:grid;place-items:center;overflow:hidden;border:2px solid #d4af7c;box-shadow:0 0 0 7px #d4af7c12,0 0 26px #d4af7c66,inset 0 0 26px #d4af7c2b;background:radial-gradient(circle at 40% 20%,#66513b,#1d2228 60%,#090d12)}
+.orbit-icon img{width:100%;height:100%;object-fit:cover}
+.node-symbol{font-family:Georgia,serif;font-size:55px;color:#e5bd84;text-shadow:0 0 16px #d4af7c88}
+.orbit-node strong{font-size:14px;line-height:1.4;text-shadow:0 2px 8px #000}
+.orbit-node small{font:10px Georgia,serif;color:#c6a779;letter-spacing:1px}
+.orbit-node[href]:hover .orbit-icon{transform:scale(1.08);border-color:#ffe5b2;box-shadow:0 0 30px #e4ae62}
+.orbit-node[href]:focus-visible{outline:2px solid #f6d6a5;outline-offset:6px;border-radius:10px}
+.orbit-node.upcoming .orbit-icon{opacity:.76}
+.orbit-node.upcoming small{font-family:Tahoma,system-ui,sans-serif}
+.node-remains{left:29%;top:15%}
+.node-documents{left:70%;top:15%}
+.node-history{left:88%;top:32%}
+.node-media{left:94%;top:55%}
+.node-projects{left:84%;top:79%}
+.node-podcast{left:63%;top:92%}
+.node-production{left:36%;top:92%}
+.node-x{left:15%;top:79%}
+.node-general{left:6%;top:55%}
+.node-saudi{left:12%;top:32%}
+.universe-bottom{text-align:center;position:relative;z-index:2}
+.universe-bottom h2{font-size:21px;color:#d4af7c;margin:0 0 8px}
+.universe-bottom p{font-size:13px;color:#b9a992;margin:0}
+@media(max-width:1050px){.universe-stage{min-height:1030px}.universe-orbit{height:800px}.orbit-icon{width:90px;height:90px}.orbit-node{width:135px}.orbit-node strong{font-size:12px}.orbit-node small{font-size:9px}.node-symbol{font-size:43px}.globe-hazzaa{font-size:18px;letter-spacing:7px}.globe-slogan{font-size:11px}.globe-brand small{font-size:8px}}
+@media(max-width:700px){body:has(.universe-main) .topinner{min-height:64px}.header-lx{font-size:34px}.header-hazzaa{font-size:10px;letter-spacing:1px}body:has(.universe-main) .nav{gap:5px}body:has(.universe-main) .nav button,body:has(.universe-main) .nav select{padding:8px;font-size:11px;max-width:100px}.universe-stage{padding:22px 12px 38px;min-height:0}.universe-intro .eyebrow{font-size:9px;letter-spacing:2px}.universe-intro #heroTitle{font-size:18px}.universe-intro #heroDesc{font-size:11px;line-height:1.7}.universe-orbit{height:auto;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 8px;padding-top:350px;padding-bottom:32px}.universe-globe{width:min(320px,86vw);top:168px}.universe-ring{top:168px;width:min(350px,96vw)}.ring-two{width:min(290px,80vw)}.globe-lx{font-size:95px;letter-spacing:-9px;padding-right:9px}.globe-hazzaa{font-size:14px;letter-spacing:5px;margin:9px 0}.globe-slogan{font-size:10px}.globe-brand small{font-size:7px;letter-spacing:1px}.orbit-node{position:relative;top:auto;left:auto;transform:none;width:100%;gap:6px}.orbit-icon{width:96px;height:96px}.orbit-node strong{font-size:12px}.orbit-node small{font-size:9px}.universe-bottom{padding:0 12px 20px}}
+@media(prefers-reduced-motion:no-preference){.ring-one{animation:lx-orbit-rotate 120s linear infinite}.ring-two{animation:lx-orbit-rotate-reverse 150s linear infinite}@keyframes lx-orbit-rotate{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}@keyframes lx-orbit-rotate-reverse{from{transform:translate(-50%,-50%) rotate(360deg)}to{transform:translate(-50%,-50%) rotate(0)}}}
