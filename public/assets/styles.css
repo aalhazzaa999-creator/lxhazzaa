@@ -584,3 +584,18 @@ body:has(.atlas-layout) .inline-detail[hidden]{display:none}
 .map-selection[hidden]{display:none}
 .map-selection-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
 .map-selection-head h3{margin:0;color:#D4AF7C;font-size:18px}
+
+/* Authentic LX HUMAN supplied artwork; uploaded to /public/assets. */
+body:has(.atlas-layout) .atlas-hero-image{display:block;padding:0;min-height:0;aspect-ratio:1536/526;max-height:450px;background:#080E12;border:1px solid #4C3928;border-radius:14px;overflow:hidden}
+body:has(.atlas-layout) .atlas-hero-image:after{display:none}
+.atlas-hero-image>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.atlas-hero-image-fallback{padding:48px 25px;background:linear-gradient(120deg,#090e15,#242018);color:#F5F1E8;text-align:center}
+.atlas-hero-image-fallback h1{font-size:clamp(26px,4vw,42px);margin:0 0 8px}
+.atlas-nav-logo{display:block;width:112px;height:48px;object-fit:cover;object-position:15% 60%;border-radius:5px}
+.atlas-logo-fallback{font-weight:bold;color:#D4AF7C}
+.atlas-stats-cover{padding:24px 18px 18px;margin:0 0 16px;border:1px solid #665139;border-radius:12px;background:linear-gradient(270deg,#080E12 0%,#080E12E8 35%,#080E12A0 100%),url('/assets/atlas-skull.webp') left center/auto 100% no-repeat,#14181c}
+.atlas-stats-title h2{margin:0;color:#F5F1E8;font-size:25px}
+.atlas-stats-title p{margin:4px 0 17px;color:#D4AF7C;font-size:11px;letter-spacing:2px}
+.atlas-stats-cover .stats{margin:0}
+.atlas-stats-cover .stat{background:#0C1118D9;backdrop-filter:blur(3px)}
+@media(max-width:700px){.atlas-stats-cover{padding:16px 10px}.atlas-nav-logo{width:88px;height:38px}.atlas-stats-title h2{font-size:20px}body:has(.atlas-layout) .atlas-hero-image{aspect-ratio:1536/650}body:has(.atlas-layout) .atlas-hero-image>img{object-position:40% center}}
