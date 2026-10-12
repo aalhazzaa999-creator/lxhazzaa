@@ -17,11 +17,42 @@
     const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r.y).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<div class="record" role="button" tabindex="0" data-idx="${start+i}"><div><strong>${esc(r.name||r.id)}</strong><span>${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="y">${esc(r.y||'Y غير محدد')}</span></div>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
   }
   function renderMap() {
-    if(!map)return;layer.clearLayers();let points=filtered.filter(r=>r.lat!==null);let shown=points.slice(0,MAX_MARKERS);shown.forEach(r=> {
-      const country=r.locationType==='country';const marker=L.circleMarker([r.lat,r.lng], {
-        radius:country?5:4,weight:1,color:country?'#f0c454':'#8ddac7',fillColor:country?'#e8bd44':'#39a894',fillOpacity:.68,renderer:canvasRenderer
-      });marker.bindPopup(`<b>${esc(r.name||r.id)}</b><div>${esc(r.site||r.country)}</div><div>${country?'نقطة دولة تقريبية':'موقع أثري / محلية'}</div><div>${esc(r.y)}</div>`);marker.on('click',()=>detail(r));marker.addTo(layer)
-    });$('mapNote').textContent=`تعرض الخريطة ${fmt(shown.length)} نقطة من أصل ${fmt(points.length)} نتيجة ذات إحداثيات. ${points.length>MAX_MARKERS?'استخدم البحث والفلاتر لتضييق النتائج.':''} الأصفر: نقطة دولة تقريبية؛ الأخضر: موقع أثري. النقاط لا تمثل إحداثيات قبور مؤكدة.`
+    if (!map) return;
+    layer.clearLayers();
+    const points = filtered.filter(r => Number.isFinite(Number(r.lat)) && Number.isFinite(Number(r.lng)) && r.lat !== null && r.lng !== null);
+    // Aggregate all geolocated records into viewport-dependent cells rather than discarding all but the first 250.
+    const zoom = map.getZoom();
+    const cellSize = 52;
+    const groups = new Map();
+    for (const r of points) {
+      const projected = map.project([Number(r.lat), Number(r.lng)], zoom);
+      const key = Math.floor(projected.x / cellSize) + ':' + Math.floor(projected.y / cellSize);
+      let group = groups.get(key);
+      if (!group) { group = { count: 0, lat: 0, lng: 0, sample: r, country: true }; groups.set(key, group); }
+      group.count++;
+      group.lat += Number(r.lat);
+      group.lng += Number(r.lng);
+      if (r.locationType !== 'country') group.country = false;
+    }
+    const visible = [];
+    for (const g of groups.values()) {
+      const lat = g.lat / g.count, lng = g.lng / g.count;
+      if (map.getBounds().pad(.25).contains([lat, lng])) visible.push({ ...g, lat, lng });
+    }
+    visible.sort((a,b) => b.count-a.count);
+    for (const g of visible.slice(0, 1400)) {
+      const color = g.country ? '#B08A56' : '#86AFC1';
+      const marker = L.circleMarker([g.lat,g.lng], {
+        radius: g.count > 1 ? Math.min(19, 6 + Math.log2(g.count) * 1.6) : 5,
+        weight: 1.5, color:'#0B1018', fillColor:color, fillOpacity:.86, renderer:canvasRenderer
+      });
+      marker.bindPopup(g.count > 1
+        ? '<b>' + fmt(g.count) + ' عينة متقاربة</b><div>كبّر الخريطة لعرض مواقع أكثر دقة</div>'
+        : '<b>' + esc(g.sample.name || g.sample.id) + '</b><div>' + esc(g.sample.site || g.sample.country) + '</div><div>' + esc(g.sample.y || '') + '</div>');
+      marker.on('click', () => { if (g.count > 1) map.setView([g.lat,g.lng],Math.min(map.getZoom()+2,16)); else detail(g.sample); });
+      marker.addTo(layer);
+    }
+    $('mapNote').textContent = 'تغطي الخريطة ' + fmt(points.length) + ' سجلًا بإحداثيات، مجمّعة في ' + fmt(groups.size) + ' مجموعة حسب مستوى التكبير. الذهبي: موقع دولة تقريبي. الأزرق: موقع أثري أو منطقة. لا تمثل النقاط قبورًا مؤكدة.';
   }
   function detail(r) {
     $('detailTitle').textContent=r.name||r.id;const pairs=[['معرّف السجل',r.id],['AADR Genetic ID',r.geneticId],['AADR Individual ID',r.individualId],['الدولة',r.country],['الموقع الأثري',r.site],['نوع الموقع',r.locationType==='country'?'تقريبي على مستوى الدولة':r.locationType==='site'?'موقع أثري / محلية':'غير محدد'],['دقة الموقع',r.locationAccuracy],['خط العرض',r.lat],['خط الطول',r.lng],['Y-DNA',r.y],['تصنيف Y',r.yRoot],['mtDNA',r.mt],['العمر BP',r.ageBP],['العمر النصي',r.ageText],['طريقة التأريخ',r.dating],['الثقافة الأثرية',r.culture],['الجنس الجزيئي',r.sex],['حالة الربط',r.match],['المصدر',r.source],['المرجع',r.reference],['عنوان الدراسة',r.study],['DOI',r.doi],['ملاحظات',r.notes]];$('detailBody').innerHTML=pairs.filter(([,v])=>v!==''&&v!==null&&v!==undefined).map(([k,v])=>`<div><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join('');$('detail').style.display='grid'
@@ -36,7 +67,7 @@
       attribution:'© OpenStreetMap contributors',maxZoom:17
     }).addTo(map);canvasRenderer=L.canvas( {
       padding:0.3
-    });layer=L.layerGroup().addTo(map)
+    });layer=L.layerGroup().addTo(map);map.on('moveend zoomend',renderMap);setTimeout(()=>map.invalidateSize(),200)
   }
   async function load() {
     try {
