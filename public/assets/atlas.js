@@ -2,7 +2,7 @@
   'use strict';const $=id=>document.getElementById(id);let all=[],filtered=[],page=0,map=null,layer=null,manifest=null,canvasRenderer=null,searchCircle=null,mapSelectionRecords=null;const PAGE=25,MAX_MARKERS=250;const fmt=n=>Number(n||0).toLocaleString('ar-SA');const esc=v=>String(v??'').replace(/[&<>"']/g,c=>( {
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }
-  [c]));const fields=['q','root','country','sex','locationType','radius'];let timer;function distance(a,b,c,d) {
+  [c]));const fields=['q','root','country','sex','locationType','radius'];let timer,mutationToken=0,mutationResolved=null;function distance(a,b,c,d) {
     const R=6371,rad=Math.PI/180,x=(c-a)*rad,y=(d-b)*rad;return 2*R*Math.asin(Math.sqrt(Math.sin(x/2)**2+Math.cos(a*rad)*Math.cos(c*rad)*Math.sin(y/2)**2))
   }
   function opt(id,arr) {
@@ -11,7 +11,7 @@
     })
   }
   function filter() {
-    const q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
+    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&String(r.y||'').split(/[,;\s/]+/).some(v=>mutationResolved.aliases.has(window.LXYdna.norm(v)))))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
   }
   function studyUrl(r) {
     const raw=String(r.doi||'').trim();
@@ -173,17 +173,42 @@
       const r=await fetch('/data/atlas/manifest.json');if(!r.ok)throw Error('تعذر تحميل فهرس البيانات');manifest=await r.json();$('loading').textContent=`جارٍ تحميل ${manifest.parts.length} أجزاء من البيانات…`;all=[];for(let i=0;i<manifest.parts.length;i++) {
         const p=manifest.parts[i];$('loading').textContent=`جارٍ تحميل البيانات (${i+1} من ${manifest.parts.length})…`;const response=await fetch('/data/atlas/'+encodeURIComponent(p));if(!response.ok)throw Error('تعذر تحميل '+p+' (HTTP '+response.status+')');const part=await response.json();if(!Array.isArray(part))throw Error('صيغة بيانات غير صحيحة في '+p);all.push(...part);await new Promise(resolve=>setTimeout(resolve,0));
       }
-      if(all.length!==manifest.total)throw Error('عدد السجلات لا يطابق الفهرس');opt('root',[...new Set(all.map(r=>r.yRoot))]);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';initMap();filtered=all;render()
+      if(all.length!==manifest.total)throw Error('عدد السجلات لا يطابق الفهرس');opt('root',[...new Set(all.map(r=>r.yRoot))]);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';initMap();filter()
     }
     catch(e) {
       $('loading').textContent='خطأ في تحميل البيانات: '+e.message+' — تأكد من رفع مجلد data/atlas كاملًا إلى GitHub.';console.error(e)
     }
 }
+  $('mutation').addEventListener('input',()=>{
+    const value=$('mutation').value.trim(),token=++mutationToken;
+    mutationResolved=null;mapSelectionRecords=null;$('mapSelection').hidden=true;
+    clearTimeout(timer);
+    if(!value){$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';filter();return;}
+    $('mutationStatus').textContent='جارٍ التحقق من التحور وفروعه في المشجرات…';
+    // Never show unfiltered results while the genetic filter is unresolved.
+    filter();
+    timer=setTimeout(async()=>{
+      try{
+        if(!window.LXYdna)throw Error('تعذر تشغيل فهرس التحورات.');
+        const result=await window.LXYdna.resolve(value);
+        if(token!==mutationToken)return;
+        mutationResolved=result;
+        $('mutationStatus').textContent=result.known
+          ?'يشمل التحور وفروعه المتحدرة — المصدر: '+result.sources.join('، ')
+          :'لم يُعثر على هذا التحور في المشجرات المتاحة؛ تحقق من الاسم.';
+      }catch(e){
+        if(token!==mutationToken)return;
+        mutationResolved={aliases:new Set()};
+        $('mutationStatus').textContent='تعذر التحقق من المشجرة؛ لا تُعرض نتائج غير مؤكدة. '+e.message;
+      }
+      filter();
+    },400);
+  });
   fields.forEach(id=>$(id).addEventListener(id==='q'?'input':'change',()=> {
     mapSelectionRecords=null;$('mapSelection').hidden=true;
     clearTimeout(timer);timer=setTimeout(filter,id==='q'?250:0)
   }));$('recenter').addEventListener('click',filter);$('reset').addEventListener('click',()=> {
-    fields.forEach(id=>$(id).value='');mapSelectionRecords=null;$('mapSelection').hidden=true;filter()
+    fields.forEach(id=>$(id).value='');$('mutation').value='';mutationToken++;mutationResolved=null;$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';mapSelectionRecords=null;$('mapSelection').hidden=true;filter()
   });$('prev').addEventListener('click',()=> {
     page--;render();$('records').scrollIntoView( {
       behavior:'smooth'
