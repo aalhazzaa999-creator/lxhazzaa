@@ -13,8 +13,21 @@
   function filter() {
     const q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));page=0;render()
   }
+  function studyUrl(r) {
+    const raw=String(r.doi||'').trim();
+    if(/^10\.\d{4,9}\/[\w.()/:;+-]+$/i.test(raw))return 'https://doi.org/'+encodeURI(raw);
+    if(/^https:\/\/(doi\.org|dx\.doi\.org)\/10\.\d{4,9}\//i.test(raw))return raw;
+    const ref=String(r.reference||'').trim();
+    if(/^https:\/\//i.test(ref)){try{const u=new URL(ref);if(u.protocol==='https:')return u.href;}catch(e){}}
+    return '';
+  }
+  function detailMarkup(r) {
+    const pairs=[['معرّف السجل',r.id],['AADR Genetic ID',r.geneticId],['AADR Individual ID',r.individualId],['الدولة',r.country],['الموقع الأثري',r.site],['نوع الموقع',r.locationType==='country'?'تقريبي على مستوى الدولة':r.locationType==='site'?'موقع أثري / محلية':'غير محدد'],['دقة الموقع',r.locationAccuracy],['خط العرض',r.lat],['خط الطول',r.lng],['Y-DNA',r.y],['تصنيف Y',r.yRoot],['mtDNA',r.mt],['العمر BP',r.ageBP],['العمر النصي',r.ageText],['طريقة التأريخ',r.dating],['الثقافة الأثرية',r.culture],['الجنس الجزيئي',r.sex],['حالة الربط',r.match],['المصدر',r.source],['المرجع',r.reference],['عنوان الدراسة',r.study],['DOI',r.doi],['ملاحظات',r.notes]];
+    const link=studyUrl(r);
+    return '<div class="inline-detail-grid">'+pairs.filter(([,v])=>v!==''&&v!==null&&v!==undefined).map(([k,v])=>'<div class="inline-detail-cell"><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div>').join('')+'</div><div class="study-actions">'+(link?'<a class="study-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">فتح الدراسة أو المصدر العلمي ↗</a>':'<span class="study-unavailable">رابط الدراسة غير متوفر لهذه العينة</span>')+'</div>';
+  }
   function render() {
-    const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r.y).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<div class="record" role="button" tabindex="0" data-idx="${start+i}"><div><strong>${esc(r.name||r.id)}</strong><span>${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="y">${esc(r.y||'Y غير محدد')}</span></div>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
+    const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r.y).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${esc(r.name||r.id)}</strong><span>${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="record-right"><span class="y">${esc(r.y||'Y غير محدد')}</span><span class="record-hint">عرض المعلومات والدراسة ⌄</span></span></button><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
   }
   function renderMap() {
     if (!map) return;
@@ -92,13 +105,17 @@
     page++;render();$('records').scrollIntoView( {
       behavior:'smooth'
     })
-  });$('records').addEventListener('click',e=> {
-    const row=e.target.closest('[data-idx]');if(row)detail(filtered[Number(row.dataset.idx)])
-  });$('records').addEventListener('keydown',e=> {
-    if(e.key==='Enter') {
-      const row=e.target.closest('[data-idx]');if(row)detail(filtered[Number(row.dataset.idx)])
-    }
-});$('close').addEventListener('click',()=>$('detail').style.display='none');$('detail').addEventListener('click',e=> {
+  });function expandRecord(button) {
+    const panel=button.parentElement.querySelector('.inline-detail');
+    if(!panel)return;
+    const opening=panel.hidden;
+    document.querySelectorAll('.record-expand[aria-expanded="true"]').forEach(b=>{if(b!==button){b.setAttribute('aria-expanded','false');const p=b.parentElement.querySelector('.inline-detail');if(p)p.hidden=true;}});
+    button.setAttribute('aria-expanded',String(opening));
+    panel.hidden=!opening;
+    if(opening){const record=filtered[Number(button.dataset.idx)];if(record)panel.innerHTML=detailMarkup(record);}
+  }
+  $('records').addEventListener('click',e=>{const button=e.target.closest('button.record-expand');if(button)expandRecord(button);});
+  $('close').addEventListener('click',()=>$('detail').style.display='none');$('detail').addEventListener('click',e=> {
     if(e.target===$('detail'))$('detail').style.display='none'
   });document.addEventListener('keydown',e=> {
     if(e.key==='Escape')$('detail').style.display='none'
