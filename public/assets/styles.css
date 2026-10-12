@@ -579,3 +579,8 @@ body:has(.atlas-layout) .inline-detail[hidden]{display:none}
 .study-link:hover{background:#55422A}
 .study-unavailable{color:#D9C6A7;font-size:13px}
 @media(max-width:800px){.atlas-hero{min-height:250px;padding:26px 6%}.atlas-hero-orbit{left:-80px;width:225px;height:225px;opacity:.35}.inline-detail-grid{grid-template-columns:1fr}.record-right{min-width:110px}}
+
+.map-selection{margin:14px 0;padding:18px;border:1px solid #B08A56;border-radius:12px;background:#101820}
+.map-selection[hidden]{display:none}
+.map-selection-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.map-selection-head h3{margin:0;color:#D4AF7C;font-size:18px}
