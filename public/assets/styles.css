@@ -802,3 +802,19 @@ body:has(.atlas-layout) .research-scope{color:#c5b7a1;font-size:11px}
 /* LXHAZZAA map editorial label; independent of atlas data and markers */
 .lx-palestine-label{background:transparent!important;border:0!important;pointer-events:none!important;}
 .lx-palestine-label span{display:flex;align-items:center;justify-content:center;white-space:nowrap;width:130px;height:30px;background:transparent;border:0;border-radius:0;color:#464646;font:500 11px/1.2 Arial,Tahoma,sans-serif;text-shadow:0 1px 1px rgba(255,255,255,.85),0 -1px 1px rgba(255,255,255,.65);box-shadow:none;}
+
+/* Shared LXHAZZAA account interface */
+.lx-auth-overlay[hidden]{display:none!important}
+.lx-auth-overlay{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.78);display:grid;place-items:center;padding:18px;overflow:auto}
+.lx-auth-dialog{position:relative;width:min(100%,430px);padding:30px;border:1px solid #9a7848;border-radius:18px;background:#181a1c;color:#f6f0e8;box-shadow:0 20px 65px #0009;display:flex;flex-direction:column;gap:12px}
+.lx-auth-brand{color:#d6b77d;font-weight:800;letter-spacing:3px;text-align:center}
+.lx-auth-dialog h2{text-align:center;margin:5px 0}
+.lx-auth-dialog label{display:block;margin:8px 0 4px;font-size:13px}
+.lx-auth-dialog input{width:100%;box-sizing:border-box;padding:12px;border-radius:8px;border:1px solid #72644e;background:#25282b;color:#fff}
+.lx-auth-dialog form{display:flex;flex-direction:column;gap:4px}
+.lx-auth-dialog form .btn{margin-top:14px}
+.lx-auth-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.lx-auth-links button,.lx-auth-close{background:none;border:0;color:#d6b77d;cursor:pointer}
+.lx-auth-close{position:absolute;top:12px;left:12px;font-size:28px}
+#lxAuthStatus{min-height:22px;font-size:13px;line-height:1.6;color:#e5c78d}
+.footer .container{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
