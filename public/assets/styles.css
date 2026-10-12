@@ -639,3 +639,10 @@ body:has(.atlas-layout) .atlas-brand-title{display:flex;flex-direction:column;ga
 body:has(.atlas-layout) .atlas-brand-title small{font-size:9px;letter-spacing:1.3px;color:#C8BBA8;font-weight:400}
 body:has(.atlas-layout) .atlas-logo-fallback{font-family:Georgia,serif;font-size:24px;white-space:nowrap}
 @media(max-width:700px){body:has(.atlas-layout) .atlas-nav-logo{width:100px;height:53px}body:has(.atlas-layout) .atlas-brand-title{font-size:12px}body:has(.atlas-layout) .atlas-brand-title small{font-size:8px;letter-spacing:0}body:has(.atlas-layout) .atlas-brand{gap:7px}body:has(.atlas-layout) .topinner{gap:5px}body:has(.atlas-layout) .nav .pill{font-size:9px;padding:5px}}
+
+/* Persistent visible LX HAZZAA wordmark in both mastheads */
+body:has(.atlas-layout) .atlas-brand-wordmark{display:block;font-family:Georgia,serif;font-size:clamp(18px,2.1vw,27px);line-height:1.1;letter-spacing:1px;color:#E3C992;text-shadow:0 1px 12px #000;font-weight:900;white-space:nowrap}
+body:has(.atlas-layout) .atlas-brand-title{display:flex;flex-direction:column;gap:2px}
+body:has(.atlas-layout) .atlas-brand-title>span{font-size:13px}
+.home-brand-wordmark{display:inline-block;color:#E3C992;font-weight:900;letter-spacing:2px;white-space:nowrap}
+@media(max-width:700px){body:has(.atlas-layout) .atlas-nav-logo{width:65px;height:48px}body:has(.atlas-layout) .atlas-brand-wordmark{font-size:18px}body:has(.atlas-layout) .atlas-brand-title>span{font-size:11px}body:has(.atlas-layout) .atlas-brand-title small{display:none}.home-brand-wordmark{font-size:17px;letter-spacing:1px}}
