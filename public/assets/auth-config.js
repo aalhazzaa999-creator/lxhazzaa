@@ -1,3 +1,2 @@
-// Public Supabase project configuration only. Never put service_role keys or passwords here.
-// Replace the placeholders after creating the LXHAZZAA Supabase project.
-window.LX_AUTH_CONFIG={url:'',anonKey:''};
+// Public Supabase project configuration. Never store service_role keys or passwords here.
+window.LX_AUTH_CONFIG={url:'https://qzmuolixptmcmfbepjmv.supabase.co',anonKey:'sb_publishable_Pejyw0VQAdeDeJBvBVLPRQ_oH2Xw7H1'};
