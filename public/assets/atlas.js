@@ -81,6 +81,31 @@
     return studies.sort((a,b)=>Number(b.scope==='sample')-Number(a.scope==='sample')||
       (parseInt(b.date,10)||0)-(parseInt(a.date,10)||0));
   }
+  function siteResearchFor(r,sampleStudies) {
+    if(!r.site||!String(r.site).trim())return [];
+    const normalized=v=>String(v??'').trim().toLocaleLowerCase();
+    const sampleKeys=new Set(sampleStudies.map(x=>normalized(x.doi||x.url||x.title)));
+    const seen=new Set(),studies=[];
+    for(const record of all){
+      if(normalized(record.site)!==normalized(r.site)||
+        (r.country&&record.country&&normalized(record.country)!==normalized(r.country)))continue;
+      const sourceStudies=researchFor(record);
+      for(const study of sourceStudies){
+        const key=normalized(study.doi||study.url||study.title);
+        if(!key||sampleKeys.has(key)||seen.has(key))continue;
+        seen.add(key);studies.push(study);
+      }
+    }
+    return studies.sort((a,b)=>(parseInt(b.date,10)||0)-(parseInt(a.date,10)||0));
+  }
+  function studyCards(studies,siteOnly=false) {
+    return studies.map((x,i)=>'<article class="research-item"><div class="research-study-head"><strong>'+fmt(i+1)+'. '+esc(x.title)+'</strong><span class="research-year">'+esc(x.date||'تاريخ غير موثق')+'</span></div>'+
+      (siteOnly?'<small class="research-scope">مرجع مرتبط بالموقع الأثري؛ لا يعني بالضرورة أنه فحص هذه الرفاة</small>':'')+
+      (x.institution?'<small>الجهة البحثية: '+esc(x.institution)+'</small>':'<small>الجهة البحثية غير مذكورة في السجل</small>')+
+      (x.doi?'<small>DOI: '+esc(x.doi)+'</small>':'')+
+      (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">فتح الدراسة ↗</a>':'<span class="unverified">رابط الدراسة غير موثق في البيانات الحالية</span>')+
+      '</article>').join('');
+  }
   function selectRecord(r,button,scrollToPanel=true) {
     const panel=$('recordDetailPanel');if(!panel)return;
     document.querySelectorAll('.record-expand').forEach(b=>{
@@ -89,14 +114,13 @@
     });
     $('recordDetailTitle').textContent=r.name||r.id||'تفاصيل الرفاة';
     const studies=researchFor(r);
-    $('recordDetailBody').innerHTML=detailMarkup(r).replace(/<div class="study-actions">[\s\S]*?<\/div>$/,'')+
+    const siteStudies=siteResearchFor(r,studies);
+    $('recordDetailBody').innerHTML=detailMarkup(r).replace(/<div class="study-actions">[\\s\\S]*?<\\/div>$/,'')+
       '<h4 class="research-heading">الدراسات الخاصة بهذه الرفاة ('+fmt(studies.length)+')</h4>'+
-      (studies.length?studies.map((x,i)=>'<article class="research-item"><div class="research-study-head"><strong>'+fmt(i+1)+'. '+esc(x.title)+'</strong><span class="research-year">'+esc(x.date||'تاريخ غير موثق')+'</span></div>'+
-        '<small class="research-scope">'+(x.scope==='sample'?'مرجع مسجل للعينة':'مرجع مرتبط بالموقع الأثري، ولا يؤكد دراسة هذه العينة')+'</small>'+
-        (x.institution?'<small>الجهة البحثية: '+esc(x.institution)+'</small>':'<small>الجهة البحثية غير مذكورة في السجل</small>')+
-        (x.doi?'<small>DOI: '+esc(x.doi)+'</small>':'')+
-        (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">فتح الدراسة ↗</a>':'<span class="unverified">رابط الدراسة غير موثق في البيانات الحالية</span>')+
-        '</article>').join(''):'<p class="smallnote">لا توجد دراسات موثقة لهذه العينة في البيانات المحمّلة.</p>');
+      (studies.length?studyCards(studies):'<p class="smallnote">لا توجد دراسات موثقة لهذه العينة في البيانات المحمّلة.</p>')+
+      '<h4 class="research-heading">الموقع الأثري: '+esc(r.site||'غير محدد')+'</h4>'+
+      '<p class="smallnote">دراسات أخرى مرتبطة بالموقع الأثري ('+fmt(siteStudies.length)+')، ولا يُفترض أنها فحصت هذه الرفاة.</p>'+
+      (siteStudies.length?studyCards(siteStudies,true):'<p class="smallnote">لا توجد دراسات إضافية موثقة للموقع في البيانات المحمّلة.</p>');
     $('recordDetailClose').hidden=false;
     if(scrollToPanel&&window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
   }
