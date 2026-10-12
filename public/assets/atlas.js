@@ -141,6 +141,7 @@
     $('clearMapGroup').addEventListener('click',clearMapGroup);
     filter();
     if(group.count===1)selectRecord(group.sample,null,false);
+    panel.scrollIntoView({behavior:'smooth',block:'nearest'});
   }
   function clearMapGroup() {
     mapSelectionRecords=null;
