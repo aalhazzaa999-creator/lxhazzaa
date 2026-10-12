@@ -719,3 +719,49 @@ body:has(.universe-main) .universe-globe{background:radial-gradient(circle at 75
 body:has(.universe-main) .universe-globe:after{background:radial-gradient(ellipse at 75% 17%,#f1c38d70 0%,#d9a75d1c 15%,transparent 36%),radial-gradient(ellipse at 48% 60%,transparent 33%,#01050bbd 96%),linear-gradient(115deg,#02071133 10%,transparent 46%,#01050b99 88%)}
 body:has(.universe-main) .globe-brand{text-shadow:0 4px 18px #000,0 0 28px #000}
 body:has(.universe-main) .universe-ring{border-color:#b8895266;box-shadow:0 0 22px #d4af7c16}
+
+
+/* LXHAZZAA home: approved dark-gold cinematic globe composition */
+body:has(.universe-main){background:#05080b;color:#f4e8d7}
+body:has(.universe-main) .topbar{background:#06080bbf;backdrop-filter:blur(9px);border-bottom:1px solid #d4af7c30}
+body:has(.universe-main) .topinner{direction:ltr}
+body:has(.universe-main) .topinner .nav{direction:rtl}
+body:has(.universe-main) .brandmark{font:48px Georgia,serif;background:linear-gradient(125deg,#fff0c9,#d4af7c 50%,#9c6339 85%,#f5d5a0);color:transparent;-webkit-background-clip:text;background-clip:text}
+body:has(.universe-main) .home-brand-wordmark{font:16px Georgia,serif;letter-spacing:3px;color:#e5c28b}
+body:has(.universe-main) .universe-stage{min-height:1010px;padding-top:16px;background:radial-gradient(ellipse at 52% 66%,#3a2415 0%,#121317 37%,#05080b 80%)}
+body:has(.universe-main) .universe-intro{margin-bottom:0}
+body:has(.universe-main) .universe-intro .eyebrow{color:#d4af7caa}
+body:has(.universe-main) .universe-orbit{height:790px;max-width:1100px}
+body:has(.universe-main) .universe-globe{width:min(76%,790px);top:46%;background:radial-gradient(circle at 78% 25%,#fff1c7aa,transparent 23%),url('https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg') center/cover no-repeat,#0a1926;border-color:#d4af7c55;box-shadow:inset -85px -60px 100px #02050ad9,0 0 65px #d6a15c3a,0 0 0 2px #d4af7c22}
+body:has(.universe-main) .universe-globe:before{background:radial-gradient(ellipse at 74% 20%,#ffe7ac99 0%,transparent 24%),linear-gradient(135deg,#03070b55 0%,transparent 48%,#03070b66 100%);opacity:1;mix-blend-mode:screen}
+body:has(.universe-main) .universe-globe:after{background:radial-gradient(circle at 80% 19%,#ffe0a98c,transparent 22%),linear-gradient(100deg,#03060a60 0%,transparent 55%,#03060a33 100%)}
+body:has(.universe-main) .globe-brand{top:62%;text-shadow:0 2px 18px #000,0 0 30px #000}
+body:has(.universe-main) .globe-lx{font-size:clamp(120px,16vw,210px)}
+body:has(.universe-main) .universe-ring{top:46%;border-color:#e3af6955;box-shadow:0 0 25px #d4af7c19}
+body:has(.universe-main) .ring-one{width:96%}
+body:has(.universe-main) .ring-two{width:83%}
+body:has(.universe-main) .node-remains{left:19%;top:75%}
+body:has(.universe-main) .node-documents{left:81%;top:75%}
+body:has(.universe-main) .orbit-icon{width:190px;height:190px;background:radial-gradient(circle at 45% 24%,#aa7d50,#261b14 62%,#090c10);border:2px solid #f2c586;box-shadow:0 0 0 6px #d4af7c18,0 0 45px #e5a65e99,inset 0 0 28px #ffd69b35}
+body:has(.universe-main) .node-documents .orbit-icon{background:radial-gradient(circle at 50% 35%,#9a6c3f,#372519 56%,#090c10)}
+body:has(.universe-main) .node-documents .node-symbol{font-size:95px;color:#efc68d}
+body:has(.universe-main) .orbit-node{width:250px;gap:7px}
+body:has(.universe-main) .orbit-node strong{font-size:19px}
+body:has(.universe-main) .orbit-node small{font-size:11px}
+body:has(.universe-main) .universe-bottom{margin-top:-4px}
+@media(max-width:1050px) and (min-width:701px){body:has(.universe-main) .universe-orbit{height:710px}body:has(.universe-main) .orbit-icon{width:135px;height:135px}body:has(.universe-main) .orbit-node{width:190px}body:has(.universe-main) .orbit-node strong{font-size:15px}}
+@media(max-width:700px){
+ body:has(.universe-main) .universe-stage{padding:14px 8px 30px;min-height:0}
+ body:has(.universe-main) .universe-orbit{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:min(91vw,360px);height:auto}
+ body:has(.universe-main) .universe-globe{top:min(42vw,164px);width:min(94vw,360px)}
+ body:has(.universe-main) .universe-ring{top:min(42vw,164px);width:97vw}
+ body:has(.universe-main) .ring-two{width:83vw}
+ body:has(.universe-main) .globe-brand{top:62%}
+ body:has(.universe-main) .globe-lx{font-size:90px}
+ body:has(.universe-main) .orbit-node{width:100%;top:auto;left:auto;position:relative;transform:none}
+ body:has(.universe-main) .orbit-icon{width:min(38vw,150px);height:min(38vw,150px)}
+ body:has(.universe-main) .orbit-node strong{font-size:12px}
+ body:has(.universe-main) .orbit-node small{font-size:8px}
+ body:has(.universe-main) .node-documents .node-symbol{font-size:65px}
+ body:has(.universe-main) .universe-bottom{margin-top:10px}
+}
