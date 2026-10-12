@@ -54,7 +54,8 @@
   }
 
   guestButton.addEventListener('click', closeWelcome);
-  accountButton.addEventListener('click', openWelcome);
+  const loginButton=byId('welcomeLogin');if(loginButton)loginButton.addEventListener('click',()=>{closeWelcome();window.LXAuth?.open('login');});
+  accountButton.addEventListener('click',()=>{if(!window.LXAuth)openWelcome();});
   languageSelect.addEventListener('change', updateLanguage);
 
   if (sessionStorage.getItem(GUEST_SESSION_KEY)) {
