@@ -11,7 +11,7 @@
     })
   }
   function filter() {
-    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&String(r.y||'').split(/[,;\s\/]+/).some(v=>(mutationResolved.aliases.has(window.LXYdna.norm(v))&&(!mutationResolved.root||r.yRoot===mutationResolved.root)))))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
+    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&mutationResolved.known&&mutationResolved.matches(r.y,r.yRoot)))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
   }
   function studyUrl(r) {
     const raw=String(r.doi||'').trim();
@@ -192,14 +192,12 @@
         const result=await window.LXYdna.resolve(value);
         if(token!==mutationToken)return;
         mutationResolved=result;
-        // A named SNP must never match a sample from an unrelated major Y haplogroup.
-        if(result.known){const m=/^([A-Z])[-_]/i.exec(value);if(m)mutationResolved.root=m[1].toUpperCase();else if(/^(L208|M70|P77|L162|CTS2214)$/i.test(value))mutationResolved.root='T';}
         $('mutationStatus').textContent=result.known
           ?'يشمل التحور وفروعه المتحدرة — المصدر: '+result.sources.join('، ')
-          :'لم يُعثر على هذا التحور في المشجرات المتاحة؛ تحقق من الاسم.';
+           :result.reason||'لم يُعثر على هذا التحور في المشجرات المتاحة؛ تحقق من الاسم.';
       }catch(e){
         if(token!==mutationToken)return;
-        mutationResolved={aliases:new Set()};
+        mutationResolved={known:false,matches:()=>false};
         $('mutationStatus').textContent='تعذر التحقق من المشجرة؛ لا تُعرض نتائج غير مؤكدة. '+e.message;
       }
       filter();
