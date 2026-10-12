@@ -156,7 +156,15 @@
       preferCanvas:true,worldCopyJump:true
     }).setView([29,34],3);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:'© OpenStreetMap contributors',maxZoom:17
-    }).addTo(map);canvasRenderer=L.canvas( {
+    }).addTo(map);
+    // LXHAZZAA editorial label. This overlay does not modify scientific source records.
+    const palestineLabel=L.divIcon({
+      className:'lx-palestine-label',
+      html:'<span lang="ar" dir="rtl">فلسطين المحتلة</span>',
+      iconSize:[130,30],iconAnchor:[65,15]
+    });
+    L.marker([31.55,34.85],{icon:palestineLabel,interactive:false,keyboard:false,zIndexOffset:1000}).addTo(map);
+    canvasRenderer=L.canvas( {
       padding:0.3
     });layer=L.layerGroup().addTo(map);map.on('moveend',()=>{drawSearchCircle();renderMap()});map.on('zoomend',renderMap);setTimeout(()=>map.invalidateSize(),200)
   }
