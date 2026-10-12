@@ -599,3 +599,12 @@ body:has(.atlas-layout) .atlas-hero-image:after{display:none}
 .atlas-stats-cover .stats{margin:0}
 .atlas-stats-cover .stat{background:#0C1118D9;backdrop-filter:blur(3px)}
 @media(max-width:700px){.atlas-stats-cover{padding:16px 10px}.atlas-nav-logo{width:88px;height:38px}.atlas-stats-title h2{font-size:20px}body:has(.atlas-layout) .atlas-hero-image{aspect-ratio:1536/650}body:has(.atlas-layout) .atlas-hero-image>img{object-position:40% center}}
+
+/* Image sizing verified against supplied files: 1536x526 banner, 308x300 atlas emblem. */
+body:has(.atlas-layout) .atlas-nav-logo{width:66px;height:64px;object-fit:contain;object-position:center;border-radius:0;flex-shrink:0}
+body:has(.atlas-layout) .atlas-hero-image>img{object-fit:contain;object-position:center}
+@media(max-width:700px){
+ body:has(.atlas-layout) .atlas-nav-logo{width:54px;height:52px}
+ body:has(.atlas-layout) .atlas-hero-image{aspect-ratio:1536/526;min-height:0;max-height:none}
+ body:has(.atlas-layout) .atlas-hero-image>img{object-fit:contain;object-position:center}
+}
