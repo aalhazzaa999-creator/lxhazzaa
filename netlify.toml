@@ -14,3 +14,15 @@
     X-Frame-Options = "SAMEORIGIN"
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Content-Type-Options = "nosniff"
+
+[[redirects]]
+  from = "/lxhuman/atlas/"
+  to = "/lxhuman/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/manuscripts/"
+  to = "/lxdocumentary/"
+  status = 301
+  force = true
