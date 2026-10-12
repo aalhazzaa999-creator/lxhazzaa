@@ -11,7 +11,7 @@
     })
   }
   function filter() {
-    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||!mutationResolved||String(r.y||'').split(/[,;\s/]+/).some(v=>mutationResolved.aliases.has(window.LXYdna.norm(v))))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
+    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||!mutationResolved||String(r.y||'').split(/[,;\s\/]+/).some(v=>mutationResolved.aliases.has(window.LXYdna.norm(v))))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
   }
   function studyUrl(r) {
     const raw=String(r.doi||'').trim();
