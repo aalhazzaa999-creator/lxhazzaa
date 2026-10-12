@@ -58,16 +58,17 @@
       const study={title,institution,date,url,doi,scope};
       seen.set(key,study);studies.push(study);
     };
-    // Direct records and structured publication arrays take priority.
-    const related=all.filter(x=>x===r||(
-      r.site&&x.site&&r.site.trim().toLocaleLowerCase()===x.site.trim().toLocaleLowerCase()&&
-      (!r.country||!x.country||r.country===x.country)
-    ));
+    // Only publications explicitly attached to this individual remain.
+    // A shared archaeological site does NOT establish that a study examined this sample.
+    const sameId=(a,b)=>String(a??'').trim()!==''&&String(a).trim()===String(b??'').trim();
+    const related=all.filter(x=>x===r||
+      (sameId(r.individualId,x.individualId))||
+      (sameId(r.geneticId,x.geneticId))||
+      (sameId(r.id,x.id)));
     for(const record of related){
-      const scope=record===r?'sample':'site';
       for(const items of [record.studies,record.publications,record.references,record.research]){
-        if(Array.isArray(items))items.forEach(item=>add(item,record,scope));
-        else if(items)add(items,record,scope);
+        if(Array.isArray(items))items.forEach(item=>add(item,record,'sample'));
+        else if(items)add(items,record,'sample');
       }
       if(record.study||record.doi||record.reference)add({
         title:record.study||record.reference||'مرجع علمي',
@@ -75,7 +76,7 @@
         publicationDate:record.publicationDate,
         publicationYear:record.publicationYear,
         year:record.studyYear||record.yearPublished||record.year
-      },record,scope);
+      },record,'sample');
     }
     return studies.sort((a,b)=>Number(b.scope==='sample')-Number(a.scope==='sample')||
       (parseInt(b.date,10)||0)-(parseInt(a.date,10)||0));
@@ -89,13 +90,13 @@
     $('recordDetailTitle').textContent=r.name||r.id||'تفاصيل الرفاة';
     const studies=researchFor(r);
     $('recordDetailBody').innerHTML=detailMarkup(r).replace(/<div class="study-actions">[\s\S]*?<\/div>$/,'')+
-      '<h4 class="research-heading">الدراسات والجهات البحثية المرتبطة ('+fmt(studies.length)+')</h4>'+
+      '<h4 class="research-heading">الدراسات الخاصة بهذه الرفاة ('+fmt(studies.length)+')</h4>'+
       (studies.length?studies.map((x,i)=>'<article class="research-item"><div class="research-study-head"><strong>'+fmt(i+1)+'. '+esc(x.title)+'</strong><span class="research-year">'+esc(x.date||'تاريخ غير موثق')+'</span></div>'+
         '<small class="research-scope">'+(x.scope==='sample'?'مرجع مسجل للعينة':'مرجع مرتبط بالموقع الأثري، ولا يؤكد دراسة هذه العينة')+'</small>'+
         (x.institution?'<small>الجهة البحثية: '+esc(x.institution)+'</small>':'<small>الجهة البحثية غير مذكورة في السجل</small>')+
         (x.doi?'<small>DOI: '+esc(x.doi)+'</small>':'')+
         (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">فتح الدراسة ↗</a>':'<span class="unverified">رابط الدراسة غير موثق في البيانات الحالية</span>')+
-        '</article>').join(''):'<p class="smallnote">لا توجد دراسات موثقة مرتبطة بهذه العينة أو الموقع في البيانات المحمّلة.</p>');
+        '</article>').join(''):'<p class="smallnote">لا توجد دراسات موثقة لهذه العينة في البيانات المحمّلة.</p>');
     $('recordDetailClose').hidden=false;
     if(scrollToPanel&&window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
   }
