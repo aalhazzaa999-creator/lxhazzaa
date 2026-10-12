@@ -801,4 +801,4 @@ body:has(.atlas-layout) .research-scope{color:#c5b7a1;font-size:11px}
 
 /* LXHAZZAA map editorial label; independent of atlas data and markers */
 .lx-palestine-label{background:transparent!important;border:0!important;pointer-events:none!important;}
-.lx-palestine-label span{display:flex;align-items:center;justify-content:center;white-space:nowrap;width:130px;height:30px;background:rgba(11,16,24,.94);border:1px solid #c5a06a;border-radius:16px;color:#f4dfb9;font:700 13px/1.2 system-ui,Tahoma,sans-serif;text-shadow:0 1px 2px #000;box-shadow:0 2px 8px rgba(0,0,0,.35);}
+.lx-palestine-label span{display:flex;align-items:center;justify-content:center;white-space:nowrap;width:130px;height:30px;background:transparent;border:0;border-radius:0;color:#464646;font:500 11px/1.2 Arial,Tahoma,sans-serif;text-shadow:0 1px 1px rgba(255,255,255,.85),0 -1px 1px rgba(255,255,255,.65);box-shadow:none;}
