@@ -1,1 +1,3 @@
-LXHAZZAA starter for Netlify. This is a static landing page and temporary atlas route only. It does not contain the full atlas dataset, search, maps or authentication. Upload the CONTENTS of this folder as a manual deploy in the existing Netlify project. Do not treat as the finished application.
+LXHAZZAA — legacy starter note.
+This file describes an obsolete starter build and is NOT the current deployment guide.
+See README.md and docs/ARCHITECTURE.md for the active GitHub/Netlify project.
