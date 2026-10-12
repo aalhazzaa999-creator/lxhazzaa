@@ -28,35 +28,57 @@
   }
 
   function researchFor(r) {
-    const studies=[],seen=new Set();
-    const add=(item,record)=>{
-      if(!item)return;
-      if(typeof item==='string')item={title:item};
-      const title=String(item.title||item.study||item.name||record.study||record.reference||'مرجع علمي مرتبط بالعينة').trim();
-      const institution=String(item.institution||item.organization||item.university||item.museum||item.researchTeam||item.team||item.publisher||record.institution||record.organization||record.researchTeam||'').trim();
-      const doi=String(item.doi||record.doi||'').trim();
-      const raw=String(item.url||item.link||item.studyUrl||'').trim();
-      let url='';
-      if(/^https:\/\//i.test(raw)){try{const u=new URL(raw);if(u.protocol==='https:')url=u.href}catch(e){}}
-      if(!url&&/^10\.\d{4,9}\/[\w.()/:;+-]+$/i.test(doi))url='https://doi.org/'+encodeURI(doi);
-      if(!url&&!item.url)url=studyUrl(record);
-      const key=(doi||url||title).toLocaleLowerCase();
-      if(!key||seen.has(key))return;
-      seen.add(key);studies.push({title,institution,url,doi});
+    const studies=[],seen=new Map();
+    const clean=v=>String(v??'').trim();
+    const validUrl=raw=>{
+      try{const u=new URL(raw);return u.protocol==='https:'?u.href:'';}catch(e){return '';}
     };
-    const relevant=all.filter(x=>x===r||(
+    const add=(raw,record,scope)=>{
+      if(!raw)return;
+      const item=typeof raw==='string'?{title:raw}:raw;
+      if(!item||typeof item!=='object')return;
+      const title=clean(item.title||item.study||item.name||item.paperTitle||record.study||record.reference||'مرجع علمي');
+      const doi=clean(item.doi||((record===r||!raw.doi)?record.doi:''));
+      const institution=clean(item.institution||item.organization||item.university||item.museum||item.researchTeam||item.team||item.publisher||record.institution||record.organization||record.researchTeam);
+      const date=clean(item.publicationDate||item.publishedAt||item.published||item.datePublished||item.date||item.publicationYear||item.year||item.studyYear||item.yearPublished||record.publicationDate||record.publishedAt||record.publicationYear||record.studyYear||record.yearPublished||record.year);
+      const rawLink=clean(item.url||item.link||item.studyUrl||item.doiUrl);
+      let url=validUrl(rawLink);
+      if(!url&&/^10\.\d{4,9}\/[\w.()/:;+-]+$/i.test(doi))url='https://doi.org/'+encodeURI(doi);
+      if(!url&&record===r)url=studyUrl(record);
+      const key=clean(doi||url||title).toLocaleLowerCase();
+      if(!key)return;
+      const old=seen.get(key);
+      if(old){
+        if(!old.date&&date)old.date=date;
+        if(!old.institution&&institution)old.institution=institution;
+        if(!old.url&&url)old.url=url;
+        if(scope==='sample')old.scope='sample';
+        return;
+      }
+      const study={title,institution,date,url,doi,scope};
+      seen.set(key,study);studies.push(study);
+    };
+    // Direct records and structured publication arrays take priority.
+    const related=all.filter(x=>x===r||(
       r.site&&x.site&&r.site.trim().toLocaleLowerCase()===x.site.trim().toLocaleLowerCase()&&
       (!r.country||!x.country||r.country===x.country)
     ));
-    for(const record of relevant){
-      const collections=[record.studies,record.publications,record.references,record.research];
-      for(const items of collections){
-        if(Array.isArray(items))items.forEach(item=>add(item,record));
-        else if(items&&typeof items==='object')add(items,record);
+    for(const record of related){
+      const scope=record===r?'sample':'site';
+      for(const items of [record.studies,record.publications,record.references,record.research]){
+        if(Array.isArray(items))items.forEach(item=>add(item,record,scope));
+        else if(items)add(items,record,scope);
       }
-      if(record.study||record.doi||record.reference)add({title:record.study||record.reference||'مرجع علمي',doi:record.doi},record);
+      if(record.study||record.doi||record.reference)add({
+        title:record.study||record.reference||'مرجع علمي',
+        doi:record.doi,url:studyUrl(record),
+        publicationDate:record.publicationDate,
+        publicationYear:record.publicationYear,
+        year:record.studyYear||record.yearPublished||record.year
+      },record,scope);
     }
-    return studies;
+    return studies.sort((a,b)=>Number(b.scope==='sample')-Number(a.scope==='sample')||
+      (parseInt(b.date,10)||0)-(parseInt(a.date,10)||0));
   }
   function selectRecord(r,button,scrollToPanel=true) {
     const panel=$('recordDetailPanel');if(!panel)return;
@@ -68,9 +90,11 @@
     const studies=researchFor(r);
     $('recordDetailBody').innerHTML=detailMarkup(r).replace(/<div class="study-actions">[\s\S]*?<\/div>$/,'')+
       '<h4 class="research-heading">الدراسات والجهات البحثية المرتبطة ('+fmt(studies.length)+')</h4>'+
-      (studies.length?studies.map(x=>'<article class="research-item"><strong>'+esc(x.title)+'</strong>'+
+      (studies.length?studies.map((x,i)=>'<article class="research-item"><div class="research-study-head"><strong>'+fmt(i+1)+'. '+esc(x.title)+'</strong><span class="research-year">'+esc(x.date||'تاريخ غير موثق')+'</span></div>'+
+        '<small class="research-scope">'+(x.scope==='sample'?'مرجع مسجل للعينة':'مرجع مرتبط بالموقع الأثري، ولا يؤكد دراسة هذه العينة')+'</small>'+
         (x.institution?'<small>الجهة البحثية: '+esc(x.institution)+'</small>':'<small>الجهة البحثية غير مذكورة في السجل</small>')+
-        (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">رابط الدراسة أو المصدر ↗</a>':'<span class="unverified">لا يتوفر رابط موثق في البيانات الحالية</span>')+
+        (x.doi?'<small>DOI: '+esc(x.doi)+'</small>':'')+
+        (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">فتح الدراسة ↗</a>':'<span class="unverified">رابط الدراسة غير موثق في البيانات الحالية</span>')+
         '</article>').join(''):'<p class="smallnote">لا توجد دراسات موثقة مرتبطة بهذه العينة أو الموقع في البيانات المحمّلة.</p>');
     $('recordDetailClose').hidden=false;
     if(scrollToPanel&&window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
