@@ -631,3 +631,11 @@ body:has(.atlas-layout) .atlas-hero-image>img{object-fit:contain;object-position
 .record-expand[aria-selected="true"]{background:#302a20;border-right:3px solid #D4AF7C}
 @media(max-width:1150px){.atlas-records-workspace{grid-template-columns:1fr}.record-detail-panel{position:static;max-height:none}.record-detail-body{max-height:650px}}
 @media(max-width:600px){.record-detail-body .inline-detail-grid{grid-template-columns:1fr}}
+
+/* Restore the prominent atlas masthead logo rather than cropping it */
+body:has(.atlas-layout) .atlas-brand{display:flex;align-items:center;gap:14px;letter-spacing:normal;min-width:0}
+body:has(.atlas-layout) .atlas-nav-logo{display:block;width:130px;height:66px;object-fit:contain;object-position:center;background:transparent;border-radius:0;flex-shrink:0}
+body:has(.atlas-layout) .atlas-brand-title{display:flex;flex-direction:column;gap:4px;font-size:17px;line-height:1.3;color:#D4AF7C;font-weight:700}
+body:has(.atlas-layout) .atlas-brand-title small{font-size:9px;letter-spacing:1.3px;color:#C8BBA8;font-weight:400}
+body:has(.atlas-layout) .atlas-logo-fallback{font-family:Georgia,serif;font-size:24px;white-space:nowrap}
+@media(max-width:700px){body:has(.atlas-layout) .atlas-nav-logo{width:100px;height:53px}body:has(.atlas-layout) .atlas-brand-title{font-size:12px}body:has(.atlas-layout) .atlas-brand-title small{font-size:8px;letter-spacing:0}body:has(.atlas-layout) .atlas-brand{gap:7px}body:has(.atlas-layout) .topinner{gap:5px}body:has(.atlas-layout) .nav .pill{font-size:9px;padding:5px}}
