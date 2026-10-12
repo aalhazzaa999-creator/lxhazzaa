@@ -76,7 +76,7 @@
     if(window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
   }
   function render() {
-    const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r.y).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${esc(r.name||r.id)}</strong><span>${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="record-right"><span class="y">${esc(r.y||'Y غير محدد')}</span><span class="record-hint">عرض المعلومات والدراسة ⌄</span></span></button><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
+    const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r.y).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${esc(r.name||r.id)}</strong><span>${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="record-right"><span class="y">${esc(r.y||'Y غير محدد')}</span><span class="record-hint">عرض التفاصيل والدراسات ←</span></span></button><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
   }
   function renderMap() {
     if (!map) return;
@@ -119,9 +119,7 @@
   function detail(r) {
     const panel=$('mapSelection');
     if(!panel)return;
-    $('mapSelectionTitle').textContent=r.name||r.id||'معلومات الرفات';
-    $('mapSelectionBody').innerHTML=detailMarkup(r);
-    panel.hidden=false;
+    panel.hidden=true;
     selectRecord(r,null);
   }
   function initMap() {
@@ -160,13 +158,8 @@
       behavior:'smooth'
     })
   });function expandRecord(button) {
-    const panel=button.parentElement.querySelector('.inline-detail');
-    if(!panel)return;
-    const opening=panel.hidden;
-    document.querySelectorAll('.record-expand[aria-expanded="true"]').forEach(b=>{if(b!==button){b.setAttribute('aria-expanded','false');const p=b.parentElement.querySelector('.inline-detail');if(p)p.hidden=true;}});
-    button.setAttribute('aria-expanded',String(opening));
-    panel.hidden=!opening;
-    if(opening){const record=filtered[Number(button.dataset.idx)];if(record)selectRecord(record,button);}
+    const record=filtered[Number(button.dataset.idx)];
+    if(record)selectRecord(record,button);
   }
   $('records').addEventListener('click',e=>{const button=e.target.closest('button.record-expand');if(button)expandRecord(button);});
   $('recordDetailClose').addEventListener('click',()=>{ $('recordDetailTitle').textContent='تفاصيل الرفاة والدراسات';$('recordDetailBody').innerHTML='<p class="smallnote">اختر عينة من نتائج البحث لعرض بياناتها ومراجعها هنا.</p>';$('recordDetailClose').hidden=true;document.querySelectorAll('.record-expand').forEach(b=>{b.setAttribute('aria-selected','false');b.setAttribute('aria-expanded','false')}); });
