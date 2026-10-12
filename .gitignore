@@ -1,0 +1,16 @@
+# Local and generated files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+node_modules/
+*.log
+*.tmp
+*.bak
+
+# Keep published atlas JSON and committed archival snapshots tracked.
