@@ -83,17 +83,29 @@
   }
   function siteResearchFor(r,sampleStudies) {
     if(!r.site||!String(r.site).trim())return [];
-    const normalized=v=>String(v??'').trim().toLocaleLowerCase();
-    const sampleKeys=new Set(sampleStudies.map(x=>normalized(x.doi||x.url||x.title)));
+    const norm=v=>String(v??'').trim().toLocaleLowerCase();
+    const sampleKeys=new Set(sampleStudies.map(x=>norm(x.doi||x.url||x.title)));
     const seen=new Set(),studies=[];
     for(const record of all){
-      if(normalized(record.site)!==normalized(r.site)||
-        (r.country&&record.country&&normalized(record.country)!==normalized(r.country)))continue;
-      const sourceStudies=researchFor(record);
-      for(const study of sourceStudies){
-        const key=normalized(study.doi||study.url||study.title);
+      if(norm(record.site)!==norm(r.site)||
+        (r.country&&record.country&&norm(record.country)!==norm(r.country)))continue;
+      const rawStudies=[...(Array.isArray(record.studies)?record.studies:record.studies?[record.studies]:[]),
+        ...(Array.isArray(record.publications)?record.publications:record.publications?[record.publications]:[]),
+        ...(Array.isArray(record.references)?record.references:record.references?[record.references]:[]),
+        ...(Array.isArray(record.research)?record.research:record.research?[record.research]:[])];
+      if(record.study||record.doi)rawStudies.push({title:record.study||record.reference||'مرجع علمي',doi:record.doi,url:studyUrl(record),year:record.publicationYear||record.studyYear||record.year});
+      for(const raw of rawStudies){
+        const item=typeof raw==='string'?{title:raw}:raw;
+        if(!item||typeof item!=='object')continue;
+        const title=String(item.title||item.study||item.name||item.paperTitle||'مرجع علمي').trim();
+        const doi=String(item.doi||'').trim();
+        const date=String(item.publicationDate||item.publishedAt||item.datePublished||item.date||item.publicationYear||item.year||record.publicationYear||record.studyYear||'').trim();
+        const institution=String(item.institution||item.organization||item.university||item.museum||item.team||item.publisher||record.institution||'').trim();
+        let url='';try{const u=new URL(String(item.url||item.link||item.studyUrl||''));if(u.protocol==='https:')url=u.href;}catch(e){}
+        if(!url&&/^10\\.\\d{4,9}\\/[\\w.()/:;+-]+$/i.test(doi))url='https://doi.org/'+encodeURI(doi);
+        const key=norm(doi||url||title);
         if(!key||sampleKeys.has(key)||seen.has(key))continue;
-        seen.add(key);studies.push(study);
+        seen.add(key);studies.push({title,doi,date,institution,url,scope:'site'});
       }
     }
     return studies.sort((a,b)=>(parseInt(b.date,10)||0)-(parseInt(a.date,10)||0));
