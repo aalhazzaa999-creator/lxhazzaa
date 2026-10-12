@@ -543,3 +543,39 @@ body:has(.atlas-layout) .stat strong {color:#D9C6A7}
 .leaflet-container .leaflet-interactive {cursor:pointer}
 .leaflet-container .leaflet-zoom-animated {transform-origin:0 0}
 .leaflet-container img {max-width:none!important;max-height:none!important}
+
+/* LX HUMAN visual system: heritage black, antique gold, editorial masthead */
+.atlas-hero{position:relative;isolation:isolate;min-height:280px;overflow:hidden;margin:28px 0 20px;border:1px solid #665139;border-radius:18px;background:radial-gradient(ellipse at 28% 50%,#263544 0%,#121B27 42%,#080E12 82%);display:flex;align-items:center;padding:32px 7%}
+.atlas-hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,#080E1288 74%),repeating-linear-gradient(0deg,transparent 0 39px,#D4AF7C07 40px)}
+.atlas-hero-content{position:relative;z-index:2;max-width:720px}
+.atlas-hero .eyebrow{letter-spacing:2px;color:#D4AF7C;font-size:12px;margin:14px 0}
+.atlas-hero h1{font-size:clamp(30px,4vw,51px);line-height:1.4;margin:8px 0;color:#F5F1E8;text-shadow:0 3px 20px #000}
+.atlas-hero p{color:#D9C6A7;font-size:15px;margin:6px 0 18px}
+.atlas-hero-rule{width:135px;height:2px;background:linear-gradient(90deg,#B08A56,transparent)}
+.atlas-emblem{display:inline-flex;align-items:baseline;gap:8px;font:bold 38px Georgia,serif;letter-spacing:-4px;color:#D4AF7C;text-shadow:0 2px 22px #B08A5644}
+.atlas-emblem span{font:bold 14px Tahoma,system-ui,sans-serif;letter-spacing:4px;color:#F5F1E8}
+.atlas-hero-orbit{position:absolute;z-index:1;left:6%;top:50%;transform:translateY(-50%);width:260px;height:260px;border-radius:50%;border:1px solid #D4AF7C75;background:radial-gradient(circle at 35% 28%,#C7A97C55,transparent 25%),radial-gradient(circle at 65% 72%,#0D2535,#060A10 72%);box-shadow:0 0 55px #D4AF7C18,inset -26px -14px 48px #000a;opacity:.75}
+.atlas-hero-orbit:before,.atlas-hero-orbit:after{content:"";position:absolute;inset:15% 0;border:1px solid #D4AF7C35;border-radius:50%;transform:rotate(-26deg)}
+.atlas-hero-orbit:after{inset:0 30%;transform:rotate(27deg)}
+.atlas-orbit-one,.atlas-orbit-two,.atlas-orbit-three{position:absolute;border:1px solid #D4AF7C3d;border-radius:50%;inset:30% 0;transform:rotate(28deg)}
+.atlas-orbit-two{inset:0 30%;transform:rotate(-28deg)}
+.atlas-orbit-three{inset:49% 0;transform:none}
+body:has(.atlas-layout) .brandmark{border-color:#B08A56;color:#D4AF7C}
+body:has(.atlas-layout) .stats .stat{border-radius:9px;border-color:#544633}
+body:has(.atlas-layout) .record-item{border-bottom:1px solid #514333}
+body:has(.atlas-layout) .record-item:last-child{border-bottom:0}
+body:has(.atlas-layout) .record-expand{appearance:none;width:100%;text-align:start;background:transparent;color:#F5F1E8;border:0;border-radius:0;align-items:center}
+body:has(.atlas-layout) .record-expand:hover,body:has(.atlas-layout) .record-expand[aria-expanded="true"]{background:#27251F}
+body:has(.atlas-layout) .record-right{display:flex;flex-direction:column;align-items:flex-end;gap:9px}
+body:has(.atlas-layout) .record-hint{color:#D9C6A7;white-space:nowrap}
+body:has(.atlas-layout) .inline-detail{padding:17px 18px 20px;background:#0B1119;border-top:1px solid #514333}
+body:has(.atlas-layout) .inline-detail[hidden]{display:none}
+.inline-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.inline-detail-cell{border:1px solid #3B352D;border-radius:7px;padding:11px;background:#171B20;overflow-wrap:anywhere}
+.inline-detail-cell b{display:block;color:#D4AF7C;font-size:12px;margin-bottom:7px}
+.inline-detail-cell span{color:#F5F1E8;font-size:13px}
+.study-actions{margin-top:16px}
+.study-link{display:inline-flex;border:1px solid #B08A56;color:#F5F1E8;background:#342C20;padding:10px 15px;border-radius:8px;font-size:13px;font-weight:bold}
+.study-link:hover{background:#55422A}
+.study-unavailable{color:#D9C6A7;font-size:13px}
+@media(max-width:800px){.atlas-hero{min-height:250px;padding:26px 6%}.atlas-hero-orbit{left:-80px;width:225px;height:225px;opacity:.35}.inline-detail-grid{grid-template-columns:1fr}.record-right{min-width:110px}}
