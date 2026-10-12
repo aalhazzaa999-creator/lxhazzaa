@@ -1,0 +1,29 @@
+{
+  "brand": "LXHAZZAA",
+  "basePath": "/",
+  "schemaVersion": 1,
+  "platforms": [
+    {
+      "id": "lxhuman",
+      "brandName": "LXHAZZAA / LX HUMAN",
+      "nameAr": "أطلس الرفات القديمة",
+      "path": "/lxhuman/",
+      "legacyPaths": [
+        "/lxhuman/atlas/"
+      ],
+      "status": "existing",
+      "enabled": true
+    },
+    {
+      "id": "lxdocumentary",
+      "brandName": "LXHAZZAA / LX DOCUMENTARY",
+      "nameAr": "أطلس الوثائق والمخطوطات",
+      "path": "/lxdocumentary/",
+      "legacyPaths": [
+        "/manuscripts/"
+      ],
+      "status": "planned",
+      "enabled": false
+    }
+  ]
+}
