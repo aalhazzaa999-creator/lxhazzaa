@@ -26,6 +26,55 @@
     const link=studyUrl(r);
     return '<div class="inline-detail-grid">'+pairs.filter(([,v])=>v!==''&&v!==null&&v!==undefined).map(([k,v])=>'<div class="inline-detail-cell"><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div>').join('')+'</div><div class="study-actions">'+(link?'<a class="study-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">فتح الدراسة أو المصدر العلمي ↗</a>':'<span class="study-unavailable">رابط الدراسة غير متوفر لهذه العينة</span>')+'</div>';
   }
+
+  function researchFor(r) {
+    const studies=[],seen=new Set();
+    const add=(item,record)=>{
+      if(!item)return;
+      if(typeof item==='string')item={title:item};
+      const title=String(item.title||item.study||item.name||record.study||record.reference||'مرجع علمي مرتبط بالعينة').trim();
+      const institution=String(item.institution||item.organization||item.university||item.museum||item.researchTeam||item.team||item.publisher||record.institution||record.organization||record.researchTeam||'').trim();
+      const doi=String(item.doi||record.doi||'').trim();
+      const raw=String(item.url||item.link||item.studyUrl||'').trim();
+      let url='';
+      if(/^https:\/\//i.test(raw)){try{const u=new URL(raw);if(u.protocol==='https:')url=u.href}catch(e){}}
+      if(!url&&/^10\.\d{4,9}\/[\w.()/:;+-]+$/i.test(doi))url='https://doi.org/'+encodeURI(doi);
+      if(!url&&!item.url)url=studyUrl(record);
+      const key=(doi||url||title).toLocaleLowerCase();
+      if(!key||seen.has(key))return;
+      seen.add(key);studies.push({title,institution,url,doi});
+    };
+    const relevant=all.filter(x=>x===r||(
+      r.site&&x.site&&r.site.trim().toLocaleLowerCase()===x.site.trim().toLocaleLowerCase()&&
+      (!r.country||!x.country||r.country===x.country)
+    ));
+    for(const record of relevant){
+      const collections=[record.studies,record.publications,record.references,record.research];
+      for(const items of collections){
+        if(Array.isArray(items))items.forEach(item=>add(item,record));
+        else if(items&&typeof items==='object')add(items,record);
+      }
+      if(record.study||record.doi||record.reference)add({title:record.study||record.reference||'مرجع علمي',doi:record.doi},record);
+    }
+    return studies;
+  }
+  function selectRecord(r,button) {
+    const panel=$('recordDetailPanel');if(!panel)return;
+    document.querySelectorAll('.record-expand').forEach(b=>{
+      b.setAttribute('aria-selected',String(b===button));
+      b.setAttribute('aria-expanded',String(b===button));
+    });
+    $('recordDetailTitle').textContent=r.name||r.id||'تفاصيل الرفاة';
+    const studies=researchFor(r);
+    $('recordDetailBody').innerHTML=detailMarkup(r).replace(/<div class="study-actions">[\s\S]*?<\/div>$/,'')+
+      '<h4 class="research-heading">الدراسات والجهات البحثية المرتبطة ('+fmt(studies.length)+')</h4>'+
+      (studies.length?studies.map(x=>'<article class="research-item"><strong>'+esc(x.title)+'</strong>'+
+        (x.institution?'<small>الجهة البحثية: '+esc(x.institution)+'</small>':'<small>الجهة البحثية غير مذكورة في السجل</small>')+
+        (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">رابط الدراسة أو المصدر ↗</a>':'<span class="unverified">لا يتوفر رابط موثق في البيانات الحالية</span>')+
+        '</article>').join(''):'<p class="smallnote">لا توجد دراسات موثقة مرتبطة بهذه العينة أو الموقع في البيانات المحمّلة.</p>');
+    $('recordDetailClose').hidden=false;
+    if(window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }
   function render() {
     const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r.y).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${esc(r.name||r.id)}</strong><span>${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="record-right"><span class="y">${esc(r.y||'Y غير محدد')}</span><span class="record-hint">عرض المعلومات والدراسة ⌄</span></span></button><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
   }
@@ -73,7 +122,7 @@
     $('mapSelectionTitle').textContent=r.name||r.id||'معلومات الرفات';
     $('mapSelectionBody').innerHTML=detailMarkup(r);
     panel.hidden=false;
-    panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+    selectRecord(r,null);
   }
   function initMap() {
     if(typeof L==='undefined') {
@@ -117,9 +166,10 @@
     document.querySelectorAll('.record-expand[aria-expanded="true"]').forEach(b=>{if(b!==button){b.setAttribute('aria-expanded','false');const p=b.parentElement.querySelector('.inline-detail');if(p)p.hidden=true;}});
     button.setAttribute('aria-expanded',String(opening));
     panel.hidden=!opening;
-    if(opening){const record=filtered[Number(button.dataset.idx)];if(record)panel.innerHTML=detailMarkup(record);}
+    if(opening){const record=filtered[Number(button.dataset.idx)];if(record)selectRecord(record,button);}
   }
   $('records').addEventListener('click',e=>{const button=e.target.closest('button.record-expand');if(button)expandRecord(button);});
+  $('recordDetailClose').addEventListener('click',()=>{ $('recordDetailTitle').textContent='تفاصيل الرفاة والدراسات';$('recordDetailBody').innerHTML='<p class="smallnote">اختر عينة من نتائج البحث لعرض بياناتها ومراجعها هنا.</p>';$('recordDetailClose').hidden=true;document.querySelectorAll('.record-expand').forEach(b=>{b.setAttribute('aria-selected','false');b.setAttribute('aria-expanded','false')}); });
   $('mapSelectionClose').addEventListener('click',()=>{$('mapSelection').hidden=true;});$('close').addEventListener('click',()=>$('detail').style.display='none');$('detail').addEventListener('click',e=> {
     if(e.target===$('detail'))$('detail').style.display='none'
   });document.addEventListener('keydown',e=> {
