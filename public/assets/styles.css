@@ -791,3 +791,10 @@ body:has(.atlas-layout) .atlas-home-button{direction:rtl;gap:8px;min-height:40px
  body:has(.atlas-layout) .topinner>.nav .pill{display:none}
  body:has(.atlas-layout) .atlas-home-button{min-height:36px;padding:7px 10px;font-size:11px}
 }
+
+
+/* Publication entries: date, scope, institution and source links */
+body:has(.atlas-layout) .research-study-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+body:has(.atlas-layout) .research-study-head strong{flex:1 1 200px;min-width:0}
+body:has(.atlas-layout) .research-year{display:inline-block;white-space:nowrap;color:#f0d5a6;border:1px solid #a47c4a;padding:4px 9px;border-radius:8px;font-size:12px}
+body:has(.atlas-layout) .research-scope{color:#c5b7a1;font-size:11px}
