@@ -765,3 +765,10 @@ body:has(.universe-main) .universe-bottom{margin-top:-4px}
  body:has(.universe-main) .node-documents .node-symbol{font-size:65px}
  body:has(.universe-main) .universe-bottom{margin-top:10px}
 }
+
+
+/* Prominent navigation from the remains atlas to LXHAZZAA main portal */
+body:has(.atlas-layout) .atlas-home-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #D4AF7C;border-radius:999px;padding:10px 16px;background:linear-gradient(135deg,#31271c,#0b1018);color:#F1D5A8;font-weight:700;text-decoration:none;white-space:nowrap;box-shadow:0 0 12px #d4af7c18}
+body:has(.atlas-layout) .atlas-home-button:hover,body:has(.atlas-layout) .atlas-home-button:focus-visible{background:#5b4228;color:#fff3df;outline:2px solid #d4af7c55;outline-offset:2px}
+body:has(.atlas-layout) .atlas-home-button>span:first-child{font-size:23px;line-height:14px}
+@media(max-width:600px){body:has(.atlas-layout) .atlas-home-button{padding:8px 10px;font-size:12px;gap:5px}}
