@@ -68,7 +68,12 @@
     $('mapNote').textContent = 'تغطي الخريطة ' + fmt(points.length) + ' سجلًا بإحداثيات، مجمّعة في ' + fmt(groups.size) + ' مجموعة حسب مستوى التكبير. الذهبي: موقع دولة تقريبي. الأزرق: موقع أثري أو منطقة. لا تمثل النقاط قبورًا مؤكدة.';
   }
   function detail(r) {
-    $('detailTitle').textContent=r.name||r.id;const pairs=[['معرّف السجل',r.id],['AADR Genetic ID',r.geneticId],['AADR Individual ID',r.individualId],['الدولة',r.country],['الموقع الأثري',r.site],['نوع الموقع',r.locationType==='country'?'تقريبي على مستوى الدولة':r.locationType==='site'?'موقع أثري / محلية':'غير محدد'],['دقة الموقع',r.locationAccuracy],['خط العرض',r.lat],['خط الطول',r.lng],['Y-DNA',r.y],['تصنيف Y',r.yRoot],['mtDNA',r.mt],['العمر BP',r.ageBP],['العمر النصي',r.ageText],['طريقة التأريخ',r.dating],['الثقافة الأثرية',r.culture],['الجنس الجزيئي',r.sex],['حالة الربط',r.match],['المصدر',r.source],['المرجع',r.reference],['عنوان الدراسة',r.study],['DOI',r.doi],['ملاحظات',r.notes]];$('detailBody').innerHTML=pairs.filter(([,v])=>v!==''&&v!==null&&v!==undefined).map(([k,v])=>`<div><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join('');$('detail').style.display='grid'
+    const panel=$('mapSelection');
+    if(!panel)return;
+    $('mapSelectionTitle').textContent=r.name||r.id||'معلومات الرفات';
+    $('mapSelectionBody').innerHTML=detailMarkup(r);
+    panel.hidden=false;
+    panel.scrollIntoView({behavior:'smooth',block:'nearest'});
   }
   function initMap() {
     if(typeof L==='undefined') {
@@ -115,7 +120,7 @@
     if(opening){const record=filtered[Number(button.dataset.idx)];if(record)panel.innerHTML=detailMarkup(record);}
   }
   $('records').addEventListener('click',e=>{const button=e.target.closest('button.record-expand');if(button)expandRecord(button);});
-  $('close').addEventListener('click',()=>$('detail').style.display='none');$('detail').addEventListener('click',e=> {
+  $('mapSelectionClose').addEventListener('click',()=>{$('mapSelection').hidden=true;});$('close').addEventListener('click',()=>$('detail').style.display='none');$('detail').addEventListener('click',e=> {
     if(e.target===$('detail'))$('detail').style.display='none'
   });document.addEventListener('keydown',e=> {
     if(e.key==='Escape')$('detail').style.display='none'
