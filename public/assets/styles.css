@@ -818,3 +818,13 @@ body:has(.atlas-layout) .research-scope{color:#c5b7a1;font-size:11px}
 .lx-auth-close{position:absolute;top:12px;left:12px;font-size:28px}
 #lxAuthStatus{min-height:22px;font-size:13px;line-height:1.6;color:#e5c78d}
 .footer .container{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+
+.lx-social-login{display:flex;flex-direction:column;gap:9px}
+.lx-social-login[hidden],.lx-auth-divider[hidden]{display:none!important}
+.lx-social-btn{display:flex;justify-content:center;align-items:center;gap:12px;width:100%;min-height:45px;border:1px solid #9a9a9a;border-radius:9px;background:#fff;color:#171717;font-size:14px;font-weight:700;cursor:pointer;direction:rtl}
+.lx-social-btn:nth-child(2){background:#090909;color:#fff;border-color:#777}
+.lx-social-btn:disabled{opacity:.6;cursor:wait}
+.lx-google-g{font-size:22px;font-weight:800;color:#4285f4;font-family:Arial,sans-serif}
+.lx-apple-mark{font-size:18px;color:#fff}
+.lx-auth-divider{display:flex;align-items:center;gap:12px;color:#c9c1b6;font-size:12px}
+.lx-auth-divider:before,.lx-auth-divider:after{content:"";flex:1;border-top:1px solid #666}
