@@ -1,39 +1,49 @@
-# LXHAZZAA — technical architecture / المخطط البرمجي
+# LXHAZZAA — المخطط البرمجي
 
-## Release 1: operational public atlas
-- `public/` is the ONLY directory Netlify publishes. No raw workbook, credentials, database schema, or build scripts are published.
-- `public/index.html`: branded LXHAZZAA portal, visitor mode (client-side browsing only). Authentication is intentionally **not implemented**; do not mistake sessionStorage for a user account.
-- `public/lxhuman/atlas/`: operational search/filter/list/detail/map for 27,096 records exported from the master workbook.
-- `public/data/atlas/records-*.json`: public read-only normalized snapshot, split into 3,000-record chunks; `manifest.json` verifies the count.
-- `public/manuscripts/`: clear development placeholder, no fake upload or moderation functionality.
-- `netlify/functions/health.mjs`: simple health endpoint, not an authentication or database API.
+## 1. النشر والملفات
 
-## Data provenance and scientific guardrails
-- Source: `ملف رفاه LXHAZZAA أطلس.xlsx`, worksheet `سجل الرفات`, AADR v66.p1 1240K; DOI https://doi.org/10.7910/DVN/FFIDCW.
-- Master workbook remains in the user's file library and is **not included in the public ZIP**. Regenerate using `python scripts/build_atlas.py '/path/to/workbook.xlsx'`.
-- Preserve `id`, `geneticId`, `individualId`, matching status, method of dating, source and location accuracy.
-- AADR Genetic ID exact matches are distinct from Individual ID links requiring review. Never infer modern ethnic identity from haplogroups.
-- 84 points are approximate country-level coordinates and **not graves**; mark yellow. Site/locality points do not necessarily pinpoint burial.
-- FTDNA/YFull are not verified sample-by-sample; not silently imported.
-- Family/person candidate sheet is **not published**, because it contains explicitly unverified claims.
-- 27,096 rows are actual unique IDs in the workbook; the separate AADR counts describe the source integration, not 27,096 AADR individuals.
-- Data is served as static snapshots; there is no server-side transactional database in release 1.
+- المستودع: `aalhazzaa999-creator/lxhazzaa`، الفرع `main`.
+- Netlify ينشر `public/` فقط وفق `netlify.toml`.
+- ملفات الجذر `index.html` و`styles.css` و`README.txt` بقايا مراحل سابقة، وليست مصدر الموقع المنشور.
+- `lxhazzaa_rebuild_v1.zip` حزمة أرشيفية قديمة؛ ليست مدخل البناء، ولا تُحذف إلا بعد مراجعتها.
+- `public/assets/styles.css` تنسيقات مشتركة؛ أي تغيير فيها قد يؤثر على جميع المنصات.
 
-## Backend / Phase 2
-- `db/migrations/001_initial.sql` provides PostgreSQL schema for data_sources, remains, provenance/match links, research references, manuscripts and translations.
-- Provision a database (e.g., Netlify DB/Postgres) and securely configure `DATABASE_URL` in Netlify environment variables. Do not place secrets in GitHub.
-- Implement authenticated administrative import and review workflow; audit changes; paginate/filter server-side before migrating 27k records to live API.
-- Add proper authentication via trusted identity provider; protect uploads and administration with server-side authorization.
-- Add manuscript upload moderation, original-language transcription then translated versions, rights declarations, and 15-language UI translations.
+## 2. المنصات
 
-## Netlify deployment
-1. Unzip and upload the **contents** of the archive to GitHub repo root, preserving nested folders. Commit to `main`.
-2. Existing Netlify site is already linked to GitHub. `netlify.toml` sets `publish = "public"` and `functions = "netlify/functions"`; no build command required.
-3. Check `https://lxhazzaa.netlify.app/`, `/lxhuman/atlas/`, `/manuscripts/`, `/api/health`.
-4. If the site is blank or 404, verify `netlify.toml`, `public/index.html`, and all `public/data/atlas/records-*.json` exist on the GitHub branch.
-5. No need to delete the old root `index.html` or `styles.css`; they are ignored by the `public` publish setting.
+| المنصة | الملفات | الحالة |
+| --- | --- | --- |
+| بوابة LXHAZZAA | `public/index.html`, `public/assets/home.js` | واجهة زائر؛ دون مصادقة حقيقية |
+| أطلس الرفات | `public/lxhuman/atlas/index.html`, `public/assets/atlas.js` | بحث وفلاتر وسجلات وخريطة |
+| المخطوطات | `public/manuscripts/index.html` | نموذج تعريفي؛ لا رفع أو مراجعة فعلية |
+| صحة الخدمة | `netlify/functions/health.mjs` | فحص بسيط فقط |
 
-## Performance
-- The first atlas visit fetches 10 JSON chunks (~17 MB uncompressed); HTTP compression reduces transfer, but mobile devices may still need time to parse the dataset. Later release should move search/filter to paginated Postgres API and vector map clustering.
-- Map renders up to 750 markers per filtered view; the record list searches all records.
-- Leaflet tiles and library are loaded from external public CDNs; maps need an internet connection.
+## 3. بيانات الأطلس
+
+- المصدر المرجعي: مصنف `ملف رفاه LXHAZZAA أطلس.xlsx`، ورقة `سجل الرفات`.
+- الإصدار المرجعي لـ AADR: `v66.p1 1240K`؛ DOI: https://doi.org/10.7910/DVN/FFIDCW.
+- `public/data/atlas/manifest.json` هو فهرس الأجزاء ومجموع السجلات.
+- الحالة الحالية: **27,096** سجلًا؛ **17,624** بإحداثيات؛ **84** نقطة تقريبية على مستوى الدولة.
+- ملفات `records-01.json` إلى `records-10.json` لقطات عامة للقراءة فقط؛ مجموعها نحو 17 ميجابايت قبل الضغط.
+- المتصفح يحمّل الأجزاء بالتتابع ويعرض بحد أقصى **250 نقطة** في عرض الخريطة لتقليل استهلاك الذاكرة؛ البحث يشمل كل السجلات المحمّلة.
+- الأصفر يعني إحداثيات تقريبية للدولة، وليس قبرًا؛ لا تستنتج انتماءً إثنيًا حديثًا من السلالات.
+- FTDNA وYFull لم يُتحقق من مطابقتهما عينة بعينة.
+- إعادة التوليد: `python scripts/build_atlas.py '/path/to/workbook.xlsx'`، بعد مراجعة مصدر المصنف وبنيته.
+- لا يُنشر المصنف الأصلي أو أي بيانات أسرية غير متحقق منها.
+
+## 4. ملاحظات صيانة مهمة
+
+1. **لا تغيّر الهوية البصرية أثناء تنظيف الكود.** النسخة الأصلية للأطلس بالأسود والذهبي والبانر الكروي هي المرجع البصري.
+2. لا تُعدّل ملفات JSON تلقائيًا لأغراض التنسيق؛ حافظ على المعرّفات والإحداثيات والمصادر.
+3. عند فشل الأطلس، افحص `manifest.json`، تحميل أجزاء JSON، أخطاء JavaScript، ومكتبة Leaflet.
+4. لا تعتبر نجاح نشر Netlify اختبارًا لعمل المتصفح؛ يلزم فحص الخريطة والفلاتر عمليًا.
+5. حافظ على نسخة قابلة للرجوع عبر تاريخ GitHub قبل أي تغيير كبير.
+6. يفضّل نقل البحث لاحقًا إلى واجهة API بترقيم صفحات على الخادم؛ تحميل 27 ألف سجل دفعة واحدة قد يظل مكلفًا للجوال.
+
+## 5. مراحل لم تُنفّذ
+
+- تسجيل دخول حقيقي وإدارة صلاحيات الخادم.
+- قاعدة بيانات PostgreSQL تشغيلية وربط الاستيراد والإدارة.
+- رفع المخطوطات والمراجعة والتفريغ والترجمة متعددة اللغات.
+- مطابقة كاملة للهوية الأصلية في الموقع المنشور.
+
+توجد مسودة مخطط PostgreSQL في `db/migrations/001_initial.sql`، لكنها ليست دليلًا على وجود قاعدة تشغيلية.
