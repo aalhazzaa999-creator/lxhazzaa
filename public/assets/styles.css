@@ -477,3 +477,23 @@ button {
 .leaflet-container {
   font-family:Tahoma,system-ui,sans-serif!important
 }
+
+/* LX HUMAN: approved dark/gold atlas palette; preserve shared portal layout. */
+body:has(.atlas-layout) {
+  --bg:#080E12;--panel:#1C1F24;--panel2:#2E2A24;
+  --gold:#B08A56;--muted:#D9C6A7;--text:#F5F1E8;--line:#4D4031;
+  background:#080E12;
+}
+body:has(.atlas-layout) .topbar {background:#080E12f2}
+body:has(.atlas-layout) .sidebar,
+body:has(.atlas-layout) .stat,
+body:has(.atlas-layout) .results,
+body:has(.atlas-layout) .dialog,
+body:has(.atlas-layout) .detail-grid div {background:#151B1F;border-color:#514333}
+body:has(.atlas-layout) .field input,
+body:has(.atlas-layout) .field select {background:#080E12;border-color:#514333}
+body:has(.atlas-layout) .record:hover {background:#29261F}
+#map {position:relative;overflow:hidden;isolation:isolate;background:#24282A;min-width:0}
+#map .leaflet-pane,#map .leaflet-control-container {max-width:none}
+.atlas-layout > section {min-width:0;overflow:hidden}
+@media(max-width:800px){#map{height:360px}.atlas-layout{gap:12px}}
