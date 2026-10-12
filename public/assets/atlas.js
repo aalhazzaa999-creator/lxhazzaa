@@ -1,5 +1,5 @@
 (()=> {
-  'use strict';const $=id=>document.getElementById(id);let all=[],filtered=[],page=0,map=null,layer=null,manifest=null,canvasRenderer=null,searchCircle=null;const PAGE=25,MAX_MARKERS=250;const fmt=n=>Number(n||0).toLocaleString('ar-SA');const esc=v=>String(v??'').replace(/[&<>"']/g,c=>( {
+  'use strict';const $=id=>document.getElementById(id);let all=[],filtered=[],page=0,map=null,layer=null,manifest=null,canvasRenderer=null,searchCircle=null,mapSelectionRecords=null;const PAGE=25,MAX_MARKERS=250;const fmt=n=>Number(n||0).toLocaleString('ar-SA');const esc=v=>String(v??'').replace(/[&<>"']/g,c=>( {
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }
   [c]));const fields=['q','root','country','sex','locationType','radius'];let timer;function distance(a,b,c,d) {
@@ -11,7 +11,7 @@
     })
   }
   function filter() {
-    const q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));page=0;drawSearchCircle();render()
+    const q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
   }
   function studyUrl(r) {
     const raw=String(r.doi||'').trim();
@@ -58,7 +58,7 @@
     }
     return studies;
   }
-  function selectRecord(r,button) {
+  function selectRecord(r,button,scrollToPanel=true) {
     const panel=$('recordDetailPanel');if(!panel)return;
     document.querySelectorAll('.record-expand').forEach(b=>{
       b.setAttribute('aria-selected',String(b===button));
@@ -73,7 +73,7 @@
         (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">رابط الدراسة أو المصدر ↗</a>':'<span class="unverified">لا يتوفر رابط موثق في البيانات الحالية</span>')+
         '</article>').join(''):'<p class="smallnote">لا توجد دراسات موثقة مرتبطة بهذه العينة أو الموقع في البيانات المحمّلة.</p>');
     $('recordDetailClose').hidden=false;
-    if(window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
+    if(scrollToPanel&&window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
   }
   function render() {
     const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r.y).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${esc(r.name||r.id)}</strong><span>${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="record-right"><span class="y">${esc(r.y||'Y غير محدد')}</span><span class="record-hint">عرض التفاصيل والدراسات ←</span></span></button><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
@@ -101,7 +101,8 @@
       const projected = map.project([Number(r.lat), Number(r.lng)], zoom);
       const key = Math.floor(projected.x / cellSize) + ':' + Math.floor(projected.y / cellSize);
       let group = groups.get(key);
-      if (!group) { group = { count: 0, lat: 0, lng: 0, sample: r, country: true }; groups.set(key, group); }
+      if (!group) { group = { count: 0, lat: 0, lng: 0, sample: r, country: true, records: [] }; groups.set(key, group); }
+      group.records.push(r);
       group.count++;
       group.lat += Number(r.lat);
       group.lng += Number(r.lng);
@@ -119,19 +120,32 @@
         radius: g.count > 1 ? Math.min(19, 6 + Math.log2(g.count) * 1.6) : 5,
         weight: 1.5, color:'#0B1018', fillColor:color, fillOpacity:.86, renderer:canvasRenderer
       });
-      marker.bindPopup(g.count > 1
-        ? '<b>' + fmt(g.count) + ' عينة متقاربة</b><div>كبّر الخريطة لعرض مواقع أكثر دقة</div>'
-        : '<b>' + esc(g.sample.name || g.sample.id) + '</b><div>' + esc(g.sample.site || g.sample.country) + '</div><div>' + esc(g.sample.y || '') + '</div>');
-      marker.on('click', () => { if (g.count > 1) map.setView([g.lat,g.lng],Math.min(map.getZoom()+2,16)); else detail(g.sample); });
+      // Stable map selection: do not open a transient Leaflet popup or auto-zoom.
+      marker.on('click', () => selectMapGroup(g));
       marker.addTo(layer);
     }
     $('mapNote').textContent = 'تغطي الخريطة ' + fmt(points.length) + ' سجلًا بإحداثيات، مجمّعة في ' + fmt(groups.size) + ' مجموعة حسب مستوى التكبير. الذهبي: موقع دولة تقريبي. الأزرق: موقع أثري أو منطقة. لا تمثل النقاط قبورًا مؤكدة.';
   }
-  function detail(r) {
+  function selectMapGroup(group) {
+    mapSelectionRecords=new Set(group.records);
     const panel=$('mapSelection');
-    if(!panel)return;
-    panel.hidden=true;
-    selectRecord(r,null);
+    $('mapSelectionTitle').textContent=group.count===1?'عينة محددة على الخريطة':'مجموعة من '+fmt(group.count)+' عينات على الخريطة';
+    const siteNames=[...new Set(group.records.map(r=>r.site||r.country).filter(Boolean))];
+    $('mapSelectionBody').innerHTML=
+      '<p class="smallnote">عدد السجلات المرتبطة بالنقطة: <strong>'+fmt(group.count)+'</strong>. تم حصر قائمة نتائج البحث في هذه المجموعة؛ اضغط على أي عينة لقراءة بياناتها ودراساتها.</p>'+
+      '<p class="smallnote">المواقع الممثلة: '+esc(siteNames.slice(0,6).join('، ')||'غير محددة')+
+      (siteNames.length>6?'، وغيرها':'')+'</p>'+
+      '<p class="smallnote">تنبيه: قد تضم الدائرة مواقع متقاربة جُمعت بصريًا وفق مستوى تكبير الخريطة، وليست بالضرورة موقعًا أثريًا واحدًا.</p>'+
+      '<button type="button" id="clearMapGroup" class="btn ghost">إظهار جميع النتائج من جديد</button>';
+    panel.hidden=false;
+    $('clearMapGroup').addEventListener('click',clearMapGroup);
+    filter();
+    if(group.count===1)selectRecord(group.sample,null,false);
+  }
+  function clearMapGroup() {
+    mapSelectionRecords=null;
+    $('mapSelection').hidden=true;
+    filter();
   }
   function initMap() {
     if(typeof L==='undefined') {
@@ -157,9 +171,10 @@
     }
 }
   fields.forEach(id=>$(id).addEventListener(id==='q'?'input':'change',()=> {
+    mapSelectionRecords=null;$('mapSelection').hidden=true;
     clearTimeout(timer);timer=setTimeout(filter,id==='q'?250:0)
   }));$('recenter').addEventListener('click',filter);$('reset').addEventListener('click',()=> {
-    fields.forEach(id=>$(id).value='');filter()
+    fields.forEach(id=>$(id).value='');mapSelectionRecords=null;$('mapSelection').hidden=true;filter()
   });$('prev').addEventListener('click',()=> {
     page--;render();$('records').scrollIntoView( {
       behavior:'smooth'
@@ -174,7 +189,7 @@
   }
   $('records').addEventListener('click',e=>{const button=e.target.closest('button.record-expand');if(button)expandRecord(button);});
   $('recordDetailClose').addEventListener('click',()=>{ $('recordDetailTitle').textContent='تفاصيل الرفاة والدراسات';$('recordDetailBody').innerHTML='<p class="smallnote">اختر عينة من نتائج البحث لعرض بياناتها ومراجعها هنا.</p>';$('recordDetailClose').hidden=true;document.querySelectorAll('.record-expand').forEach(b=>{b.setAttribute('aria-selected','false');b.setAttribute('aria-expanded','false')}); });
-  $('mapSelectionClose').addEventListener('click',()=>{$('mapSelection').hidden=true;});$('close').addEventListener('click',()=>$('detail').style.display='none');$('detail').addEventListener('click',e=> {
+  $('mapSelectionClose').addEventListener('click',clearMapGroup);$('close').addEventListener('click',()=>$('detail').style.display='none');$('detail').addEventListener('click',e=> {
     if(e.target===$('detail'))$('detail').style.display='none'
   });document.addEventListener('keydown',e=> {
     if(e.key==='Escape')$('detail').style.display='none'
