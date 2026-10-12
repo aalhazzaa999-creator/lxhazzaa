@@ -704,3 +704,12 @@ body:has(.universe-main) .nav button,body:has(.universe-main) .nav select{border
 @media(max-width:1050px){.universe-stage{min-height:1030px}.universe-orbit{height:800px}.orbit-icon{width:90px;height:90px}.orbit-node{width:135px}.orbit-node strong{font-size:12px}.orbit-node small{font-size:9px}.node-symbol{font-size:43px}.globe-hazzaa{font-size:18px;letter-spacing:7px}.globe-slogan{font-size:11px}.globe-brand small{font-size:8px}}
 @media(max-width:700px){body:has(.universe-main) .topinner{min-height:64px}.header-lx{font-size:34px}.header-hazzaa{font-size:10px;letter-spacing:1px}body:has(.universe-main) .nav{gap:5px}body:has(.universe-main) .nav button,body:has(.universe-main) .nav select{padding:8px;font-size:11px;max-width:100px}.universe-stage{padding:22px 12px 38px;min-height:0}.universe-intro .eyebrow{font-size:9px;letter-spacing:2px}.universe-intro #heroTitle{font-size:18px}.universe-intro #heroDesc{font-size:11px;line-height:1.7}.universe-orbit{height:auto;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 8px;padding-top:350px;padding-bottom:32px}.universe-globe{width:min(320px,86vw);top:168px}.universe-ring{top:168px;width:min(350px,96vw)}.ring-two{width:min(290px,80vw)}.globe-lx{font-size:95px;letter-spacing:-9px;padding-right:9px}.globe-hazzaa{font-size:14px;letter-spacing:5px;margin:9px 0}.globe-slogan{font-size:10px}.globe-brand small{font-size:7px;letter-spacing:1px}.orbit-node{position:relative;top:auto;left:auto;transform:none;width:100%;gap:6px}.orbit-icon{width:96px;height:96px}.orbit-node strong{font-size:12px}.orbit-node small{font-size:9px}.universe-bottom{padding:0 12px 20px}}
 @media(prefers-reduced-motion:no-preference){.ring-one{animation:lx-orbit-rotate 120s linear infinite}.ring-two{animation:lx-orbit-rotate-reverse 150s linear infinite}@keyframes lx-orbit-rotate{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}@keyframes lx-orbit-rotate-reverse{from{transform:translate(-50%,-50%) rotate(360deg)}to{transform:translate(-50%,-50%) rotate(0)}}}
+
+
+/* Active platforms only: two orbiting destinations until further launches */
+body:has(.universe-main) .node-remains{left:18%;top:56%}
+body:has(.universe-main) .node-documents{left:82%;top:56%}
+@media(max-width:700px){
+ body:has(.universe-main) .universe-orbit{grid-template-columns:repeat(2,minmax(0,1fr));padding-top:350px;gap:14px 8px}
+ body:has(.universe-main) .node-remains,body:has(.universe-main) .node-documents{left:auto;top:auto}
+}
