@@ -1,17 +1,41 @@
-# LXHAZZAA — Research Universe
+# LXHAZZAA
 
-**Release:** v1.0 foundation / actual ancient-remains data snapshot.
+بوابة LXHAZZAA البحثية — موقع ثابت منشور عبر **Netlify** من الفرع `main` في GitHub.
 
-## Contains
-- Main portal, visitor entry, Arabic/English intro
-- Ancient Remains Atlas: 27,096 normalized records, searchable and filterable, mapped when coordinates exist
-- AADR v66.p1 provenance, references and Y-lineage summaries
-- Manuscripts platform skeleton (not a finished database)
-- PostgreSQL schema and reproducible XLSX import script
+## المسارات المعتمدة
 
-## Deploy
-Unzip; upload **all contents including subfolders** to the root of `aalhazzaa999-creator/lxhazzaa`, commit on `main`. Netlify reads `netlify.toml` and publishes `public/`.
+| المسار | الوظيفة |
+| --- | --- |
+| `public/index.html` | البوابة الرئيسية |
+| `public/lxhuman/atlas/index.html` | أطلس الرفات القديمة |
+| `public/manuscripts/index.html` | صفحة موسوعة الوثائق (قيد التطوير) |
+| `public/assets/atlas.js` | البحث، الفلاتر، تفاصيل السجلات والخريطة |
+| `public/assets/home.js` | تفاعل البوابة الرئيسية |
+| `public/assets/styles.css` | أنماط الواجهة المشتركة |
+| `public/data/atlas/` | بيانات الأطلس العامة وفهرسها |
+| `scripts/build_atlas.py` | إعادة توليد ملفات البيانات من المصنف الأصلي |
+| `db/migrations/` | مخطط قاعدة بيانات مستقبلي؛ غير مشغّل حاليًا |
+| `netlify/functions/health.mjs` | نقطة فحص الخدمة |
 
-**IMPORTANT:** This is not the original ChatGPT Sites application code; it is a new implementation from the existing master data workbook. Authentication and transactional database have not yet been connected. Do not present the manuscript platform as operational.
+**المجلد المنشور الوحيد هو `public/`.** الملفات `index.html` و`styles.css` في جذر المستودع بقايا نسخة تجريبية غير منشورة؛ احتُفظ بها مؤقتًا للتوثيق وعدم فقدان أي عمل.
 
-Detailed instructions: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+## التشغيل والنشر
+
+1. تُحفظ التغييرات في الفرع `main`.
+2. يتولى Netlify النشر من `public/` وفق `netlify.toml`، دون أمر بناء.
+3. التحقق من:
+   - https://lxhazzaa.netlify.app/
+   - https://lxhazzaa.netlify.app/lxhuman/atlas/
+   - https://lxhazzaa.netlify.app/manuscripts/
+   - https://lxhazzaa.netlify.app/api/health
+
+## قواعد العمل
+
+- الهوية البصرية الأصلية لأطلس الرفات (الأسود والذهبي) هي المرجع المعتمد للاستعادة؛ **لا تغيّر الهوية دون موافقة المالك**.
+- لا تحذف أو تعدّل بيانات `public/data/atlas/` ضمن أعمال تنظيف الكود.
+- لا ترفع مصنف البيانات الأصلي أو كلمات المرور أو مفاتيح الخدمات إلى المستودع.
+- فرّق بين الواجهة المتاحة كزائر وبين تسجيل الدخول الحقيقي: **المصادقة لم تُنفّذ بعد**.
+- موسوعة المخطوطات صفحة تعريفية فقط، وليست خدمة رفع فعّالة.
+- اختبر البحث والخريطة وعدد السجلات قبل أي نشر واسع.
+
+للمزيد: [المخطط البرمجي](docs/ARCHITECTURE.md).
