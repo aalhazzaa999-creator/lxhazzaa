@@ -13,3 +13,32 @@ body:has(.universe-main) .globe-brand{top:56%}
 body:has(.universe-main) .globe-lx{font-family:Georgia,serif;font-weight:400;letter-spacing:-16px;text-shadow:0 6px 30px #000c}
 body:has(.universe-main) .orbit-node strong{text-shadow:0 2px 12px #000;max-width:270px;line-height:1.4}
 @media(max-width:700px){body:has(.universe-main) .brandmark.home-official-monogram{width:40px;height:40px;font-size:23px}body:has(.universe-main) .home-brand-wordmark{font-size:12px;letter-spacing:2px}body:has(.universe-main) .home-brand-wordmark small{font-size:8px}body:has(.universe-main) .node-documents .documentary-photo img{object-position:76% center}body:has(.universe-main) .globe-brand{top:57%}}
+
+/* V2 exact assets, circular orbital layout */
+body:has(.universe-main) .home-brand-logo{width:142px;height:55px;object-fit:contain;object-position:center}
+body:has(.universe-main) .home-globe-logo{width:min(58%,320px);height:auto;object-fit:contain;filter:drop-shadow(0 8px 16px #000b)}
+body:has(.universe-main) .universe-orbit{width:min(920px,94vw);height:auto;aspect-ratio:1;max-width:920px}
+body:has(.universe-main) .universe-ring{width:90%;height:90%;aspect-ratio:1;top:50%;left:50%;border-radius:50%}
+body:has(.universe-main) .ring-two{width:77%;height:77%}
+body:has(.universe-main) .universe-globe{width:72%;height:72%;aspect-ratio:1;background-image:url('/assets/LXHAZZAA_Identity_Assets_v2%202/official-globe-reference.webp');background-size:cover;background-position:center}
+body:has(.universe-main) .universe-globe:before{background:none;opacity:0}
+body:has(.universe-main) .universe-globe:after{background:radial-gradient(circle at 65% 22%,#ffd28b22,transparent 42%),linear-gradient(100deg,#0009,transparent 50%,#0004)}
+body:has(.universe-main) .globe-brand{z-index:5;top:56%;width:100%;display:flex;justify-content:center}
+body:has(.universe-main) .orbit-node{z-index:6}
+body:has(.universe-main) .node-remains{left:7%;top:50%}
+body:has(.universe-main) .node-documents{left:93%;top:50%}
+body:has(.universe-main) .orbit-icon{border-radius:50%;overflow:hidden}
+body:has(.universe-main) .orbit-icon img{width:100%;height:100%;object-fit:cover;object-position:center;transform:none;filter:none}
+body:has(.universe-main) .node-documents .documentary-photo img{object-fit:cover;object-position:center;transform:none;filter:none}
+@media(max-width:700px){
+body:has(.universe-main) .home-brand-logo{width:102px;height:43px}
+body:has(.universe-main) .universe-orbit{width:100%;aspect-ratio:1;height:auto}
+body:has(.universe-main) .universe-globe{width:68%;height:68%}
+body:has(.universe-main) .node-remains{left:13%;top:52%}
+body:has(.universe-main) .node-documents{left:87%;top:52%}
+body:has(.universe-main) .orbit-icon{width:68px;height:68px}
+body:has(.universe-main) .orbit-node{width:108px}
+body:has(.universe-main) .orbit-node strong{font-size:11px}
+body:has(.universe-main) .orbit-node small{font-size:8px}
+body:has(.universe-main) .home-globe-logo{width:58%}
+}
