@@ -51,7 +51,8 @@ html[data-lx-theme="light"] .card{background:#fff;border-color:#d5c5af}
 html[data-lx-theme="light"] :is(h1,h2,.card h2){color:#704917}
 html[data-lx-theme="light"] .overlay{background:#17202799}
 /* Keep the official imagery intact while making the surrounding portal daylight. */
-html[data-lx-theme="light"] body:has(.universe-main) .universe-stage{background:#e9e5dc;background-image:linear-gradient(#f7f4eddf,#f7f4eddf),url('/assets/LXHAZZAA_Separated_Assets_V3/lx-space-background.webp');background-position:center;background-size:cover}
+html[data-lx-theme="light"] body:has(.universe-main) .universe-stage{background:#f7f4ed;background-image:linear-gradient(#f7f4edf6,#f7f4edf6),url('/assets/LXHAZZAA_Separated_Assets_V3/lx-space-background.webp');background-position:center;background-size:cover}
 html[data-lx-theme="light"] body:has(.universe-main) .universe-stage:before{display:none}
+html[data-lx-theme="light"] body:has(.universe-main) .universe-intro .eyebrow{color:#704917}
 html[data-lx-theme="light"] body:has(.atlas-layout) .stat strong{color:#704917}
 html[data-lx-theme="light"] body:has(.atlas-layout) .stat span{color:#594f43}
