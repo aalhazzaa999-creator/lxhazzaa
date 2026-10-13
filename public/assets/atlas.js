@@ -2,7 +2,9 @@
   'use strict';const $=id=>document.getElementById(id);let all=[],filtered=[],page=0,map=null,layer=null,manifest=null,canvasRenderer=null,searchCircle=null,mapSelectionRecords=null;const PAGE=25,MAX_MARKERS=250;const fmt=n=>Number(n||0).toLocaleString('ar-SA');const esc=v=>String(v??'').replace(/[&<>"']/g,c=>( {
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }
-  [c]));const fields=['q','root','country','sex','locationType','radius'];let timer,mutationToken=0,mutationResolved=null;function distance(a,b,c,d) {
+  [c]));const fields=['q','root','country','sex','locationType','spatialClassification','radius'];let timer,mutationToken=0,mutationResolved=null;const spatialLabels={local:'ساكنة محلية',nonlocal:'وافد من خارج المنطقة',genetic_outlier:'مختلف وراثيًا عن المجموعة المحلية',undetermined:'غير محسوم'};let spatialAnnotations={};
+  function spatialFor(r){const annotation=spatialAnnotations[r.id];return annotation&&Object.hasOwn(spatialLabels,annotation.status)&&annotation.status!=='undetermined'&&typeof annotation.evidence==='string'&&annotation.evidence.trim()&&typeof annotation.source==='string'&&/^https:\/\/[^\s]+$/i.test(annotation.source)?annotation:{status:'undetermined'};}
+  function distance(a,b,c,d) {
     const R=6371,rad=Math.PI/180,x=(c-a)*rad,y=(d-b)*rad;return 2*R*Math.asin(Math.sqrt(Math.sin(x/2)**2+Math.cos(a*rad)*Math.cos(c*rad)*Math.sin(y/2)**2))
   }
   function opt(id,arr) {
@@ -39,7 +41,7 @@
   function guestSearchAllowed(){
     if(window.LXAuth?.getUser()){removeGuestLock();return true;}
     if(showGuestLock())return false;
-    const ids=['q','mutation','root','country','sex','locationType','radius'];
+    const ids=['q','mutation','root','country','sex','locationType','spatialClassification','radius'];
     const signature=ids.map(id=>$(id)?.value?.trim()||'').join('|');
     if(!signature.replaceAll('|','')||signature===lastGuestSearch)return true;
     const used=guestUsed();
@@ -58,7 +60,7 @@
   else showGuestLock();
   function filter() {
     if(!guestSearchAllowed())return;
-    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&mutationResolved.known&&mutationResolved.matches(r.y,r.yRoot)))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
+    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,spatial=$('spatialClassification').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&mutationResolved.known&&mutationResolved.matches(r.y,r.yRoot)))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!spatial||spatialFor(r).status===spatial)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
   }
   function studyUrl(r) {
     const raw=String(r.doi||'').trim();
@@ -69,7 +71,7 @@
     return '';
   }
   function detailMarkup(r) {
-    const pairs=[['معرّف السجل',r.id],['AADR Genetic ID',r.geneticId],['AADR Individual ID',r.individualId],['الدولة',r.country],['الموقع الأثري',r.site],['نوع الموقع',r.locationType==='country'?'تقريبي على مستوى الدولة':r.locationType==='site'?'موقع أثري / محلية':'غير محدد'],['دقة الموقع',r.locationAccuracy],['خط العرض',r.lat],['خط الطول',r.lng],['Y-DNA',r.y],['تصنيف Y',r.yRoot],['mtDNA',r.mt],['العمر BP',r.ageBP],['العمر النصي',r.ageText],['طريقة التأريخ',r.dating],['الثقافة الأثرية',r.culture],['الجنس الجزيئي',r.sex],['حالة الربط',r.match],['المصدر',r.source],['المرجع',r.reference],['عنوان الدراسة',r.study],['DOI',r.doi],['ملاحظات',r.notes]];
+    const spatial=spatialFor(r);const pairs=[['معرّف السجل',r.id],['AADR Genetic ID',r.geneticId],['AADR Individual ID',r.individualId],['الدولة',r.country],['الموقع الأثري',r.site],['التصنيف المكاني وفق الدراسة أو البيانات المنشورة',spatialLabels[spatial.status]],['أساس التصنيف المكاني',spatial.basis||''],['نص الدليل',spatial.evidence||''],['مصدر التصنيف',spatial.source||''],['نوع الموقع',r.locationType==='country'?'تقريبي على مستوى الدولة':r.locationType==='site'?'موقع أثري / محلية':'غير محدد'],['دقة الموقع',r.locationAccuracy],['خط العرض',r.lat],['خط الطول',r.lng],['Y-DNA',r.y],['تصنيف Y',r.yRoot],['mtDNA',r.mt],['العمر BP',r.ageBP],['العمر النصي',r.ageText],['طريقة التأريخ',r.dating],['الثقافة الأثرية',r.culture],['الجنس الجزيئي',r.sex],['حالة الربط',r.match],['المصدر',r.source],['المرجع',r.reference],['عنوان الدراسة',r.study],['DOI',r.doi],['ملاحظات',r.notes]];
     const link=studyUrl(r);
     return '<div class="inline-detail-grid">'+pairs.filter(([,v])=>v!==''&&v!==null&&v!==undefined).map(([k,v])=>'<div class="inline-detail-cell"><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div>').join('')+'</div><div class="study-actions">'+(link?'<a class="study-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">فتح الدراسة أو المصدر العلمي ↗</a>':'<span class="study-unavailable">رابط الدراسة غير متوفر لهذه العينة</span>')+'</div>';
   }
@@ -220,7 +222,7 @@
       const r=await fetch('/data/atlas/manifest.json');if(!r.ok)throw Error('تعذر تحميل فهرس البيانات');manifest=await r.json();$('loading').textContent=`جارٍ تحميل ${manifest.parts.length} أجزاء من البيانات…`;all=[];for(let i=0;i<manifest.parts.length;i++) {
         const p=manifest.parts[i];$('loading').textContent=`جارٍ تحميل البيانات (${i+1} من ${manifest.parts.length})…`;const response=await fetch('/data/atlas/'+encodeURIComponent(p));if(!response.ok)throw Error('تعذر تحميل '+p+' (HTTP '+response.status+')');const part=await response.json();if(!Array.isArray(part))throw Error('صيغة بيانات غير صحيحة في '+p);for(const record of part){if(/^israel$/i.test(String(record.country||'').trim())||String(record.country||'').trim()==='إسرائيل')record.country='Palestine Occupied';}all.push(...part);await new Promise(resolve=>setTimeout(resolve,0));
       }
-      if(all.length!==manifest.total)throw Error('عدد السجلات لا يطابق الفهرس');opt('root',[...new Set(all.map(r=>r.yRoot))]);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';initMap();filter()
+      if(all.length!==manifest.total)throw Error('عدد السجلات لا يطابق الفهرس');try{const sr=await fetch('/data/atlas/spatial-classifications.json');if(sr.ok){const parsed=await sr.json();if(parsed&&typeof parsed.records==='object'&&!Array.isArray(parsed.records))spatialAnnotations=parsed.records;}}catch(e){console.warn('تعذر تحميل التصنيف المكاني:',e)}opt('root',[...new Set(all.map(r=>r.yRoot))]);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';initMap();filter()
     }
     catch(e) {
       $('loading').textContent='خطأ في تحميل البيانات: '+e.message+' — تأكد من رفع مجلد data/atlas كاملًا إلى GitHub.';console.error(e)
