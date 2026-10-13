@@ -34,7 +34,7 @@ document.querySelectorAll('[data-lx-account]').forEach(b=>{b.textContent=user?((
 document.querySelectorAll('[data-lx-member]').forEach(el=>{el.hidden=!user;});
 document.dispatchEvent(new CustomEvent('lx-auth-change',{detail:{signedIn:!!user,role,name:publicName}}));
 }
-async function signOut(){if(sb)await sb.auth.signOut();if(location.pathname.startsWith('/lxdocumentary')){try{await fetch('/api/documentary-session',{method:'DELETE',credentials:'same-origin'});}catch{}if(location.pathname!=='/lxdocumentary/')location.replace('/lxdocumentary/');}await refresh();}
+async function signOut(){if(sb)await sb.auth.signOut();try{await fetch('/api/documentary-session',{method:'DELETE',credentials:'same-origin'});}catch{}if(location.pathname.startsWith('/lxdocumentary')&&location.pathname!=='/lxdocumentary/')location.replace('/lxdocumentary/');await refresh();}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lx-account]');if(b){e.preventDefault();if(user){if(window.LXAccount)window.LXAccount.open();else open();}else open();}});
 window.LXAuth={open,signOut,refresh,getUser:()=>user,getRole:()=>role,configured:!!sb,client:sb};document.addEventListener('lx-profile-change',()=>refresh());
 if(sb){sb.auth.onAuthStateChange(()=>{setTimeout(refresh,0)});(async()=>{const params=new URLSearchParams(location.search);const code=params.get('code');if(code){document.querySelectorAll('[data-lx-account]').forEach(b=>b.textContent='جارٍ إكمال الدخول…');const {error}=await sb.auth.exchangeCodeForSession(code);if(error){open('login');$('lxAuthStatus').textContent='تعذر إكمال تسجيل Google: '+error.message;}else{history.replaceState({},'',location.pathname);}}await refresh();})();}
