@@ -29,7 +29,7 @@ if(mode==='login'){await refresh();close();}else if(mode==='signup'&&result.data
 });
 function accountName(u){const m=u?.user_metadata||{};return String(m.display_name||m.full_name||m.name||'عضو LXHAZZAA').trim().slice(0,80);}
 async function refresh(){
-if(sb){const {data,error}=await sb.auth.getUser();if(error&&error.name!=='AuthSessionMissingError')console.warn('LXHAZZAA auth:',error.message);user=data?.user||null;role='researcher';publicName='';if(user){const {data:p}=await sb.from('profiles').select('role,display_name').eq('id',user.id).maybeSingle();if(p?.role)role=p.role;if(p?.display_name)publicName=p.display_name;else publicName=accountName(user);}}
+if(sb){const {data,error}=await sb.auth.getUser();if(error&&error.name!=='AuthSessionMissingError')console.warn('LXHAZZAA auth:',error.message);user=data?.user||null;role='researcher';publicName='';if(user){const {data:p}=await sb.from('profiles').select('role,display_name').eq('id',user.id).maybeSingle();if(p?.role)role=p.role;if(p?.display_name)publicName=p.display_name;else publicName='حسابي';}}
 document.querySelectorAll('[data-lx-account]').forEach(b=>{b.textContent=user?((publicName||'حسابي')+' · '+({researcher:'باحث',verified_researcher:'باحث مختص',scientific_moderator:'مشرف علمي',admin:'إدارة',owner:'مالك'}[role]||'باحث')):'دخول / تسجيل';b.title=user?'إدارة الحساب وتسجيل الخروج':'الدخول أو إنشاء حساب';});
 document.querySelectorAll('[data-lx-member]').forEach(el=>{el.hidden=!user;});
 document.dispatchEvent(new CustomEvent('lx-auth-change',{detail:{signedIn:!!user,role,name:publicName}}));
