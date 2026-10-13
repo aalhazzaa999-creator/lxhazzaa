@@ -13,7 +13,6 @@ function update(){agree.disabled=busy||missing().some(r=>{const i=rows.indexOf(r
 async function check(){
 const u=auth()?.getUser(),sb=auth()?.client;
 if(!u||!sb){el.hidden=true;identity='';return;}
-if(busy)return;
 const key=u.id;identity=key;errorBox.textContent='';
 const {data,error}=await sb.rpc('lx_current_legal');
 if(identity!==key||auth()?.getUser()?.id!==key)return;
