@@ -2,7 +2,7 @@
 'use strict';
 const cfg=window.LX_AUTH_CONFIG||{},configured=Boolean(cfg.url&&cfg.anonKey&&!cfg.url.includes('YOUR_'));
 const sb=configured&&window.supabase?window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,flowType:'pkce'}}):null;
-let user=null,role='researcher';
+let user=null,role='researcher',publicName='';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const modal=document.createElement('div');modal.className='lx-auth-overlay';modal.hidden=true;
@@ -29,14 +29,14 @@ if(mode==='login'){await refresh();close();}
 });
 function accountName(u){const m=u?.user_metadata||{};return String(m.display_name||m.full_name||m.name||u?.email?.split('@')[0]||'المستخدم').trim().slice(0,80);}
 async function refresh(){
-if(sb){const {data,error}=await sb.auth.getUser();if(error&&error.name!=='AuthSessionMissingError')console.warn('LXHAZZAA auth:',error.message);user=data?.user||null;role='researcher';if(user){const {data:p}=await sb.from('profiles').select('role').eq('id',user.id).maybeSingle();if(p?.role)role=p.role;}}
-document.querySelectorAll('[data-lx-account]').forEach(b=>{b.textContent=user?(role==='owner'||role==='admin'?'LXHAZZAA | الإدارة':'حسابي'):'دخول / تسجيل';b.title=user?'إدارة الحساب وتسجيل الخروج':'الدخول أو إنشاء حساب';});
+if(sb){const {data,error}=await sb.auth.getUser();if(error&&error.name!=='AuthSessionMissingError')console.warn('LXHAZZAA auth:',error.message);user=data?.user||null;role='researcher';publicName='';if(user){const {data:p}=await sb.from('profiles').select('role,display_name').eq('id',user.id).maybeSingle();if(p?.role)role=p.role;if(p?.display_name)publicName=p.display_name;}}
+document.querySelectorAll('[data-lx-account]').forEach(b=>{b.textContent=user?((publicName||'حسابي')+' · '+({researcher:'باحث',verified_researcher:'باحث مختص',scientific_moderator:'مشرف علمي',admin:'إدارة',owner:'مالك'}[role]||'باحث')):'دخول / تسجيل';b.title=user?'إدارة الحساب وتسجيل الخروج':'الدخول أو إنشاء حساب';});
 document.querySelectorAll('[data-lx-member]').forEach(el=>{el.hidden=!user;});
 document.dispatchEvent(new CustomEvent('lx-auth-change',{detail:{signedIn:!!user,role}}));
 }
 async function signOut(){if(sb)await sb.auth.signOut();await refresh();}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-lx-account]');if(b){e.preventDefault();if(user){if(confirm('هل تريد تسجيل الخروج من LXHAZZAA؟'))signOut();}else open();}});
-window.LXAuth={open,signOut,refresh,getUser:()=>user,getRole:()=>role,configured:!!sb,client:sb};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lx-account]');if(b){e.preventDefault();if(user){if(window.LXAccount)window.LXAccount.open();else open();}else open();}});
+window.LXAuth={open,signOut,refresh,getUser:()=>user,getRole:()=>role,configured:!!sb,client:sb};document.addEventListener('lx-profile-change',()=>refresh());
 if(sb){sb.auth.onAuthStateChange(()=>{setTimeout(refresh,0)});(async()=>{const params=new URLSearchParams(location.search);const code=params.get('code');if(code){document.querySelectorAll('[data-lx-account]').forEach(b=>b.textContent='جارٍ إكمال الدخول…');const {error}=await sb.auth.exchangeCodeForSession(code);if(error){open('login');$('lxAuthStatus').textContent='تعذر إكمال تسجيل Google: '+error.message;}else{history.replaceState({},'',location.pathname);}}await refresh();})();}
 const oauthError=new URLSearchParams(location.search).get('error_description')||new URLSearchParams(location.hash.slice(1)).get('error_description');if(oauthError){open('login');$('lxAuthStatus').textContent='لم يكتمل تسجيل الدخول: '+oauthError;}
 setMode('login');
