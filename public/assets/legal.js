@@ -2,7 +2,7 @@
 'use strict';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const el=document.createElement('div');el.className='lx-legal-overlay';el.hidden=true;
-el.innerHTML='<section class="lx-legal-card" dir="rtl" role="dialog" aria-modal="true" aria-labelledby="lxLegalHeading"><div class="lx-legal-mark">LXHAZZAA</div><h2 id="lxLegalHeading">الشروط والأحكام والخصوصية</h2><p class="lx-legal-intro">يرجى قراءة النسخ الحالية قبل تفعيل ميزات حسابك. قد تتغير السياسات مستقبلاً، وسنطلب موافقتك مجددًا على التغييرات التي تستلزم ذلك.</p><div id="lxLegalDocs" class="lx-legal-docs">جارٍ تحميل الشروط…</div><p id="lxLegalError" role="alert"></p><div class="lx-legal-actions"><button id="lxLegalAgree" type="button" disabled>موافق، متابعة إلى حسابي</button><button id="lxLegalLogout" type="button">تسجيل الخروج</button></div></section>';
+el.innerHTML='<section class="lx-legal-card" dir="rtl" role="dialog" aria-modal="true" aria-labelledby="lxLegalHeading"><div class="lx-legal-mark">LXHAZZAA</div><h2 id="lxLegalHeading">الشروط والأحكام والخصوصية</h2><p class="lx-legal-intro">مرحباً بك في LXHAZZAA. باستخدام حسابك، تلتزم باحترام حقوق الآخرين والمصادر العلمية وسياسات المنصة.</p><div id="lxLegalDocs" class="lx-legal-docs">جارٍ تحميل الشروط…</div><p id="lxLegalError" role="alert"></p><div class="lx-legal-actions"><button id="lxLegalAgree" type="button" disabled>موافق، متابعة إلى حسابي</button><button id="lxLegalLogout" type="button">تسجيل الخروج</button></div></section>';
 document.body.appendChild(el);
 const docs=el.querySelector('#lxLegalDocs'),agree=el.querySelector('#lxLegalAgree'),errorBox=el.querySelector('#lxLegalError');
 let rows=[],busy=false,identity='',acceptedKey='';
@@ -10,15 +10,15 @@ const auth=()=>window.LXAuth;
 function missing(){return rows.filter(x=>x.requires_reacceptance&&!x.accepted);}
 function show(){
  el.hidden=false;
- const checks=rows.map((r,i)=>'<label class="lx-legal-check"><input type="checkbox" data-legal-check="'+i+'" '+(r.accepted?'checked disabled':'')+'> '+(r.document_type==='terms'?'أوافق على شروط الاستخدام':'أوافق على سياسة الخصوصية')+' <small>('+esc(r.version)+')</small></label>').join('');
- docs.innerHTML='<div class="lx-legal-summary"><strong>قبل متابعة استخدام حساب LXHAZZAA</strong><p>باستخدام حسابك، تلتزم بحقوق النشر ودقة المساهمات، وتقر بالاطلاع على كيفية معالجة بيانات الحساب. تُحدّث هذه السياسات عند الحاجة، وسنطلب موافقتك مجددًا عند التغييرات التي تستلزم ذلك.</p><details class="lx-legal-details"><summary>قراءة الشروط والسياسات كاملة</summary>'+rows.map(r=>'<section><h3>'+esc(r.title_ar)+' <small>الإصدار '+esc(r.version)+'</small></h3><p>'+esc(r.body_ar)+'</p></section>').join('')+'</details></div><div class="lx-legal-checks">'+checks+'</div>';
+ const checks=rows.map((r,i)=>'<label class="lx-legal-check"><input type="checkbox" data-legal-check="'+i+'" '+(r.accepted?'checked disabled':'')+'> '+(r.document_type==='terms'?'أوافق على شروط الاستخدام':'اطلعت على سياسة الخصوصية وأوافق عليها')+' <small>('+esc(r.version)+')</small></label>').join('');
+ docs.innerHTML='<div class="lx-legal-summary"><strong>قبل متابعة استخدام حساب LXHAZZAA</strong><p>باستخدام حسابك، تلتزم بحقوق النشر ودقة المساهمات، وتقر بالاطلاع على كيفية معالجة بيانات الحساب. تُحدّث هذه السياسات عند الحاجة، وسنطلب موافقتك مجددًا عند التغييرات التي تستلزم ذلك.</p><details class="lx-legal-details"><summary>المزيد من الشروط والأحكام وسياسة الخصوصية</summary>'+rows.map(r=>'<section><h3>'+esc(r.title_ar)+' <small>الإصدار '+esc(r.version)+'</small></h3><p>'+esc(r.body_ar)+'</p></section>').join('')+'</details></div><div class="lx-legal-checks">'+checks+'</div>';
  update();
 }
 function update(){agree.disabled=busy||missing().some(r=>{const i=rows.indexOf(r);return !docs.querySelector('[data-legal-check="'+i+'"]')?.checked;});}
 async function check(){
 const u=auth()?.getUser(),sb=auth()?.client;
 if(!u||!sb){el.hidden=true;identity='';return;}
-const key=u.id;identity=key;errorBox.textContent='';
+const key=u.id;identity=key;acceptedKey='';errorBox.textContent='';
 const {data,error}=await sb.rpc('lx_current_legal');
 if(identity!==key||auth()?.getUser()?.id!==key)return;
 if(error){rows=[];el.hidden=false;docs.textContent='تعذر تحميل النسخ المعتمدة. تحقق من الاتصال وأعد المحاولة.';agree.disabled=true;errorBox.textContent=error.message;return;}
