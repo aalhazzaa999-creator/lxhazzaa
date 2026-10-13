@@ -1,0 +1,21 @@
+/* LXHAZZAA ancient remains: scoped, consistent top navigation; no atlas data/map changes. */
+body:has(.atlas-layout) .atlas-topbar{background:#090b0eF5;border-bottom:1px solid #aa85513d;backdrop-filter:blur(14px)}
+body:has(.atlas-layout) .atlas-topinner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px;direction:rtl}
+body:has(.atlas-layout) .atlas-header-logo{display:flex;align-items:center;justify-content:center;flex:0 0 auto;min-width:110px}
+body:has(.atlas-layout) .atlas-header-logo img{display:block;width:100px;height:66px;object-fit:contain}
+body:has(.atlas-layout) .atlas-header-nav{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,28px);flex:1;min-width:0}
+body:has(.atlas-layout) .atlas-header-nav a{display:inline-flex;align-items:center;justify-content:center;color:#e5d8c0;font-size:13px;white-space:nowrap;padding:10px 0;transition:color .15s}
+body:has(.atlas-layout) .atlas-header-nav a:hover,body:has(.atlas-layout) .atlas-header-nav a:focus-visible{color:#edc388}
+body:has(.atlas-layout) .atlas-header-actions{display:flex;align-items:center;flex:0 0 auto}
+body:has(.atlas-layout) .atlas-header-account{border:1px solid #b18b57;background:transparent;color:#f0d2a0;border-radius:999px;padding:10px 19px;font-weight:600;font-size:13px;white-space:nowrap}
+body:has(.atlas-layout) .atlas-header-account:hover{background:#d4af7c1c}
+body:has(.atlas-layout) #atlasSearch,body:has(.atlas-layout) #atlasRecords{scroll-margin-top:100px}
+@media(max-width:700px){
+ body:has(.atlas-layout) .atlas-topinner{min-height:68px;gap:8px;flex-wrap:wrap;padding:6px 0}
+ body:has(.atlas-layout) .atlas-header-logo{min-width:60px}
+ body:has(.atlas-layout) .atlas-header-logo img{width:66px;height:48px}
+ body:has(.atlas-layout) .atlas-header-actions{margin-inline-start:auto}
+ body:has(.atlas-layout) .atlas-header-account{font-size:11px;padding:8px 11px}
+ body:has(.atlas-layout) .atlas-header-nav{order:3;flex-basis:100%;justify-content:center;gap:20px}
+ body:has(.atlas-layout) .atlas-header-nav a{font-size:11px;padding:4px 0 8px;display:inline-flex!important}
+}
