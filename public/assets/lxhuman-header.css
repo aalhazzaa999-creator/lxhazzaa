@@ -10,6 +10,8 @@ body:has(.atlas-layout) .atlas-header-actions{display:flex;align-items:center;fl
 body:has(.atlas-layout) .atlas-header-account{border:1px solid #b18b57;background:transparent;color:#f0d2a0;border-radius:999px;padding:10px 19px;font-weight:600;font-size:13px;white-space:nowrap}
 body:has(.atlas-layout) .atlas-header-account:hover{background:#d4af7c1c}
 body:has(.atlas-layout) #atlasSearch,body:has(.atlas-layout) #atlasRecords{scroll-margin-top:100px}
+body:has(.atlas-layout) .coordinate-filter-toggle{width:100%;text-align:center}
+body:has(.atlas-layout) .coordinate-filter-toggle[aria-pressed="true"]{background:#b9955e;color:#111820;border-color:#e5c58e;font-weight:700}
 @media(max-width:700px){
  body:has(.atlas-layout) .atlas-topinner{min-height:68px;gap:8px;flex-wrap:wrap;padding:6px 0}
  body:has(.atlas-layout) .atlas-header-logo{min-width:60px}
