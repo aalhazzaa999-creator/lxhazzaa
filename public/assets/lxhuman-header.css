@@ -19,6 +19,3 @@ body:has(.atlas-layout) #atlasSearch,body:has(.atlas-layout) #atlasRecords{scrol
  body:has(.atlas-layout) .atlas-header-nav{order:3;flex-basis:100%;justify-content:center;gap:20px}
  body:has(.atlas-layout) .atlas-header-nav a{font-size:11px;padding:4px 0 8px;display:inline-flex!important}
 }
-
-/* White official atlas logo in top header only */
-body:has(.atlas-layout) .atlas-header-logo img{filter:brightness(0) invert(1)}
