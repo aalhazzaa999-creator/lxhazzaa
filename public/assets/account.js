@@ -63,7 +63,7 @@ let last='',timer;
 const ids=['q','mutation','root','country','sex','locationType','radius'];
 const log=()=>{const entries=ids.map(id=>{const el=document.getElementById(id);return el&&el.value?((el.labels?.[0]?.textContent||id)+': '+el.value):''}).filter(Boolean);const q=entries.join(' | ');if(q&&q!==last){last=q;recordSearch('lxhuman',q);}};
 for(const id of ids){const el=document.getElementById(id);if(el)el.addEventListener(id==='q'||id==='mutation'?'input':'change',()=>{clearTimeout(timer);timer=setTimeout(log,1100);});}
-const saved=new URLSearchParams(location.search).get('lxsearch');if(saved){const q=document.getElementById('q');if(q&&saved.length<=300&&!saved.includes(' | ')){q.value=saved;q.dispatchEvent(new Event('input',{bubbles:true}));}}
+const saved=new URLSearchParams(location.search).get('lxsearch');if(saved){const q=document.getElementById('q');if(q&&saved.length<=300){if(saved.includes(': ')){for(const part of saved.split(' | ')){const ix=part.indexOf(': ');if(ix<0)continue;const label=part.slice(0,ix),value=part.slice(ix+2);for(const id of ids){const el=document.getElementById(id);if(el&&el.labels?.[0]?.textContent===label){el.value=value;el.dispatchEvent(new Event(id==='q'||id==='mutation'?'input':'change',{bubbles:true}));}}}}else{q.value=saved;q.dispatchEvent(new Event('input',{bubbles:true}));}}}
 }
 window.LXAccount={open,close,recordSearch,refresh:load,displayName};
 initAtlasHistory();
