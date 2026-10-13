@@ -10,32 +10,52 @@
       const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o)
     })
   }
-  // Guest quota applies to new search/filter combinations only; map movement, pagination and browsing are free.
-  const GUEST_DAILY_SEARCHES=30;let lastGuestSearch='',guestLimitShown=false;
+  // A daily guest allowance. Once exhausted, the research atlas stays locked until the
+  // next local calendar day or until Supabase confirms an authenticated account.
+  // Client-side storage is a UX allowance, not a tamper-proof server-side rate limit.
+  const GUEST_DAILY_SEARCHES=30;
+  let lastGuestSearch='';
+  const guestDay=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');};
+  const guestKey=()=> 'lxhazzaa-guest-searches-'+guestDay();
+  const guestUsed=()=>{try{return Math.max(0,Number(localStorage.getItem(guestKey())||0)||0)}catch(e){return 0}};
+  const isGuestLocked=()=>!window.LXAuth?.getUser()&&guestUsed()>=GUEST_DAILY_SEARCHES;
+  function removeGuestLock(){
+    document.getElementById('lxGuestDailyLock')?.remove();
+    document.body.classList.remove('lx-guest-locked');
+  }
+  function showGuestLock(){
+    if(!isGuestLocked()){removeGuestLock();return false;}
+    if(document.getElementById('lxGuestDailyLock'))return true;
+    const wrap=document.createElement('div');
+    wrap.id='lxGuestDailyLock';
+    wrap.className='lx-guest-limit-overlay';
+    wrap.innerHTML='<div class="lx-guest-limit-card" role="dialog" aria-modal="true" aria-labelledby="lxGuestLockTitle" dir="rtl"><h2 id="lxGuestLockTitle">استهلكت الحد المجاني لليوم</h2><p>استخدمت '+GUEST_DAILY_SEARCHES+' عملية بحث مجانية. تتجدد فرص البحث غدًا، أو يمكنك تسجيل الدخول أو إنشاء حساب مجاني لمواصلة البحث الآن.</p><div class="lx-guest-limit-actions"><button type="button" data-lx-guest-signup>إنشاء حساب مجاني</button><button type="button" data-lx-guest-login>تسجيل الدخول</button></div><p class="lx-guest-limit-note">ستُفتح صلاحيات حسابك تلقائيًا بعد إكمال تسجيل الدخول.</p></div>';
+    document.body.appendChild(wrap);
+    document.body.classList.add('lx-guest-locked');
+    wrap.querySelector('[data-lx-guest-signup]').onclick=()=>window.LXAuth?.open('signup');
+    wrap.querySelector('[data-lx-guest-login]').onclick=()=>window.LXAuth?.open('login');
+    return true;
+  }
   function guestSearchAllowed(){
-    if(window.LXAuth?.getUser())return true;
+    if(window.LXAuth?.getUser()){removeGuestLock();return true;}
+    if(showGuestLock())return false;
     const ids=['q','mutation','root','country','sex','locationType','radius'];
     const signature=ids.map(id=>$(id)?.value?.trim()||'').join('|');
-    if(!signature.replaceAll('|',''))return true;
-    if(signature===lastGuestSearch)return true;
-    const today=new Date().toLocaleDateString('en-CA');
-    const key='lxhazzaa-guest-searches-'+today;
-    let used=0;try{used=Number(localStorage.getItem(key)||0)||0}catch(e){}
-    if(used>=GUEST_DAILY_SEARCHES){
-      if(!guestLimitShown){
-        guestLimitShown=true;
-        const wrap=document.createElement('div');wrap.className='lx-guest-limit-overlay';
-        wrap.innerHTML='<div class="lx-guest-limit-card" role="dialog" aria-modal="true" dir="rtl"><h2>انتهى الحد المجاني للبحث اليوم</h2><p>استخدمت '+GUEST_DAILY_SEARCHES+' عملية بحث مجانية اليوم. يمكنك العودة غدًا أو إنشاء حساب مجاني لمواصلة البحث.</p><div class="lx-guest-limit-actions"><button type="button" data-lx-guest-signup>تسجيل حساب مجاني</button><button type="button" data-lx-guest-dismiss>العودة للتصفح</button></div></div>';
-        document.body.appendChild(wrap);
-        wrap.querySelector('[data-lx-guest-signup]').onclick=()=>{wrap.remove();guestLimitShown=false;window.LXAuth?.open('signup');};
-        wrap.querySelector('[data-lx-guest-dismiss]').onclick=()=>{wrap.remove();guestLimitShown=false;};
-      }
-      return false;
-    }
-    try{localStorage.setItem(key,String(used+1))}catch(e){}
+    if(!signature.replaceAll('|','')||signature===lastGuestSearch)return true;
+    const used=guestUsed();
+    if(used>=GUEST_DAILY_SEARCHES){showGuestLock();return false;}
+    try{localStorage.setItem(guestKey(),String(used+1))}catch(e){}
     lastGuestSearch=signature;
     return true;
   }
+  document.addEventListener('lx-auth-change',e=>{
+    if(e.detail?.signedIn){removeGuestLock();lastGuestSearch='';}
+    else showGuestLock();
+  });
+  // Reopen access when the local day changes, even if the page was left open overnight.
+  setInterval(()=>{if(!isGuestLocked())removeGuestLock();else showGuestLock()},60000);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',showGuestLock,{once:true});
+  else showGuestLock();
   function filter() {
     if(!guestSearchAllowed())return;
     const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&mutationResolved.known&&mutationResolved.matches(r.y,r.yRoot)))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
