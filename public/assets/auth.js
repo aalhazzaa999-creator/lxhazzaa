@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const cfg=window.LX_AUTH_CONFIG||{},configured=Boolean(cfg.url&&cfg.anonKey&&!cfg.url.includes('YOUR_'));
-const sb=configured&&window.supabase?window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}}):null;
+const sb=configured&&window.supabase?window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,flowType:'pkce'}}):null;
 let user=null,role='researcher';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
