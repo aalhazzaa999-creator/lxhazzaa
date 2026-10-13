@@ -8,7 +8,12 @@ const docs=el.querySelector('#lxLegalDocs'),agree=el.querySelector('#lxLegalAgre
 let rows=[],busy=false,identity='',acceptedKey='';
 const auth=()=>window.LXAuth;
 function missing(){return rows.filter(x=>x.requires_reacceptance&&!x.accepted);}
-function show(){el.hidden=false;docs.innerHTML=rows.map((r,i)=>'<section class="lx-legal-document"><h3>'+esc(r.title_ar)+' <small>الإصدار '+esc(r.version)+'</small></h3><p>'+esc(r.body_ar)+'</p><label><input type="checkbox" data-legal-check="'+i+'" '+(r.accepted?'checked disabled':'')+'> '+(r.accepted?'سبق قبول هذا الإصدار':'قرأت وأوافق على هذا الإصدار')+'</label></section>').join('');update();}
+function show(){
+ el.hidden=false;
+ const checks=rows.map((r,i)=>'<label class="lx-legal-check"><input type="checkbox" data-legal-check="'+i+'" '+(r.accepted?'checked disabled':'')+'> '+(r.document_type==='terms'?'أوافق على شروط الاستخدام':'أوافق على سياسة الخصوصية')+' <small>('+esc(r.version)+')</small></label>').join('');
+ docs.innerHTML='<div class="lx-legal-summary"><strong>قبل متابعة استخدام حساب LXHAZZAA</strong><p>باستخدام حسابك، تلتزم بحقوق النشر ودقة المساهمات، وتقر بالاطلاع على كيفية معالجة بيانات الحساب. تُحدّث هذه السياسات عند الحاجة، وسنطلب موافقتك مجددًا عند التغييرات التي تستلزم ذلك.</p><details class="lx-legal-details"><summary>قراءة الشروط والسياسات كاملة</summary>'+rows.map(r=>'<section><h3>'+esc(r.title_ar)+' <small>الإصدار '+esc(r.version)+'</small></h3><p>'+esc(r.body_ar)+'</p></section>').join('')+'</details></div><div class="lx-legal-checks">'+checks+'</div>';
+ update();
+}
 function update(){agree.disabled=busy||missing().some(r=>{const i=rows.indexOf(r);return !docs.querySelector('[data-legal-check="'+i+'"]')?.checked;});}
 async function check(){
 const u=auth()?.getUser(),sb=auth()?.client;
