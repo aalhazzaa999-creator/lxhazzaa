@@ -24,15 +24,15 @@ else if(mode==='reset'){result=await sb.auth.resetPasswordForEmail(email,{redire
 else{result=await sb.auth.signInWithPassword({email,password});}
 if(result.error)throw result.error;
 $('lxAuthStatus').textContent=mode==='signup'?'تم تقديم طلب التسجيل. راجع بريدك لتأكيد الحساب قبل الدخول.':mode==='reset'?'إذا كان البريد مسجلاً فستصلك رسالة استعادة.':'تم تسجيل الدخول.';
-if(mode==='login'){await refresh();close();}
+if(mode==='login'){await refresh();close();}else if(mode==='signup'&&result.data?.session){await refresh();close();}
 }catch(err){$('lxAuthStatus').textContent=err.message||'تعذر إتمام الطلب';}finally{btn.disabled=false}
 });
-function accountName(u){const m=u?.user_metadata||{};return String(m.display_name||m.full_name||m.name||u?.email?.split('@')[0]||'المستخدم').trim().slice(0,80);}
+function accountName(u){const m=u?.user_metadata||{};return String(m.display_name||m.full_name||m.name||'عضو LXHAZZAA').trim().slice(0,80);}
 async function refresh(){
-if(sb){const {data,error}=await sb.auth.getUser();if(error&&error.name!=='AuthSessionMissingError')console.warn('LXHAZZAA auth:',error.message);user=data?.user||null;role='researcher';publicName='';if(user){const {data:p}=await sb.from('profiles').select('role,display_name').eq('id',user.id).maybeSingle();if(p?.role)role=p.role;if(p?.display_name)publicName=p.display_name;}}
+if(sb){const {data,error}=await sb.auth.getUser();if(error&&error.name!=='AuthSessionMissingError')console.warn('LXHAZZAA auth:',error.message);user=data?.user||null;role='researcher';publicName='';if(user){const {data:p}=await sb.from('profiles').select('role,display_name').eq('id',user.id).maybeSingle();if(p?.role)role=p.role;if(p?.display_name)publicName=p.display_name;else publicName=accountName(user);}}
 document.querySelectorAll('[data-lx-account]').forEach(b=>{b.textContent=user?((publicName||'حسابي')+' · '+({researcher:'باحث',verified_researcher:'باحث مختص',scientific_moderator:'مشرف علمي',admin:'إدارة',owner:'مالك'}[role]||'باحث')):'دخول / تسجيل';b.title=user?'إدارة الحساب وتسجيل الخروج':'الدخول أو إنشاء حساب';});
 document.querySelectorAll('[data-lx-member]').forEach(el=>{el.hidden=!user;});
-document.dispatchEvent(new CustomEvent('lx-auth-change',{detail:{signedIn:!!user,role}}));
+document.dispatchEvent(new CustomEvent('lx-auth-change',{detail:{signedIn:!!user,role,name:publicName}}));
 }
 async function signOut(){if(sb)await sb.auth.signOut();await refresh();}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lx-account]');if(b){e.preventDefault();if(user){if(window.LXAccount)window.LXAccount.open();else open();}else open();}});
