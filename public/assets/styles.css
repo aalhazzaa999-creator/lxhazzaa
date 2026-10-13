@@ -852,3 +852,9 @@ body:has(.atlas-layout) .research-scope{color:#c5b7a1;font-size:11px}
 .lx-account-footer{border-top:1px solid #554936;margin-top:24px;padding-top:18px}
 .lx-account-empty{padding:22px;color:#b8a58b;text-align:center}
 @media(max-width:550px){.lx-account-card{padding:19px 14px}.lx-account-tabs button{font-size:12px;padding:8px}.lx-member-row{flex-wrap:wrap}}
+
+/* Guest research quota notice: shown only after reaching the daily search limit. */
+.lx-guest-limit-overlay{position:fixed;inset:0;z-index:99999;background:#05070bdc;display:grid;place-items:center;padding:18px}
+.lx-guest-limit-card{width:min(460px,100%);background:#11161d;border:1px solid #c5a16c;border-radius:18px;box-shadow:0 25px 90px #000b;color:#f6e7d1;padding:28px;line-height:1.9}
+.lx-guest-limit-card h2{color:#eac48b;font-size:23px;margin:0 0 10px}.lx-guest-limit-card p{margin:0 0 22px}
+.lx-guest-limit-actions{display:flex;gap:10px;flex-wrap:wrap}.lx-guest-limit-actions button{border:1px solid #bd9760;border-radius:10px;padding:10px 15px;cursor:pointer;background:#c8a36f;color:#0b1018;font-weight:700}.lx-guest-limit-actions [data-lx-guest-dismiss]{background:transparent;color:#eac48b}
