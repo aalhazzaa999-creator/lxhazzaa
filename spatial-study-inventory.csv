@@ -1,5 +1,5 @@
 doi,reference,atlas_records,review_status,review_note
-https://doi.org/10.1038/s41586-021-04287-4,PattersonReichNature2021,790,pending,
+https://doi.org/10.1038/s41586-021-04287-4,PattersonReichNature2021,790,partial,Named individuals verified against published analysis; remaining study samples pending
 https://doi.org/10.1101/2025.02.28.640770,McCollWillerslevBioRxiv2025,712,pending,
 https://doi.org/10.1126/science.abm4247,LazaridisReichScience2022,707,pending,
 https://doi.org/10.1038/s41586-024-08418-5,WangHofmanováNature2025,690,pending,
@@ -72,7 +72,7 @@ https://doi.org/10.1038/s41467-018-06024-4,AmorimVeeramahNatComm2018,62,pending,
 https://doi.org/10.1016/j.cell.2020.04.015,NakatsukaFehren-SchmitzCell2020,60,pending,
 https://doi.org/10.1038/s41467-025-63743-1,YangHuangNatCommun2025,58,pending,
 https://doi.org/10.1073/pnas.1918034117,BrunelPruvostPNAS2020,57,pending,
-https://doi.org/10.1038/s41586-024-08409-6,CassidyBradleyNature2025,56,pending,
+https://doi.org/10.1038/s41586-024-08409-6,CassidyBradleyNature2025,56,partial,Named individuals verified against published analysis; remaining study samples pending
 https://doi.org/10.1038/s41467-020-16557-2,NingCuiNatComm2020,55,pending,
 https://doi.org/10.1038/s41586-024-07509-7,BarqueraKrauseNature2024,53,pending,
 https://doi.org/10.1038/s42003-023-05131-3,MathiesonReichNature2018,51,pending,
@@ -81,7 +81,7 @@ https://doi.org/10.1016/j.cell.2022.11.024,Rodríguez-VarelaGötherströmCell202
 https://doi.org/10.1016/j.cub.2024.04.068,BaiFuCurrBiol2024,48,pending,
 https://doi.org/10.1016/j.scib.2025.11.013,ZhangCuiSciBull2025,48,pending,
 https://doi.org/10.1038/s41559-020-1102-0,FernandesReichNatEcolEvol2020,48,pending,
-https://doi.org/10.1016/j.isci.2022.104094,FisherPruvostiScience2022,47,pending,
+https://doi.org/10.1016/j.isci.2022.104094,FisherPruvostiScience2022,47,partial,Named individuals verified against published analysis; remaining study samples pending
 https://doi.org/10.1038/s41467-018-08220-8,WangHaakNatComm2019,46,pending,
 https://doi.org/10.1038/s41598-024-54462-6,PenskeHaakSciRep2024,46,pending,
 https://doi.org/10.1038/s41586-026-10111-8,OlaldeReichNature2026,45,pending,
