@@ -2,7 +2,7 @@
   'use strict';const $=id=>document.getElementById(id);let all=[],filtered=[],page=0,map=null,layer=null,manifest=null,canvasRenderer=null,searchCircle=null,mapSelectionRecords=null;const PAGE=25,MAX_MARKERS=250;const fmt=n=>Number(n||0).toLocaleString('ar-SA');const esc=v=>String(v??'').replace(/[&<>"']/g,c=>( {
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }
-  [c]));const fields=['q','root','country','sex','locationType','spatialClassification','radius'];let timer,mutationToken=0,mutationResolved=null;const spatialLabels={local:'ساكنة محلية',nonlocal:'وافد من خارج المنطقة',genetic_outlier:'مختلف وراثيًا عن المجموعة المحلية',undetermined:'غير محسوم'};let spatialAnnotations={};
+  [c]));const fields=['q','root','country','sex','locationType','spatialClassification','radius'];let timer,mutationToken=0,mutationResolved=null;const spatialLabels={local:'ساكنة محلية',nonlocal:'وافد من خارج المنطقة',genetic_outlier:'مختلف وراثيًا عن المجموعة المقارنة',undetermined:'غير محسوم'};let spatialAnnotations={};
   function spatialFor(r){const annotation=spatialAnnotations[r.id];return annotation&&Object.hasOwn(spatialLabels,annotation.status)&&annotation.status!=='undetermined'&&typeof annotation.evidence==='string'&&annotation.evidence.trim()&&typeof annotation.source==='string'&&/^https:\/\/[^\s]+$/i.test(annotation.source)?annotation:{status:'undetermined'};}
   function distance(a,b,c,d) {
     const R=6371,rad=Math.PI/180,x=(c-a)*rad,y=(d-b)*rad;return 2*R*Math.asin(Math.sqrt(Math.sin(x/2)**2+Math.cos(a*rad)*Math.cos(c*rad)*Math.sin(y/2)**2))
