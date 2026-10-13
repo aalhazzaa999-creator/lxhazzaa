@@ -17,6 +17,3 @@ body:has(.universe-main) .globe-brand{position:absolute;z-index:5;top:57%;left:5
 body:has(.universe-main) .globe-official-logo{display:block;width:100%;height:auto;object-fit:contain;opacity:1;filter:brightness(1.18) contrast(1.07)}
 body:has(.universe-main) .globe-shine{display:none}
 @media(max-width:700px){body:has(.universe-main) .globe-brand{top:57%;width:40%;min-width:115px}}
-
-/* Official white logo in the main platform header only */
-body:has(.universe-main) .topbar .lx-official-logo{filter:brightness(0) invert(1)}
