@@ -10,7 +10,34 @@
       const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o)
     })
   }
+  // Guest quota applies to new search/filter combinations only; map movement, pagination and browsing are free.
+  const GUEST_DAILY_SEARCHES=30;let lastGuestSearch='',guestLimitShown=false;
+  function guestSearchAllowed(){
+    if(window.LXAuth?.getUser())return true;
+    const ids=['q','mutation','root','country','sex','locationType','radius'];
+    const signature=ids.map(id=>$(id)?.value?.trim()||'').join('|');
+    if(!signature.replaceAll('|',''))return true;
+    if(signature===lastGuestSearch)return true;
+    const today=new Date().toLocaleDateString('en-CA');
+    const key='lxhazzaa-guest-searches-'+today;
+    let used=0;try{used=Number(localStorage.getItem(key)||0)||0}catch(e){}
+    if(used>=GUEST_DAILY_SEARCHES){
+      if(!guestLimitShown){
+        guestLimitShown=true;
+        const wrap=document.createElement('div');wrap.className='lx-guest-limit-overlay';
+        wrap.innerHTML='<div class="lx-guest-limit-card" role="dialog" aria-modal="true" dir="rtl"><h2>انتهى الحد المجاني للبحث اليوم</h2><p>استخدمت '+GUEST_DAILY_SEARCHES+' عملية بحث مجانية اليوم. يمكنك العودة غدًا أو إنشاء حساب مجاني لمواصلة البحث.</p><div class="lx-guest-limit-actions"><button type="button" data-lx-guest-signup>تسجيل حساب مجاني</button><button type="button" data-lx-guest-dismiss>العودة للتصفح</button></div></div>';
+        document.body.appendChild(wrap);
+        wrap.querySelector('[data-lx-guest-signup]').onclick=()=>{wrap.remove();guestLimitShown=false;window.LXAuth?.open('signup');};
+        wrap.querySelector('[data-lx-guest-dismiss]').onclick=()=>{wrap.remove();guestLimitShown=false;};
+      }
+      return false;
+    }
+    try{localStorage.setItem(key,String(used+1))}catch(e){}
+    lastGuestSearch=signature;
+    return true;
+  }
   function filter() {
+    if(!guestSearchAllowed())return;
     const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&mutationResolved.known&&mutationResolved.matches(r.y,r.yRoot)))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
   }
   function studyUrl(r) {
