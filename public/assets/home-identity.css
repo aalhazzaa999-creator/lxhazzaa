@@ -1,0 +1,14 @@
+/* Official LXHAZZAA identity. All visual assets are independent layers. */
+body:has(.universe-main){background:#03060a}
+body:has(.universe-main) .topbar{background:#03060bea}
+body:has(.universe-main) .topinner{min-height:72px}
+body:has(.universe-main) .brand{letter-spacing:normal}
+body:has(.universe-main) .lx-official-logo{display:block;width:auto;height:54px;max-width:170px;object-fit:contain}
+body:has(.universe-main) .universe-stage{background:#03060a url('/assets/LXHAZZAA_Separated_Assets_V3/lx-space-background.webp') center center/cover no-repeat}
+body:has(.universe-main) .universe-globe{background:url('/assets/LXHAZZAA_Separated_Assets_V3/lx-globe-clean.webp') center/contain no-repeat!important;border:0!important;box-shadow:0 0 70px #d49c4d22!important}
+body:has(.universe-main) .universe-globe:before,body:has(.universe-main) .universe-globe:after{display:none!important}
+body:has(.universe-main) .globe-shine{pointer-events:none}
+body:has(.universe-main) .orbit-icon{background:transparent!important;overflow:hidden;border-radius:50%;border:1px solid #d5a85b!important;box-shadow:0 0 20px #d4a24d80!important}
+body:has(.universe-main) .orbit-icon img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+body:has(.universe-main) .orbit-node strong{color:#f5dfb4}
+@media(max-width:700px){body:has(.universe-main) .lx-official-logo{height:43px;max-width:125px}body:has(.universe-main) .topinner{min-height:64px}}
