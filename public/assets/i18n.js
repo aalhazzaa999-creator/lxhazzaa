@@ -27,7 +27,7 @@ Object.assign(en,{
  'تعرض الخريطة عددًا محدودًا من النقاط في كل مرة للحفاظ على سرعة الأداء. يمكن البحث في جميع السجلات أدناه.':'The map displays a limited number of points at a time for performance. Search all records below.',
  'اختر عينة من نتائج البحث أو نقطة مفردة من الخريطة لعرض جميع بياناتها ومراجعها هنا.':'Select a sample from the results or a map point to view its data and references here.','اختر عينة من نتائج البحث لعرض بياناتها ومراجعها هنا.':'Select a sample from the results to view its data and references here.',
  'خريطة المواقع الأثرية':'Map of archaeological sites','السياسات':'Policies','150 كم':'150 km','500 كم':'500 km','1000 كم':'1,000 km','2000 كم':'2,000 km',
- 'معلومية الموقع الأثري':'Archaeological location availability','جميع العينات':'All samples','موقعها معروف':'Known archaeological location','موقعها غير معروف أو تقريبي':'Unknown or approximate location','المعروف هنا موقع أثري بإحداثيات؛ نقطة الدولة التقريبية لا تحدد موقع العينة.':'Known means an archaeological site with coordinates; an approximate country point does not locate the sample.',
+ 'العينات ذات الإحداثيات فقط':'Samples with coordinates only','اضغط لعرض العينات ذات الإحداثيات، واضغط مرة أخرى لعرض جميع العينات. تشمل الإحداثيات النقاط التقريبية على مستوى الدولة.':'Press to show samples with coordinates. Press again to show all samples. Coordinates include approximate country points.',
  'عرض التفاصيل والدراسات ←':'View details and studies ←','Y غير محدد':'Y undetermined','مطابقة Genetic ID دقيقة':'Exact Genetic ID match','لا يوجد ربط AADR':'No AADR match','فلسطين المحتلة':'Occupied Palestine'
 });
 const origins=new WeakMap();const attrs=new WeakMap();let language='ar',scheduled=false;
