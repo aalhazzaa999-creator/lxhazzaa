@@ -42,3 +42,28 @@ body:has(.universe-main) .orbit-node strong{font-size:11px}
 body:has(.universe-main) .orbit-node small{font-size:8px}
 body:has(.universe-main) .home-globe-logo{width:58%}
 }
+
+/* V3: truly independent globe layer; never use the composite mockup as material. */
+body:has(.universe-main) .universe-globe{
+ background-image:radial-gradient(circle at 70% 22%,#f8ca8140,transparent 35%),url('https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg');
+ background-size:cover,auto 110%;
+ background-position:center,65% center;
+ background-repeat:no-repeat;
+ background-color:#09121c;
+ isolation:isolate;
+}
+body:has(.universe-main) .universe-globe:before{
+ content:"";opacity:1;position:absolute;inset:0;border-radius:50%;
+ background:radial-gradient(circle at 78% 22%,#f6c27855,transparent 30%),linear-gradient(100deg,#000b 2%,transparent 47%,#0007 96%);
+ z-index:1;pointer-events:none;
+}
+body:has(.universe-main) .universe-globe:after{
+ content:"";position:absolute;inset:0;border-radius:50%;
+ background:radial-gradient(circle at 65% 28%,#ffdba83b,transparent 44%);
+ box-shadow:inset 24px 10px 70px #03070c9c,inset -10px -20px 55px #03070cd9;
+ z-index:2;pointer-events:none;
+}
+body:has(.universe-main) .globe-brand{z-index:5}
+body:has(.universe-main) .globe-meridians{z-index:3}
+body:has(.universe-main) .universe-ring{border-color:#d4a46b77;box-shadow:0 0 28px #d49c4b1c,inset 0 0 20px #d49c4b08}
+body:has(.universe-main) .node-remains,body:has(.universe-main) .node-documents{z-index:8}
