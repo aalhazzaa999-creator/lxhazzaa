@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const cfg=window.LX_AUTH_CONFIG||{},configured=Boolean(cfg.url&&cfg.anonKey&&!cfg.url.includes('YOUR_'));
-const sb=configured&&window.supabase?window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
+const sb=configured&&window.supabase?window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}}):null;
 let user=null,role='researcher';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -37,7 +37,7 @@ document.dispatchEvent(new CustomEvent('lx-auth-change',{detail:{signedIn:!!user
 async function signOut(){if(sb)await sb.auth.signOut();await refresh();}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lx-account]');if(b){e.preventDefault();if(user){if(confirm('هل تريد تسجيل الخروج من LXHAZZAA؟'))signOut();}else open();}});
 window.LXAuth={open,signOut,refresh,getUser:()=>user,getRole:()=>role,configured:!!sb,client:sb};
-if(sb){sb.auth.onAuthStateChange(()=>{setTimeout(refresh,0)});refresh();}
+if(sb){sb.auth.onAuthStateChange(()=>{setTimeout(refresh,0)});(async()=>{const params=new URLSearchParams(location.search);const code=params.get('code');if(code){document.querySelectorAll('[data-lx-account]').forEach(b=>b.textContent='جارٍ إكمال الدخول…');const {error}=await sb.auth.exchangeCodeForSession(code);if(error){open('login');$('lxAuthStatus').textContent='تعذر إكمال تسجيل Google: '+error.message;}else{history.replaceState({},'',location.pathname);}}await refresh();})();}
 const oauthError=new URLSearchParams(location.search).get('error_description')||new URLSearchParams(location.hash.slice(1)).get('error_description');if(oauthError){open('login');$('lxAuthStatus').textContent='لم يكتمل تسجيل الدخول: '+oauthError;}
 setMode('login');
 })();
