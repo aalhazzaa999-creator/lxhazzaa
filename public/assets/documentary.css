@@ -14,3 +14,7 @@
 .lxdoc.has-official-hero .doc-hero-image{display:block;width:100%;height:auto;aspect-ratio:1536/746;object-fit:cover;object-position:center;background:#090909}
 .doc-hero-image{display:none}
 @media(max-width:720px){.doc-official-logo{width:91px;height:67px}.lxdoc.has-official-hero .doc-hero-grid{padding:0 0 30px}.lxdoc.has-official-hero .doc-hero-copy{padding:22px 17px}.lxdoc.has-official-hero .doc-hero-image{aspect-ratio:1536/746;object-fit:contain}}
+
+/* White documentary platform identity in top navigation only */
+.lxdoc .doc-header .doc-official-logo{filter:brightness(0) invert(1)}
+.lxdoc .doc-header .doc-logo-mark,.lxdoc .doc-header .doc-logo-copy{color:#fff;background:none;-webkit-text-fill-color:#fff}
