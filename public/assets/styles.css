@@ -828,3 +828,27 @@ body:has(.atlas-layout) .research-scope{color:#c5b7a1;font-size:11px}
 .lx-apple-mark{font-size:18px;color:#fff}
 .lx-auth-divider{display:flex;align-items:center;gap:12px;color:#c9c1b6;font-size:12px}
 .lx-auth-divider:before,.lx-auth-divider:after{content:"";flex:1;border-top:1px solid #666}
+
+/* Shared account panel — visible on every LXHAZZAA platform */
+.lx-account-overlay[hidden]{display:none!important}
+.lx-account-overlay{position:fixed;inset:0;z-index:100001;background:#000c;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 12px}
+.lx-account-card{position:relative;width:min(100%,690px);margin:auto;background:#13171c;border:1px solid #b28b54;border-radius:18px;padding:26px;color:#f7ecda;box-shadow:0 20px 70px #000a;box-sizing:border-box}
+.lx-account-card h2{margin:8px 0 18px;text-align:center;color:#e9c58c}
+.lx-account-close{position:absolute;top:8px;left:15px;background:transparent;border:0;color:#dfc49a;font-size:30px;cursor:pointer}
+.lx-account-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid #66523a;padding-bottom:12px}
+.lx-account-tabs button{background:#24282e;border:1px solid #66523a;border-radius:9px;color:#dfc49a;padding:10px;cursor:pointer}
+.lx-account-tabs button.active{background:#634b2c;color:#fff}
+.lx-account-identity{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.lx-account-identity strong{font-size:20px}.lx-account-identity span{border:1px solid #c5a06b;border-radius:30px;padding:5px 13px;color:#edcc95}
+.lx-account-hint{color:#c5b8a7;font-size:13px;line-height:1.9}
+#lxAccountNameForm{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
+#lxAccountNameForm label{width:100%}
+#lxAccountNameForm input{flex:1 1 190px;min-width:0;padding:12px;border:1px solid #8e744e;border-radius:8px;background:#090d12;color:white}
+.lx-account-history{display:flex;flex-direction:column;gap:7px;max-height:45vh;overflow:auto}
+.lx-history-row,.lx-member-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #5e503c;border-radius:10px;padding:12px;margin:7px 0;background:#1c2228;overflow-wrap:anywhere}
+.lx-history-row div,.lx-member-row div{min-width:0}.lx-history-row small,.lx-member-row small{display:block;color:#b6ab9e;margin-top:6px}
+.lx-history-row a{white-space:nowrap;color:#f1ce93}
+.lx-member-row select{max-width:150px;background:#12171c;color:#fff;border:1px solid #ab8955;border-radius:7px;padding:8px}
+.lx-account-footer{border-top:1px solid #554936;margin-top:24px;padding-top:18px}
+.lx-account-empty{padding:22px;color:#b8a58b;text-align:center}
+@media(max-width:550px){.lx-account-card{padding:19px 14px}.lx-account-tabs button{font-size:12px;padding:8px}.lx-member-row{flex-wrap:wrap}}
