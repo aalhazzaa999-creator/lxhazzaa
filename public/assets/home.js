@@ -2,11 +2,7 @@
   'use strict';
 
   const byId = (id) => document.getElementById(id);
-  const welcome = byId('welcome');
   const languageSelect = byId('lang');
-  const guestButton = byId('guest');
-  const accountButton = byId('account');
-  const GUEST_SESSION_KEY = 'lx-guest';
 
   const translations = {
     ar: [
@@ -25,17 +21,6 @@
 
   const translatedElementIds = ['heroTitle', 'heroDesc', 'platforms', 'sub'];
 
-  function closeWelcome() {
-    welcome.hidden = true;
-    welcome.style.display = 'none';
-    sessionStorage.setItem(GUEST_SESSION_KEY, '1');
-  }
-
-  function openWelcome() {
-    welcome.hidden = false;
-    welcome.style.display = 'grid';
-  }
-
   function updateLanguage() {
     let selectedLanguage = languageSelect.value;
 
@@ -53,12 +38,5 @@
     document.documentElement.dir = selectedLanguage === 'en' ? 'ltr' : 'rtl';
   }
 
-  guestButton.addEventListener('click', closeWelcome);
-  const loginButton=byId('welcomeLogin');if(loginButton)loginButton.addEventListener('click',()=>{closeWelcome();window.LXAuth?.open('login');});
-  accountButton.addEventListener('click',()=>{if(!window.LXAuth)openWelcome();});
   languageSelect.addEventListener('change', updateLanguage);
-
-  if (sessionStorage.getItem(GUEST_SESSION_KEY)) {
-    closeWelcome();
-  }
 })();
