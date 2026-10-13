@@ -1,0 +1,5 @@
+(()=>{'use strict';let busy=false;const status=document.getElementById('docGateStatus'),allowed=new Set(['verified_researcher','scientific_moderator','admin','owner']);
+async function enter(){if(busy)return;const auth=window.LXAuth,role=auth?.getRole();if(!auth?.getUser()||!allowed.has(role)){status.textContent='';return;}if(!window.LXLegal?.isReady()){status.textContent='يرجى إكمال الموافقة على السياسات الحالية.';return;}
+busy=true;status.textContent='جارٍ فتح المنصة المخصصة لحسابك…';try{const {data,error}=await auth.client.auth.getSession();if(error||!data?.session?.access_token)throw error||Error('انتهت جلسة الحساب');const response=await fetch('/api/documentary-session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.session.access_token}),credentials:'same-origin'});if(!response.ok)throw Error('تعذر التحقق من صلاحية الدخول');location.replace('/lxdocumentary/workspace/');}catch(e){status.textContent=e.message||'تعذر فتح المنصة';busy=false;}}
+document.addEventListener('lx-auth-change',enter);document.addEventListener('lx-legal-ready',enter);window.addEventListener('load',enter);
+})();
