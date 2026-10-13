@@ -27,9 +27,10 @@ $('lxAuthStatus').textContent=mode==='signup'?'تم تقديم طلب التسج
 if(mode==='login'){await refresh();close();}
 }catch(err){$('lxAuthStatus').textContent=err.message||'تعذر إتمام الطلب';}finally{btn.disabled=false}
 });
+function accountName(u){const m=u?.user_metadata||{};return String(m.display_name||m.full_name||m.name||u?.email?.split('@')[0]||'المستخدم').trim().slice(0,80);}
 async function refresh(){
-if(sb){const {data}=await sb.auth.getUser();user=data?.user||null;role='researcher';if(user){const {data:p}=await sb.from('profiles').select('role').eq('id',user.id).maybeSingle();if(p?.role)role=p.role;}}
-document.querySelectorAll('[data-lx-account]').forEach(b=>{b.textContent=user?'حسابي · '+(user.user_metadata?.display_name||user.email):'دخول / تسجيل';});
+if(sb){const {data,error}=await sb.auth.getUser();if(error&&error.name!=='AuthSessionMissingError')console.warn('LXHAZZAA auth:',error.message);user=data?.user||null;role='researcher';if(user){const {data:p}=await sb.from('profiles').select('role').eq('id',user.id).maybeSingle();if(p?.role)role=p.role;}}
+document.querySelectorAll('[data-lx-account]').forEach(b=>{b.textContent=user?'حسابي · '+accountName(user):'دخول / تسجيل';b.title=user?'الحساب: '+accountName(user)+' — اضغط لإدارة تسجيل الخروج':'الدخول أو إنشاء حساب';});
 document.querySelectorAll('[data-lx-member]').forEach(el=>{el.hidden=!user;});
 document.dispatchEvent(new CustomEvent('lx-auth-change',{detail:{signedIn:!!user,role}}));
 }
@@ -37,5 +38,6 @@ async function signOut(){if(sb)await sb.auth.signOut();await refresh();}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lx-account]');if(b){e.preventDefault();if(user){if(confirm('هل تريد تسجيل الخروج من LXHAZZAA؟'))signOut();}else open();}});
 window.LXAuth={open,signOut,refresh,getUser:()=>user,getRole:()=>role,configured:!!sb,client:sb};
 if(sb){sb.auth.onAuthStateChange(()=>{setTimeout(refresh,0)});refresh();}
+const oauthError=new URLSearchParams(location.search).get('error_description')||new URLSearchParams(location.hash.slice(1)).get('error_description');if(oauthError){open('login');$('lxAuthStatus').textContent='لم يكتمل تسجيل الدخول: '+oauthError;}
 setMode('login');
 })();
