@@ -71,7 +71,7 @@ body:has(.universe-main) .node-remains,body:has(.universe-main) .node-documents{
 /* V3 source-of-truth: individual, locally hosted image layers */
 body:has(.universe-main) .universe-stage{background-image:linear-gradient(180deg,#03060a55,#03060a88),url('/assets/LXHAZZAA_Separated_Assets_V3/lx-space-background.webp');background-size:cover;background-position:center}
 body:has(.universe-main) .universe-globe{
-background-image:url('/assets/LXHAZZAA_Separated_Assets_V3/lx-globe-clean.webp')!important;
+background-image:url('/assets/LXHAZZAA_Separated_Assets_V3/lx-globe-gold-v4.webp')!important;
 background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;
 background-color:transparent!important;filter:none!important;border:0!important;box-shadow:none!important;
 }
