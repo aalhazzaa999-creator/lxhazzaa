@@ -9,10 +9,10 @@ export async function authorized(token){
  if(!user.ok)return false;
  const identity=await user.json();
  if(!/^[0-9a-f-]{36}$/i.test(identity.id||''))return false;
- const profile=await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${identity.id}&select=role`,{headers,cache:'no-store'});
+ const profile=await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${identity.id}&select=role,permissions_suspended`,{headers,cache:'no-store'});
  if(!profile.ok)return false;
  const rows=await profile.json();
- return ALLOWED.has(rows?.[0]?.role);
+ return !rows?.[0]?.permissions_suspended&&ALLOWED.has(rows?.[0]?.role);
 }
 
 export async function onRequestPost({request}){
