@@ -7,6 +7,15 @@ function message(el,s){el.textContent=s;}
 function line(parent,title,description){const article=document.createElement('article'),strong=document.createElement('strong'),p=document.createElement('p');strong.textContent=title;p.textContent=description;article.append(strong,p);parent.append(article);return article;}
 function displayRights(){const metadata=$('rightsBasis').value==='metadata_only';if(metadata)$('display').value='metadata_only';$('display').disabled=metadata;$('originalFile').disabled=metadata;$('rightsEvidence').required=!metadata;}
 $('rightsBasis').addEventListener('change',displayRights);displayRights();
+const ottomanSource=new URLSearchParams(location.search).get('source')==='ottoman';
+if(ottomanSource){
+ form.elements.holding_institution.value='T.C. Cumhurbaşkanlığı Devlet Arşivleri Başkanlığı — Osmanlı Arşivi';
+ form.elements.original_owner.value='T.C. Cumhurbaşkanlığı Devlet Arşivleri Başkanlığı';
+ form.elements.rights_basis.value='metadata_only';
+ form.elements.shelfmark.required=true;
+ form.elements.source_citation.required=true;
+ displayRights();
+}
 async function refresh(){
  const sb=client(),u=user(),role=window.LXAuth?.getRole();$('submissionPanel').hidden=!u||!allowed.includes(role);$('reviewPanel').hidden=!u||!staff.includes(role);
  if(!u||!sb){message($('access'),'سجّل الدخول لعرض مساهماتك. رفع المواد متاح للباحثين المعتمدين.');message($('mine'),'يلزم تسجيل الدخول.');return;}
@@ -24,9 +33,9 @@ async function reviewQueue(){const sb=client(),out=$('queue');const {data,error}
  if(!data?.length)message(out,'لا توجد طلبات للمراجعة.');
 }
 form.addEventListener('submit',async e=>{e.preventDefault();const u=user(),sb=client(),file=$('originalFile').files[0],out=$('result');if(!u||!sb||!allowed.includes(window.LXAuth.getRole()))return message(out,'يلزم دخول باحث معتمد.');if(!window.LXLegal?.isReady())return message(out,'أكمل الموافقة على الشروط الحالية أولًا.');
- const f=new FormData(form),basis=f.get('rights_basis');if(file&&(basis==='metadata_only'||file.size>15728640||!['application/pdf','image/jpeg','image/png'].includes(file.type)))return message(out,'اختر إذن إتاحة مناسبًا وملف PDF أو JPG أو PNG حتى 15 MB.');if(basis==='metadata_only'&&f.get('permitted_display')!=='metadata_only')return message(out,'الفهرسة الوصفية لا تسمح بعرض الملف.');if(f.get('translation_text')&&!f.get('original_transcription'))return message(out,'أضف التفريغ بلغته الأصلية قبل الترجمة.');
+ const f=new FormData(form),basis=f.get('rights_basis');if(ottomanSource&&!String(f.get('shelfmark')||'').trim())return message(out,'أدخل رمز الحفظ الرسمي للوثيقة العثمانية.');if(ottomanSource&&basis!=='metadata_only'&&!String(f.get('rights_evidence')||'').trim())return message(out,'إتاحة صورة الأرشيف تحتاج تصريحًا واضحًا؛ استخدم الفهرسة الوصفية حتى يتوفر.');if(file&&(basis==='metadata_only'||file.size>15728640||!['application/pdf','image/jpeg','image/png'].includes(file.type)))return message(out,'اختر إذن إتاحة مناسبًا وملف PDF أو JPG أو PNG حتى 15 MB.');if(basis==='metadata_only'&&f.get('permitted_display')!=='metadata_only')return message(out,'الفهرسة الوصفية لا تسمح بعرض الملف.');if(f.get('translation_text')&&!f.get('original_transcription'))return message(out,'أضف التفريغ بلغته الأصلية قبل الترجمة.');
  const btn=$('send');btn.disabled=true;message(out,'جارٍ حفظ المسودة…');try{
- const cols=['kind','title','original_language','script','holding_institution','shelfmark','source_url','source_citation','original_owner','provider_credit','researcher_credit','rights_basis','rights_evidence','permitted_display','original_transcription','transcription_status','translation_text','translation_language','translation_status'];const entry={contributor_id:u.id};for(const key of cols)entry[key]=String(f.get(key)||'').trim()||null;entry.permitted_display=basis==='metadata_only'?'metadata_only':entry.permitted_display;entry.transcription_status||='unread';entry.translation_status||='not_started';
+ const cols=['kind','title','original_language','script','holding_institution','shelfmark','source_url','source_citation','original_owner','provider_credit','researcher_credit','rights_basis','rights_evidence','permitted_display','original_transcription','transcription_status','translation_text','translation_language','translation_status'];const entry={contributor_id:u.id};for(const key of cols)entry[key]=String(f.get(key)||'').trim()||null;entry.permitted_display=basis==='metadata_only'?'metadata_only':entry.permitted_display;entry.transcription_status||='unread';entry.translation_status||='not_started';if(ottomanSource){entry.transcription_status=entry.original_transcription?'draft':'unread';entry.translation_status=entry.translation_text?'draft':'not_started';}
  const created=await sb.from('lx_documents').insert(entry).select('id').single();if(created.error)throw created.error;const id=created.data.id;
  if(file){message(out,'حُفظت المسودة. جارٍ رفع الأصل إلى التخزين الخاص…');const ext={'application/pdf':'pdf','image/jpeg':'jpg','image/png':'png'}[file.type],path=`${u.id}/${id}/${crypto.randomUUID()}.${ext}`;const uploaded=await sb.storage.from('lx-source-originals').upload(path,file,{contentType:file.type,upsert:false});if(uploaded.error)throw uploaded.error;const update=await sb.from('lx_documents').update({original_file_path:path}).eq('id',id);if(update.error)throw update.error;}
  const submitted=await sb.rpc('lx_submit_document',{p_id:id});if(submitted.error)throw submitted.error;
