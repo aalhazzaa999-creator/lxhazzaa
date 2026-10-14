@@ -56,3 +56,9 @@ html[data-lx-theme="light"] body:has(.universe-main) .universe-stage:before{disp
 html[data-lx-theme="light"] body:has(.universe-main) .universe-intro .eyebrow{color:#704917}
 html[data-lx-theme="light"] body:has(.atlas-layout) .stat strong{color:#704917}
 html[data-lx-theme="light"] body:has(.atlas-layout) .stat span{color:#594f43}
+.lx-email-visibility{display:flex;align-items:center;gap:9px;line-height:1.6;cursor:pointer}
+.lx-email-visibility input{width:18px;height:18px;accent-color:#b18b57}
+html[data-lx-theme="light"] .lx-account-card{background:#fff;color:#242c31;border-color:#d5c5af}
+html[data-lx-theme="light"] .lx-member-row,html[data-lx-theme="light"] .lx-history-row{background:#f7f4ed;color:#242c31;border-color:#d5c5af}
+html[data-lx-theme="light"] .lx-account-hint,html[data-lx-theme="light"] .lx-member-row small{color:#594f43}
+html[data-lx-theme="light"] .lx-member-row select,html[data-lx-theme="light"] #lxAccountNameForm input{background:#fff;color:#242c31;border-color:#b89e79}
