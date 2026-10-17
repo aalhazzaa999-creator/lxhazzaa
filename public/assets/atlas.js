@@ -222,13 +222,21 @@
       const r=await fetch('/data/atlas/manifest.json');if(!r.ok)throw Error('تعذر تحميل فهرس البيانات');manifest=await r.json();$('loading').textContent=`جارٍ تحميل ${manifest.parts.length} أجزاء من البيانات…`;all=[];for(let i=0;i<manifest.parts.length;i++) {
         const p=manifest.parts[i];$('loading').textContent=`جارٍ تحميل البيانات (${i+1} من ${manifest.parts.length})…`;const response=await fetch('/data/atlas/'+encodeURIComponent(p));if(!response.ok)throw Error('تعذر تحميل '+p+' (HTTP '+response.status+')');const part=await response.json();if(!Array.isArray(part))throw Error('صيغة بيانات غير صحيحة في '+p);for(const record of part){if(/^israel$/i.test(String(record.country||'').trim())||String(record.country||'').trim()==='إسرائيل')record.country='Palestine Occupied';}all.push(...part);await new Promise(resolve=>setTimeout(resolve,0));
       }
-      if(all.length!==manifest.total)throw Error('عدد السجلات لا يطابق الفهرس');try{const sr=await fetch('/data/atlas/spatial-classifications.json');if(sr.ok){const parsed=await sr.json();if(parsed&&typeof parsed.records==='object'&&!Array.isArray(parsed.records))spatialAnnotations=parsed.records;}}catch(e){console.warn('تعذر تحميل التصنيف المكاني:',e)}opt('root',[...new Set(all.map(r=>r.yRoot))]);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';initMap();filter()
+      if(all.length!==manifest.total)throw Error('عدد السجلات لا يطابق الفهرس');try{const sr=await fetch('/data/atlas/spatial-classifications.json');if(sr.ok){const parsed=await sr.json();if(parsed&&typeof parsed.records==='object'&&!Array.isArray(parsed.records))spatialAnnotations=parsed.records;}}catch(e){console.warn('تعذر تحميل التصنيف المكاني:',e)}opt('root',[...new Set(all.map(r=>r.yRoot))]);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';document.dispatchEvent(new Event('lx-atlas-data-loaded'));initMap();filter()
     }
     catch(e) {
       $('loading').textContent='خطأ في تحميل البيانات: '+e.message+' — تأكد من رفع مجلد data/atlas كاملًا إلى GitHub.';console.error(e)
     }
 }
-  $('mutation').addEventListener('input',()=>{
+  // Text queries are committed deliberately, so pauses while typing do not consume the guest allowance.
+  const qApply=document.createElement('button');qApply.type='button';qApply.className='btn ghost';qApply.textContent='بحث';qApply.setAttribute('aria-label','تنفيذ البحث بالنص');$('q').after(qApply);
+  qApply.addEventListener('click',filter);$('q').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();filter();}});
+  const mutationMode=document.createElement('select');mutationMode.id='mutationMode';mutationMode.setAttribute('aria-label','طريقة مطابقة التحور');mutationMode.innerHTML='<option value="exact">التحور المكتوب نفسه</option><option value="descendants">التحور وفروعه المتحدرة</option>';
+  const modeLabel=document.createElement('label');modeLabel.htmlFor='mutationMode';modeLabel.textContent='طريقة مطابقة التحور';$('mutationStatus').after(modeLabel,mutationMode);
+  const mutationApply=document.createElement('button');mutationApply.type='button';mutationApply.className='btn ghost';mutationApply.textContent='بحث التحور';mutationMode.after(mutationApply);
+  const coverageNote=document.createElement('p');coverageNote.className='smallnote';mutationApply.after(coverageNote);
+  document.addEventListener('lx-atlas-data-loaded',()=>{const broad=all.filter(r=>r.y&&!window.LXYdna?.norm(r.y)).length;coverageNote.textContent=broad.toLocaleString('ar-SA')+' سجلًا يحمل وصف Y عامًا أو صيغة غير قابلة للمطابقة برقم تحور؛ ابحث عنها عبر فلتر السلالة أو معرّف العينة.';});
+  const applyMutation=()=>{
     const value=$('mutation').value.trim(),token=++mutationToken;
     mutationResolved=null;mapSelectionRecords=null;$('mapSelection').hidden=true;
     clearTimeout(timer);
@@ -238,23 +246,28 @@
     timer=setTimeout(async()=>{
       try{
         if(!window.LXYdna)throw Error('تعذر تشغيل فهرس التحورات.');
-        const result=await window.LXYdna.resolve(value);
+        const scopedValue=$('root').value&&!/^[A-T](?:\d+[A-Z0-9]*)?-/i.test(value)?$('root').value+'-'+value:value;
+        const result=await window.LXYdna.resolve(scopedValue,mutationMode.value);
         if(token!==mutationToken)return;
         mutationResolved=result;
-        $('mutationStatus').textContent=result.known
-          ?'يشمل التحور وفروعه المتحدرة — المصدر: '+result.sources.join('، ')
-           :result.reason||'لم يُعثر على هذا التحور في المشجرات المتاحة؛ تحقق من الاسم.';
+        $('mutationStatus').textContent=result.reason||(
+          result.exact?'مطابقة اسم التحور نفسه فقط — المصدر: سجل الأطلس.':
+          'يشمل التحور وفروعه المتحدرة — المصادر: '+result.sources.join('، ')+(result.partial?'؛ إحدى المشجرات غير متاحة، وقد تنقص النتائج.':''));
       }catch(e){
         if(token!==mutationToken)return;
         mutationResolved={known:false,matches:()=>false};
         $('mutationStatus').textContent='تعذر التحقق من المشجرة؛ لا تُعرض نتائج غير مؤكدة. '+e.message;
       }
       filter();
-    },400);
-  });
-  fields.forEach(id=>$(id).addEventListener(id==='q'?'input':'change',()=> {
+    },0);
+  };
+  mutationApply.addEventListener('click',applyMutation);
+  $('mutation').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applyMutation();}});
+  $('mutation').addEventListener('input',()=>{$('mutationStatus').textContent='اضغط «بحث التحور» لتطبيق الاسم الجديد.';});
+  mutationMode.addEventListener('change',applyMutation);
+  fields.filter(id=>id!=='q').forEach(id=>$(id).addEventListener('change',()=> {
     mapSelectionRecords=null;$('mapSelection').hidden=true;
-    clearTimeout(timer);timer=setTimeout(filter,id==='q'?250:0)
+    clearTimeout(timer);if(id==='root'&&$('mutation').value.trim())applyMutation();else timer=setTimeout(filter,0)
   }));$('withCoordinatesOnly').addEventListener('click',()=>{const button=$('withCoordinatesOnly');button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));mapSelectionRecords=null;$('mapSelection').hidden=true;filter()});$('recenter').addEventListener('click',filter);$('reset').addEventListener('click',()=> {
     fields.forEach(id=>$(id).value='');$('withCoordinatesOnly').setAttribute('aria-pressed','false');$('mutation').value='';mutationToken++;mutationResolved=null;$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';mapSelectionRecords=null;$('mapSelection').hidden=true;filter()
   });$('prev').addEventListener('click',()=> {
