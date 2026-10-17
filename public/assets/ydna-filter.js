@@ -2,10 +2,10 @@
 (()=>{'use strict';
  const norm=value=>{
    let s=String(value||'').trim().toUpperCase().replace(/\s+/g,'');
-   s=s.replace(/^[A-T]-/,'').replace(/\((?:H|T)\)$/,'');
+   s=s.replace(/^[A-T](?:\d+[A-Z0-9]*)?-/,'').replace(/\((?:H|T)\)$/,'');
    return /^[A-Z]{1,8}[0-9]{1,12}$/.test(s)?s:'';
  };
- const explicitRoot=value=>{const m=/^([A-T])-/i.exec(String(value||'').trim());return m?m[1].toUpperCase():null};
+ const explicitRoot=value=>{const m=/^([A-T])(?:\d+[A-Z0-9]*)?-/i.exec(String(value||'').trim());return m?m[1].toUpperCase():null};
  const sources=[],sourceErrors=[];let loading=null;
  function makeSource(name){return {name,nodes:[],byAlias:new Map()}}
  function addAlias(src,node,label){
@@ -68,14 +68,15 @@
  async function ready(){
    if(loading)return loading;
    loading=(async()=>{
+     sources.length=0;sourceErrors.length=0;
      const jobs=[
        ['YFull','https://raw.githubusercontent.com/YFullTeam/YTree/master/current_tree.json',addYFull],
        ['FamilyTreeDNA','https://www.familytreedna.com/public/y-dna-haplotree/get',addFTDNA]
      ];
-     for(const [name,url,parse] of jobs){
+     await Promise.all(jobs.map(async([name,url,parse])=>{
        try{parse(await getJSON(url))}
        catch(e){sourceErrors.push(name+': '+e.message);console.warn('Y-DNA source unavailable',name,e)}
-     }
+     }));
      if(!sources.length)throw Error('تعذر تحميل أي مشجرة جينية');
      return sources.map(s=>s.name);
    })().catch(e=>{loading=null;throw e});
@@ -92,22 +93,26 @@
    if(unique.length!==1)return {ambiguous:true};
    return {ancestor:unique[0]};
  }
- async function resolve(input){
-   const loaded=await ready(),key=norm(input),wantedRoot=explicitRoot(input);
-   if(!key)return {known:false,reason:'اسم التحور غير صالح',sources:loaded,matches:()=>false};
+ async function resolve(input,mode='descendants'){
+   const key=norm(input),wantedRoot=explicitRoot(input);
+   if(!key)return {known:false,reason:'اسم التحور غير صالح',sources:[],matches:()=>false};
+   const exact=(recordLabel,recordRoot)=>norm(recordLabel)===key&&(!wantedRoot||String(recordRoot||'').toUpperCase()===wantedRoot);
+   if(mode==='exact')return {known:true,exact:true,sources:['بيانات أطلس الرفات'],matches:exact};
+   let loaded;
+   try{loaded=await ready()}catch(e){return {known:true,fallback:true,reason:'تعذر تحميل المشجرات؛ المعروض الآن مطابقات الاسم المباشرة فقط.',sources:[],matches:exact};}
    const possible=new Set();
    for(const src of sources)for(const n of src.byAlias.get(key)||[])if(n.root)possible.add(n.root);
-   if(wantedRoot&&!possible.has(wantedRoot))return {known:false,reason:'التحور غير موجود تحت السلالة المختارة',sources:loaded,matches:()=>false};
-   if(!wantedRoot&&possible.size>1)return {known:false,ambiguous:true,reason:'التحور مسجل في أكثر من سلالة؛ اكتب اسم السلالة معه',sources:loaded,matches:()=>false};
+   if(wantedRoot&&!possible.has(wantedRoot))return {known:true,fallback:true,reason:'لا توجد علاقة شجرية لهذا الاسم تحت السلالة المحددة؛ المعروض مطابقات مباشرة فقط.',sources:loaded,matches:exact};
+   if(!wantedRoot&&possible.size>1)return {known:true,fallback:true,ambiguous:true,reason:'التحور مسجل في أكثر من سلالة؛ المعروض مطابقات مباشرة فقط. اكتب السلالة معه لتحديد الفرع.',sources:loaded,matches:exact};
    const root=wantedRoot||[...possible][0];
-   if(!root)return {known:false,reason:'التحور غير موجود في المشجرات المتاحة',sources:loaded,matches:()=>false};
+   if(!root)return {known:true,fallback:true,reason:'التحور غير موجود في المشجرات المتاحة؛ المعروض مطابقات مباشرة فقط.',sources:loaded,matches:exact};
    const queries=[];
    for(const src of sources){
      const q=sourceQuery(src,key,root);
-     if(q&&q.ambiguous)return {known:false,ambiguous:true,reason:'تعارض في موضع التحور داخل المشجرة',sources:loaded,matches:()=>false};
+     if(q&&q.ambiguous)return {known:true,fallback:true,ambiguous:true,reason:'تعارض في موضع التحور داخل المشجرة؛ المعروض مطابقات مباشرة فقط.',sources:loaded,matches:exact};
      if(q)queries.push({src,ancestor:q.ancestor});
    }
-   if(!queries.length)return {known:false,reason:'لا توجد علاقة شجرية موثقة لهذا التحور',sources:loaded,matches:()=>false};
+   if(!queries.length)return {known:true,fallback:true,reason:'لا توجد علاقة شجرية متاحة لهذا التحور؛ المعروض مطابقات مباشرة فقط.',sources:loaded,matches:exact};
    const matches=(recordLabel,recordRoot)=>{
      if(String(recordRoot||'').toUpperCase()!==root)return false;
      const raw=String(recordLabel||'').trim();
