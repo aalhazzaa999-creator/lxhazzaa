@@ -128,7 +128,7 @@
   resultsHead.append(menu);
   menu.querySelector('[data-share-search]').addEventListener('click',()=>{const previousIds=sharedIds,previousGroup=selectedGroup;sharedIds=null;selectedGroup=null;shareButton.click();sharedIds=previousIds;selectedGroup=previousGroup;menu.open=false;});
   menu.querySelector('[data-share-point]').addEventListener('click',()=>{if(!mapSelectionRecords){shareStatus.textContent='اختر نقطة من الخريطة أولًا.';return;}shareButton.click();menu.open=false;});
-    const shareStatus=document.createElement('p');shareStatus.className='smallnote';shareStatus.setAttribute('role','status');shareButton.after(shareStatus);
+    const shareStatus=document.createElement('p');shareStatus.className='smallnote';shareStatus.setAttribute('role','status');resultsHead.append(shareStatus);
   shareButton.addEventListener('click',async()=>{
     const url=shareUrl();
     try{
