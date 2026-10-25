@@ -126,7 +126,27 @@
   const shareIcon=document.createElement('button');shareIcon.type='button';shareIcon.className='atlas-title-share';
   shareIcon.setAttribute('aria-label','مشاركة النتائج المعروضة');shareIcon.title='مشاركة النتائج المعروضة';
   shareIcon.innerHTML='<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><path d="m8 11 8-5M8 13l8 5"/></svg>';
-  titleBox.append(shareIcon);shareIcon.addEventListener('click',()=>shareButton.click());
+  titleBox.append(shareIcon);
+  const exportMenu=document.createElement('div');exportMenu.className='atlas-export-menu';exportMenu.hidden=true;
+  exportMenu.innerHTML='<button type="button" data-action="link">مشاركة رابط النتائج</button><button type="button" data-action="print">تصدير PDF / طباعة</button>';
+  titleBox.append(exportMenu);
+  shareIcon.addEventListener('click',()=>{exportMenu.hidden=!exportMenu.hidden});
+  document.addEventListener('click',e=>{if(!titleBox.contains(e.target))exportMenu.hidden=true});
+  exportMenu.querySelector('[data-action="link"]').addEventListener('click',()=>{exportMenu.hidden=true;shareButton.click()});
+  exportMenu.querySelector('[data-action="print"]').addEventListener('click',()=>{exportMenu.hidden=true;printResults()});
+  function printResults(){
+    const auth=window.LXAuth,user=auth?.getUser(),role=user?auth?.getRole():'guest';
+    const max=role==='owner'||role==='admin'?Infinity:user?100:20;
+    const rows=filtered.slice(0,max);
+    if(!rows.length){shareStatus.textContent='لا توجد نتائج لتصديرها.';return;}
+    const popup=window.open('','_blank');
+    if(!popup){shareStatus.textContent='اسمح بفتح نافذة الطباعة لهذا الموقع ثم حاول مجددًا.';return;}
+    const total=filtered.length,limit=Number.isFinite(max)?' (الحد '+max+' عينة)':'';
+    const body=rows.map(r=>'<tr><td dir="ltr">'+esc(r.id)+'</td><td>'+esc(r.site||r.country||'غير متوفر')+'</td><td>'+esc(r.ageText||((r.ageBP!=null)?Math.round(r.ageBP).toLocaleString('ar-SA')+' سنة قبل الحاضر':'غير متوفر'))+'</td><td dir="ltr">'+esc(r.y||'غير متوفر')+'</td></tr>').join('');
+    const doc='<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><title>نتائج أطلس الرفات — LXHAZZAA</title><style>@page{size:A4 landscape;margin:12mm}body{font:14px Arial,Tahoma,sans-serif;color:#0b1018;margin:0}header{background:#0b1018;color:#d4af7c;padding:18px 24px;display:flex;align-items:center;gap:24px}header img{width:210px;max-height:100px;object-fit:contain}h1{font-size:23px}main{padding:18px}table{border-collapse:collapse;width:100%;table-layout:fixed}th{background:#1b2a3a;color:#f1ebd7}td,th{padding:9px;border:1px solid #a6b8b6;text-align:right;overflow-wrap:anywhere}tr{break-inside:avoid}thead{display:table-header-group}footer{margin-top:20px;color:#555}.controls{padding:12px;text-align:center}@media print{.controls{display:none}header{-webkit-print-color-adjust:exact;print-color-adjust:exact}th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style><header><img src="/assets/atlas-logo.webp" alt="شعار أطلس الرفات"><div><h1>أطلس الرفات القديمة · نتائج البحث</h1><span>LXHAZZAA · HUMAN REMAINS ATLAS</span></div></header><main><p>النتائج المطابقة: '+total+' · المعروضة في التصدير: '+rows.length+limit+'</p><table><thead><tr><th>معرّف العينة</th><th>الموقع</th><th>العمر</th><th>التحور Y</th></tr></thead><tbody>'+body+'</tbody></table><footer>بيانات أطلس LXHAZZAA حسب النتائج وقت التصدير. الحقول غير المتوفرة لا تُستنتج.</footer></main><div class="controls"><button onclick="window.print()">طباعة / حفظ PDF</button></div></html>';
+    popup.document.open();popup.document.write(doc);popup.document.close();
+    shareStatus.textContent='جاهز للطباعة: '+rows.length+' من '+total+' عينة'+limit+'.';
+  }
   const shareStatus=document.createElement('p');shareStatus.className='smallnote';shareStatus.setAttribute('role','status');titleBox.append(shareStatus);
   shareButton.addEventListener('click',async()=>{
     const url=shareUrl();
