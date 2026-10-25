@@ -858,3 +858,8 @@ body:has(.atlas-layout) .research-scope{color:#c5b7a1;font-size:11px}
 .lx-guest-limit-card{width:min(460px,100%);background:#11161d;border:1px solid #c5a16c;border-radius:18px;box-shadow:0 25px 90px #000b;color:#f6e7d1;padding:28px;line-height:1.9}
 .lx-guest-limit-card h2{color:#eac48b;font-size:23px;margin:0 0 10px}.lx-guest-limit-card p{margin:0 0 22px}
 .lx-guest-limit-actions{display:flex;gap:10px;flex-wrap:wrap}.lx-guest-limit-actions button{border:1px solid #bd9760;border-radius:10px;padding:10px 15px;cursor:pointer;background:#c8a36f;color:#0b1018;font-weight:700}.lx-guest-limit-actions [data-lx-guest-dismiss]{background:transparent;color:#eac48b}
+
+.atlas-stats-title{position:relative;padding-left:54px}
+.atlas-title-share{position:absolute;left:0;top:0;display:grid;place-items:center;width:44px;height:44px;border:1px solid #b89564;border-radius:12px;background:#14191fe6;color:#d4af7c;cursor:pointer}
+.atlas-title-share:hover,.atlas-title-share:focus-visible{background:#d4af7c;color:#111820;outline:2px solid #f5f1e8;outline-offset:2px}
+.atlas-stats-title .smallnote[role=status]:empty{display:none}
