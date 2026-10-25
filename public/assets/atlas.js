@@ -329,7 +329,7 @@
   document.addEventListener('lx-atlas-data-loaded',()=>{const broad=all.filter(r=>r.y&&!window.LXYdna?.norm(r.y)).length;coverageNote.textContent=broad.toLocaleString('ar-SA')+' سجلًا يحمل وصف Y عامًا أو صيغة غير قابلة للمطابقة برقم تحور؛ ابحث عنها عبر فلتر السلالة أو معرّف العينة.';});
   const applyMutation=()=>{
     const value=$('mutation').value.trim(),token=++mutationToken;
-    mutationResolved=null;mapSelectionRecords=null;$('mapSelection').hidden=true;
+    mutationResolved=null;mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;
     clearTimeout(timer);
     if(!value){$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';filter();return;}
     $('mutationStatus').textContent='جارٍ التحقق من التحور وفروعه في المشجرات…';
@@ -357,10 +357,10 @@
   $('mutation').addEventListener('input',()=>{$('mutationStatus').textContent='اضغط «بحث التحور» لتطبيق الاسم الجديد.';});
   mutationMode.addEventListener('change',applyMutation);
   fields.filter(id=>id!=='q').forEach(id=>$(id).addEventListener('change',()=> {
-    mapSelectionRecords=null;$('mapSelection').hidden=true;
+    mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;
     clearTimeout(timer);if(id==='root'&&$('mutation').value.trim())applyMutation();else timer=setTimeout(filter,0)
-  }));$('withCoordinatesOnly').addEventListener('click',()=>{const button=$('withCoordinatesOnly');button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));mapSelectionRecords=null;$('mapSelection').hidden=true;filter()});$('recenter').addEventListener('click',filter);$('reset').addEventListener('click',()=> {
-    sharedRecordId='';pendingSharedRecord='';pendingSharedPage=0;history.replaceState(null,'',location.pathname);fields.forEach(id=>$(id).value='');$('withCoordinatesOnly').setAttribute('aria-pressed','false');$('mutation').value='';mutationToken++;mutationResolved=null;$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';mapSelectionRecords=null;$('mapSelection').hidden=true;filter()
+  }));$('withCoordinatesOnly').addEventListener('click',()=>{const button=$('withCoordinatesOnly');button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;filter()});$('recenter').addEventListener('click',filter);$('reset').addEventListener('click',()=> {
+    sharedRecordId='';pendingSharedRecord='';pendingSharedPage=0;history.replaceState(null,'',location.pathname);fields.forEach(id=>$(id).value='');$('withCoordinatesOnly').setAttribute('aria-pressed','false');$('mutation').value='';mutationToken++;mutationResolved=null;$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;filter()
   });$('prev').addEventListener('click',()=> {
     page--;render();$('records').scrollIntoView( {
       behavior:'smooth'
