@@ -235,12 +235,13 @@
       const projected = map.project([Number(r.lat), Number(r.lng)], zoom);
       const key = Math.floor(projected.x / cellSize) + ':' + Math.floor(projected.y / cellSize);
       let group = groups.get(key);
-      if (!group) { group = { count: 0, lat: 0, lng: 0, sample: r, country: true, records: [] }; groups.set(key, group); }
+      if (!group) { group = { count: 0, lat: 0, lng: 0, sample: r, country: true, countryOnly: true, records: [] }; groups.set(key, group); }
       group.records.push(r);
       group.count++;
       group.lat += Number(r.lat);
       group.lng += Number(r.lng);
       if (r.locationType === 'site') group.country = false;
+      if (r.locationType !== 'country') group.countryOnly = false;
     }
     const visible = [];
     for (const g of groups.values()) {
@@ -254,7 +255,7 @@
     }
     visible.sort((a,b) => b.count-a.count);
     for (const g of visible.slice(0, 1400)) {
-      const color = g.country ? '#B08A56' : '#86AFC1';
+      const color = !g.country ? '#86AFC1' : g.countryOnly ? '#CE735B' : '#B08A56';
       const marker = L.circleMarker([g.lat,g.lng], {
         radius: g.count > 1 ? Math.min(19, 6 + Math.log2(g.count) * 1.6) : 5,
         weight: 1.5, color:'#0B1018', fillColor:color, fillOpacity:.86, renderer:canvasRenderer
@@ -263,7 +264,7 @@
       marker.on('click', () => selectMapGroup(g));
       marker.addTo(layer);
     }
-    $('mapNote').textContent = 'تغطي الخريطة ' + fmt(points.length) + ' سجلًا بإحداثيات، مجمّعة في ' + fmt(groups.size) + ' مجموعة حسب مستوى التكبير. الذهبي: موقع تقريبي لدولة أو مدينة. الأزرق: موقع أثري. لا تمثل النقاط قبورًا مؤكدة.';
+    $('mapNote').textContent = 'تغطي الخريطة ' + fmt(points.length) + ' سجلًا بإحداثيات، مجمّعة في ' + fmt(groups.size) + ' مجموعة حسب مستوى التكبير. الأحمر الطيني: الدولة معلومة فقط. الذهبي: مدينة تقريبية. الأزرق: موقع أثري. لا تمثل النقاط قبورًا مؤكدة.';
   }
   function selectMapGroup(group) {
     selectedGroup={lat:group.lat,lng:group.lng,zoom:map.getZoom()};sharedIds=group.records.map(r=>r.id);mapSelectionRecords=new Set(group.records);
