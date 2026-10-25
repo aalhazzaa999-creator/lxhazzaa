@@ -99,7 +99,7 @@
       if(match&&Math.abs(+match[1])<=90&&Math.abs(+match[2])<=180)map.setView([+match[1],+match[2]],map.getZoom());
     }
     const samples=initialShare.get('samples');
-    if(samples&&samples.length<6000){const ids=samples.split(',').filter(x=>/^[A-Za-z0-9_.-]{1,80}$/.test(x));if(ids.length&&ids.length<=100){sharedIds=ids;mapSelectionRecords=new Set(all.filter(r=>ids.includes(r.id)));$('mapSelectionTitle').textContent='قائمة العينات المشتركة';$('mapSelectionBody').textContent='العينات التي شاركها الباحث: '+ids.length;const share=document.createElement('button');share.type='button';share.className='btn ghost';share.textContent='↗';share.setAttribute('aria-label','مشاركة قائمة العينات');share.style.marginInlineStart='12px';$('mapSelectionBody').appendChild(share);share.addEventListener('click',()=>shareButton.click());$('mapSelection').hidden=false;}}
+    if(samples&&samples.length<6000){const ids=samples.split(',').filter(x=>/^[A-Za-z0-9_.-]{1,80}$/.test(x));if(ids.length&&ids.length<=100){sharedIds=ids;mapSelectionRecords=new Set(all.filter(r=>ids.includes(r.id)));$('mapSelectionTitle').textContent='قائمة العينات المشتركة';$('mapSelectionBody').textContent='العينات التي شاركها الباحث: '+ids.length;const share=document.createElement('button');share.type='button';share.className='btn ghost';share.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><path d="m8 11 8-5M8 13l8 5"/></svg>';share.setAttribute('aria-label','مشاركة قائمة العينات');share.style.marginInlineStart='12px';$('mapSelectionBody').appendChild(share);share.addEventListener('click',()=>shareButton.click());$('mapSelection').hidden=false;}}
     const point=initialShare.get('point'),zoom=Number(initialShare.get('zoom'));
     const pointMatch=point&&/^(-?\d{1,2}(?:\.\d{1,5})?),(-?\d{1,3}(?:\.\d{1,5})?)$/.exec(point);
     if(!sharedIds&&pointMatch&&zoom>=1&&zoom<=17&&map){pendingGroup={lat:+pointMatch[1],lng:+pointMatch[2],zoom};map.setView([pendingGroup.lat,pendingGroup.lng],zoom);}
@@ -279,7 +279,7 @@
       '<button type="button" id="clearMapGroup" class="btn ghost">إظهار جميع النتائج من جديد</button>';
     panel.hidden=false;
     const countLine=panel.querySelector('.smallnote');
-    if(countLine){const share=document.createElement('button');share.type='button';share.className='btn ghost';share.setAttribute('aria-label','مشاركة قائمة العينات');share.title='مشاركة قائمة العينات';share.innerHTML='↗';share.style.marginInlineStart='12px';countLine.appendChild(share);share.addEventListener('click',()=>shareButton.click());}
+    if(countLine){const share=document.createElement('button');share.type='button';share.className='btn ghost';share.setAttribute('aria-label','مشاركة قائمة العينات');share.title='مشاركة قائمة العينات';share.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><path d="m8 11 8-5M8 13l8 5"/></svg>';share.style.marginInlineStart='12px';countLine.appendChild(share);share.addEventListener('click',()=>shareButton.click());}
     $('clearMapGroup').addEventListener('click',clearMapGroup);
     $('shareMapGroup').addEventListener('click',()=>shareButton.click());
     filter();
