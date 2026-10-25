@@ -64,7 +64,7 @@
   }
   // Share only public search state; never include account or session information.
   const shareKeys={q:'q',mutation:'mutation',root:'root',country:'country',sex:'sex',locationType:'place',spatialClassification:'spatial',radius:'radius'};
-  let sharedRecordId='',pendingSharedRecord='',pendingSharedPage=0,selectedGroup=null,pendingGroup=null;
+  let sharedRecordId='',pendingSharedRecord='',pendingSharedPage=0,selectedGroup=null,pendingGroup=null,sharedIds=null;
   const initialShare=new URLSearchParams(location.search);
   function shareUrl(){
     const url=new URL('/lxhuman/',location.origin);
@@ -78,6 +78,7 @@
       const center=map.getCenter();
       url.searchParams.set('center',center.lat.toFixed(5)+','+center.lng.toFixed(5));
     }
+    if(sharedIds&&sharedIds.length&&sharedIds.length<=100){url.searchParams.set('samples',sharedIds.join(','));}
     if(selectedGroup){url.searchParams.set('point',selectedGroup.lat.toFixed(5)+','+selectedGroup.lng.toFixed(5));url.searchParams.set('zoom',String(selectedGroup.zoom));}
     if(page)url.searchParams.set('page',String(page+1));
     if(sharedRecordId)url.searchParams.set('record',sharedRecordId);
@@ -97,9 +98,11 @@
       const match=/^(-?\d{1,2}(?:\.\d{1,5})?),(-?\d{1,3}(?:\.\d{1,5})?)$/.exec(center);
       if(match&&Math.abs(+match[1])<=90&&Math.abs(+match[2])<=180)map.setView([+match[1],+match[2]],map.getZoom());
     }
+    const samples=initialShare.get('samples');
+    if(samples&&samples.length<6000){const ids=samples.split(',').filter(x=>/^[A-Za-z0-9_.-]{1,80}$/.test(x));if(ids.length&&ids.length<=100){sharedIds=ids;mapSelectionRecords=new Set(all.filter(r=>ids.includes(r.id)));$('mapSelectionTitle').textContent='قائمة العينات المشتركة';$('mapSelectionBody').textContent='العينات التي شاركها الباحث: '+ids.length;$('mapSelection').hidden=false;}}
     const point=initialShare.get('point'),zoom=Number(initialShare.get('zoom'));
     const pointMatch=point&&/^(-?\d{1,2}(?:\.\d{1,5})?),(-?\d{1,3}(?:\.\d{1,5})?)$/.exec(point);
-    if(pointMatch&&zoom>=1&&zoom<=17&&map){pendingGroup={lat:+pointMatch[1],lng:+pointMatch[2],zoom};map.setView([pendingGroup.lat,pendingGroup.lng],zoom);}
+    if(!sharedIds&&pointMatch&&zoom>=1&&zoom<=17&&map){pendingGroup={lat:+pointMatch[1],lng:+pointMatch[2],zoom};map.setView([pendingGroup.lat,pendingGroup.lng],zoom);}
     pendingSharedPage=Math.max(0,Math.min(2000,(Number(initialShare.get('page'))||1)-1));
     pendingSharedRecord=(initialShare.get('record')||'').slice(0,120);
     if($('mutation').value.trim())applyMutation();else filter();
@@ -257,7 +260,7 @@
     $('mapNote').textContent = 'تغطي الخريطة ' + fmt(points.length) + ' سجلًا بإحداثيات، مجمّعة في ' + fmt(groups.size) + ' مجموعة حسب مستوى التكبير. الذهبي: موقع دولة تقريبي. الأزرق: موقع أثري أو منطقة. لا تمثل النقاط قبورًا مؤكدة.';
   }
   function selectMapGroup(group) {
-    selectedGroup={lat:group.lat,lng:group.lng,zoom:map.getZoom()};mapSelectionRecords=new Set(group.records);
+    selectedGroup={lat:group.lat,lng:group.lng,zoom:map.getZoom()};sharedIds=group.records.map(r=>r.id);mapSelectionRecords=new Set(group.records);
     const panel=$('mapSelection');
     $('mapSelectionTitle').textContent=group.count===1?'عينة محددة على الخريطة':'مجموعة من '+fmt(group.count)+' عينات على الخريطة';
     const siteNames=[...new Set(group.records.map(r=>r.site||r.country).filter(Boolean))];
@@ -276,7 +279,7 @@
     panel.scrollIntoView({behavior:'smooth',block:'nearest'});
   }
   function clearMapGroup() {
-    mapSelectionRecords=null;selectedGroup=null;
+    mapSelectionRecords=null;selectedGroup=null;sharedIds=null;
     $('mapSelection').hidden=true;
     filter();
   }
