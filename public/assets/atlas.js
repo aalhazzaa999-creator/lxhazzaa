@@ -266,9 +266,11 @@
       '<p class="smallnote">المواقع الممثلة: '+esc(siteNames.slice(0,6).join('، ')||'غير محددة')+
       (siteNames.length>6?'، وغيرها':'')+'</p>'+
       '<p class="smallnote">تنبيه: قد تضم الدائرة مواقع متقاربة جُمعت بصريًا وفق مستوى تكبير الخريطة، وليست بالضرورة موقعًا أثريًا واحدًا.</p>'+
+      '<button type="button" id="shareMapGroup" class="btn">مشاركة عينات هذا الموقع</button> '+
       '<button type="button" id="clearMapGroup" class="btn ghost">إظهار جميع النتائج من جديد</button>';
     panel.hidden=false;
     $('clearMapGroup').addEventListener('click',clearMapGroup);
+    $('shareMapGroup').addEventListener('click',()=>shareButton.click());
     filter();
     if(group.count===1)selectRecord(group.sample,null,false);
     panel.scrollIntoView({behavior:'smooth',block:'nearest'});
