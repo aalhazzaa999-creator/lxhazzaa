@@ -18,7 +18,7 @@
   "aadrVersion": "v66.p1 1240K",
   "aadrDOI": "https://doi.org/10.7910/DVN/FFIDCW",
   "total": 27264,
-  "withCoordinates": 17792,
+  "withCoordinates": 17793,
   "countryApproximate": 84,
   "withY": 14352,
   "withMt": 23156,
@@ -183,5 +183,5 @@
     "A00": 2
   },
   "notice": "Country coordinates are approximate, not burial locations. Y/mtDNA calls and age methods must retain source distinctions. FTDNA/YFull person-level imports are not verified.",
-  "cityApproximate": 137
+  "cityApproximate": 138
 }
