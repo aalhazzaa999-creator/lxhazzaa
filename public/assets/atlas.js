@@ -78,7 +78,7 @@
       const center=map.getCenter();
       url.searchParams.set('center',center.lat.toFixed(5)+','+center.lng.toFixed(5));
     }
-    if(sharedIds&&sharedIds.length&&sharedIds.length<=100){url.searchParams.set('samples',sharedIds.join(','));}
+    if(sharedIds&&sharedIds.length&&sharedIds.length<=300){url.searchParams.set('samples',sharedIds.join(','));}
     if(selectedGroup){url.searchParams.set('point',selectedGroup.lat.toFixed(5)+','+selectedGroup.lng.toFixed(5));url.searchParams.set('zoom',String(selectedGroup.zoom));}
     if(page)url.searchParams.set('page',String(page+1));
     if(sharedRecordId)url.searchParams.set('record',sharedRecordId);
@@ -99,7 +99,7 @@
       if(match&&Math.abs(+match[1])<=90&&Math.abs(+match[2])<=180)map.setView([+match[1],+match[2]],map.getZoom());
     }
     const samples=initialShare.get('samples');
-    if(samples&&samples.length<6000){const ids=samples.split(',').filter(x=>/^[A-Za-z0-9_.-]{1,80}$/.test(x));if(ids.length&&ids.length<=100){sharedIds=ids;mapSelectionRecords=new Set(all.filter(r=>ids.includes(r.id)));$('mapSelectionTitle').textContent='قائمة العينات المشتركة';$('mapSelectionBody').textContent='العينات التي شاركها الباحث: '+ids.length;const share=document.createElement('button');share.type='button';share.className='btn ghost';share.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><path d="m8 11 8-5M8 13l8 5"/></svg>';share.setAttribute('aria-label','مشاركة قائمة العينات');share.style.marginInlineStart='12px';$('mapSelectionBody').appendChild(share);share.addEventListener('click',()=>shareButton.click());$('mapSelection').hidden=false;}}
+    if(samples&&samples.length<6000){const ids=samples.split(',').filter(x=>/^[A-Za-z0-9_.-]{1,80}$/.test(x));if(ids.length&&ids.length<=300){sharedIds=ids;mapSelectionRecords=new Set(all.filter(r=>ids.includes(r.id)));$('mapSelectionTitle').textContent='قائمة العينات المشتركة';$('mapSelectionBody').textContent='العينات التي شاركها الباحث: '+ids.length;$('mapSelection').hidden=false;}}
     const point=initialShare.get('point'),zoom=Number(initialShare.get('zoom'));
     const pointMatch=point&&/^(-?\d{1,2}(?:\.\d{1,5})?),(-?\d{1,3}(?:\.\d{1,5})?)$/.exec(point);
     if(!sharedIds&&pointMatch&&zoom>=1&&zoom<=17&&map){pendingGroup={lat:+pointMatch[1],lng:+pointMatch[2],zoom};map.setView([pendingGroup.lat,pendingGroup.lng],zoom);}
@@ -122,13 +122,12 @@
   shareButton.type='button';shareButton.className='btn ghost';
   shareButton.textContent='مشاركة نتائج البحث';shareButton.setAttribute('aria-label','نسخ رابط نتائج البحث الحالية');
   shareButton.hidden=true;document.body.append(shareButton);
-  const resultsHead=$('records').closest('.results').querySelector('.results-head');
-  const menu=document.createElement('details');menu.className='atlas-share-menu';
-  menu.innerHTML='<summary aria-label="خيارات مشاركة النتائج" title="مشاركة النتائج">⋮</summary><div class="atlas-share-options"><button type="button" data-share-search>مشاركة نتائج البحث</button><button type="button" data-share-point>مشاركة قائمة الخريطة</button></div>';
-  resultsHead.append(menu);
-  menu.querySelector('[data-share-search]').addEventListener('click',()=>{const previousIds=sharedIds,previousGroup=selectedGroup;sharedIds=null;selectedGroup=null;shareButton.click();sharedIds=previousIds;selectedGroup=previousGroup;menu.open=false;});
-  menu.querySelector('[data-share-point]').addEventListener('click',()=>{if(!mapSelectionRecords){shareStatus.textContent='اختر نقطة من الخريطة أولًا.';return;}shareButton.click();menu.open=false;});
-    const shareStatus=document.createElement('p');shareStatus.className='smallnote';shareStatus.setAttribute('role','status');resultsHead.append(shareStatus);
+  const titleBox=document.querySelector('.atlas-stats-title');
+  const shareIcon=document.createElement('button');shareIcon.type='button';shareIcon.className='atlas-title-share';
+  shareIcon.setAttribute('aria-label','مشاركة النتائج المعروضة');shareIcon.title='مشاركة النتائج المعروضة';
+  shareIcon.innerHTML='<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><path d="m8 11 8-5M8 13l8 5"/></svg>';
+  titleBox.append(shareIcon);shareIcon.addEventListener('click',()=>shareButton.click());
+  const shareStatus=document.createElement('p');shareStatus.className='smallnote';shareStatus.setAttribute('role','status');titleBox.append(shareStatus);
   shareButton.addEventListener('click',async()=>{
     const url=shareUrl();
     try{
@@ -276,13 +275,10 @@
       '<p class="smallnote">المواقع الممثلة: '+esc(siteNames.slice(0,6).join('، ')||'غير محددة')+
       (siteNames.length>6?'، وغيرها':'')+'</p>'+
       '<p class="smallnote">تنبيه: قد تضم الدائرة مواقع متقاربة جُمعت بصريًا وفق مستوى تكبير الخريطة، وليست بالضرورة موقعًا أثريًا واحدًا.</p>'+
-      '<button type="button" id="shareMapGroup" class="btn">مشاركة عينات هذا الموقع</button> '+
-      '<button type="button" id="clearMapGroup" class="btn ghost">إظهار جميع النتائج من جديد</button>';
+'<button type="button" id="clearMapGroup" class="btn ghost">إظهار جميع النتائج من جديد</button>';
     panel.hidden=false;
-    const countLine=panel.querySelector('.smallnote');
-    if(countLine){const share=document.createElement('button');share.type='button';share.className='btn ghost';share.setAttribute('aria-label','مشاركة قائمة العينات');share.title='مشاركة قائمة العينات';share.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><path d="m8 11 8-5M8 13l8 5"/></svg>';share.style.marginInlineStart='12px';countLine.appendChild(share);share.addEventListener('click',()=>shareButton.click());}
     $('clearMapGroup').addEventListener('click',clearMapGroup);
-    $('shareMapGroup').addEventListener('click',()=>shareButton.click());
+
     filter();
     if(group.count===1)selectRecord(group.sample,null,false);
     panel.scrollIntoView({behavior:'smooth',block:'nearest'});
