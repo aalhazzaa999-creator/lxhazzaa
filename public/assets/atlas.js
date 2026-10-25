@@ -60,8 +60,79 @@
   else showGuestLock();
   function filter() {
     if(!guestSearchAllowed())return;
-    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,coordinatesOnly=$('withCoordinatesOnly').getAttribute('aria-pressed')==='true',spatial=$('spatialClassification').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&mutationResolved.known&&mutationResolved.matches(r.y,r.yRoot)))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!coordinatesOnly||(r.lat!==null&&r.lng!==null))&&(!spatial||spatialFor(r).status===spatial)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render()
+    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,coordinatesOnly=$('withCoordinatesOnly').getAttribute('aria-pressed')==='true',spatial=$('spatialClassification').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&mutationResolved.known&&mutationResolved.matches(r.y,r.yRoot)))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!coordinatesOnly||(r.lat!==null&&r.lng!==null))&&(!spatial||spatialFor(r).status===spatial)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render();finishShareRestore()
   }
+  // Share only public search state; never include account or session information.
+  const shareKeys={q:'q',mutation:'mutation',root:'root',country:'country',sex:'sex',locationType:'place',spatialClassification:'spatial',radius:'radius'};
+  let sharedRecordId='',pendingSharedRecord='',pendingSharedPage=0;
+  const initialShare=new URLSearchParams(location.search);
+  function shareUrl(){
+    const url=new URL('/lxhuman/',location.origin);
+    for(const [id,key] of Object.entries(shareKeys)){
+      const value=$(id)?.value?.trim();
+      if(value)url.searchParams.set(key,value);
+    }
+    if($('mutation')?.value.trim())url.searchParams.set('mode',$('mutationMode').value);
+    if($('withCoordinatesOnly').getAttribute('aria-pressed')==='true')url.searchParams.set('coords','1');
+    if($('radius').value&&map){
+      const center=map.getCenter();
+      url.searchParams.set('center',center.lat.toFixed(5)+','+center.lng.toFixed(5));
+    }
+    if(page)url.searchParams.set('page',String(page+1));
+    if(sharedRecordId)url.searchParams.set('record',sharedRecordId);
+    return url.href;
+  }
+  function restoreShare(){
+    if(!initialShare.size)return;
+    for(const [id,key] of Object.entries(shareKeys)){
+      const value=initialShare.get(key);
+      if(value!==null&&($(id).tagName==='INPUT'||Array.from($(id).options||[]).some(o=>o.value===value)))$(id).value=value.slice(0,120);
+    }
+    const mode=initialShare.get('mode');
+    if(mode==='exact'||mode==='descendants')$('mutationMode').value=mode;
+    $('withCoordinatesOnly').setAttribute('aria-pressed',String(initialShare.get('coords')==='1'));
+    const center=initialShare.get('center');
+    if(center&&map){
+      const match=/^(-?\d{1,2}(?:\.\d{1,5})?),(-?\d{1,3}(?:\.\d{1,5})?)$/.exec(center);
+      if(match&&Math.abs(+match[1])<=90&&Math.abs(+match[2])<=180)map.setView([+match[1],+match[2]],map.getZoom());
+    }
+    pendingSharedPage=Math.max(0,Math.min(2000,(Number(initialShare.get('page'))||1)-1));
+    pendingSharedRecord=(initialShare.get('record')||'').slice(0,120);
+    if($('mutation').value.trim())applyMutation();else filter();
+  }
+  function finishShareRestore(){
+    if(!pendingSharedRecord&&!pendingSharedPage)return;
+    const id=pendingSharedRecord;pendingSharedRecord='';
+    if(id){
+      const index=filtered.findIndex(r=>r.id===id);
+      if(index!==-1){page=Math.floor(index/PAGE);sharedRecordId=id;render();selectRecord(filtered[index],null,false);return;}
+    }
+    page=Math.min(pendingSharedPage,Math.max(0,Math.ceil(filtered.length/PAGE)-1));
+    pendingSharedPage=0;
+    if(page)render();
+  }
+  const shareButton=document.createElement('button');
+  shareButton.type='button';shareButton.className='btn ghost';
+  shareButton.textContent='مشاركة نتائج البحث';shareButton.setAttribute('aria-label','نسخ رابط نتائج البحث الحالية');
+  $('recenter').after(shareButton);
+  const shareStatus=document.createElement('p');shareStatus.className='smallnote';shareStatus.setAttribute('role','status');shareButton.after(shareStatus);
+  shareButton.addEventListener('click',async()=>{
+    const url=shareUrl();
+    try{
+      if(navigator.share&&matchMedia('(pointer:coarse)').matches){
+        await navigator.share({title:'نتائج أطلس الرفات القديمة',url});
+        shareStatus.textContent='تمت مشاركة النتائج.';
+      }else{
+        await navigator.clipboard.writeText(url);
+        shareStatus.textContent='تم نسخ رابط النتائج. أرسله لمن تريد.';
+      }
+    }catch(e){
+      if(e.name==='AbortError')return;
+      shareStatus.innerHTML='';
+      const input=document.createElement('input');input.readOnly=true;input.value=url;input.setAttribute('aria-label','رابط نتائج البحث');
+      shareStatus.append('انسخ رابط النتائج: ',input);input.select();
+    }
+  });
   function studyUrl(r) {
     const raw=String(r.doi||'').trim();
     if(/^10\.\d{4,9}\/[\w.()/:;+-]+$/i.test(raw))return 'https://doi.org/'+encodeURI(raw);
@@ -121,6 +192,7 @@
         (x.institution?'<small>الجهة البحثية: '+esc(x.institution)+'</small>':'<small>الجهة البحثية غير مذكورة في السجل</small>')+
         (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">رابط الدراسة أو المصدر ↗</a>':'<span class="unverified">لا يتوفر رابط موثق في البيانات الحالية</span>')+
         '</article>').join(''):'<p class="smallnote">لا توجد دراسات موثقة مرتبطة بهذه العينة أو الموقع في البيانات المحمّلة.</p>');
+    sharedRecordId=r.id;
     $('recordDetailClose').hidden=false;
     if(scrollToPanel&&window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
   }
@@ -222,7 +294,7 @@
       const r=await fetch('/data/atlas/manifest.json');if(!r.ok)throw Error('تعذر تحميل فهرس البيانات');manifest=await r.json();$('loading').textContent=`جارٍ تحميل ${manifest.parts.length} أجزاء من البيانات…`;all=[];for(let i=0;i<manifest.parts.length;i++) {
         const p=manifest.parts[i];$('loading').textContent=`جارٍ تحميل البيانات (${i+1} من ${manifest.parts.length})…`;const response=await fetch('/data/atlas/'+encodeURIComponent(p));if(!response.ok)throw Error('تعذر تحميل '+p+' (HTTP '+response.status+')');const part=await response.json();if(!Array.isArray(part))throw Error('صيغة بيانات غير صحيحة في '+p);for(const record of part){if(/^israel$/i.test(String(record.country||'').trim())||String(record.country||'').trim()==='إسرائيل')record.country='Palestine Occupied';}all.push(...part);await new Promise(resolve=>setTimeout(resolve,0));
       }
-      if(all.length!==manifest.total)throw Error('عدد السجلات لا يطابق الفهرس');try{const sr=await fetch('/data/atlas/spatial-classifications.json');if(sr.ok){const parsed=await sr.json();if(parsed&&typeof parsed.records==='object'&&!Array.isArray(parsed.records))spatialAnnotations=parsed.records;}}catch(e){console.warn('تعذر تحميل التصنيف المكاني:',e)}opt('root',[...new Set(all.map(r=>r.yRoot))]);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';document.dispatchEvent(new Event('lx-atlas-data-loaded'));initMap();filter()
+      if(all.length!==manifest.total)throw Error('عدد السجلات لا يطابق الفهرس');try{const sr=await fetch('/data/atlas/spatial-classifications.json');if(sr.ok){const parsed=await sr.json();if(parsed&&typeof parsed.records==='object'&&!Array.isArray(parsed.records))spatialAnnotations=parsed.records;}}catch(e){console.warn('تعذر تحميل التصنيف المكاني:',e)}opt('root',[...new Set(all.map(r=>r.yRoot))]);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';document.dispatchEvent(new Event('lx-atlas-data-loaded'));initMap();restoreShare()
     }
     catch(e) {
       $('loading').textContent='خطأ في تحميل البيانات: '+e.message+' — تأكد من رفع مجلد data/atlas كاملًا إلى GitHub.';console.error(e)
@@ -269,7 +341,7 @@
     mapSelectionRecords=null;$('mapSelection').hidden=true;
     clearTimeout(timer);if(id==='root'&&$('mutation').value.trim())applyMutation();else timer=setTimeout(filter,0)
   }));$('withCoordinatesOnly').addEventListener('click',()=>{const button=$('withCoordinatesOnly');button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));mapSelectionRecords=null;$('mapSelection').hidden=true;filter()});$('recenter').addEventListener('click',filter);$('reset').addEventListener('click',()=> {
-    fields.forEach(id=>$(id).value='');$('withCoordinatesOnly').setAttribute('aria-pressed','false');$('mutation').value='';mutationToken++;mutationResolved=null;$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';mapSelectionRecords=null;$('mapSelection').hidden=true;filter()
+    sharedRecordId='';pendingSharedRecord='';pendingSharedPage=0;history.replaceState(null,'',location.pathname);fields.forEach(id=>$(id).value='');$('withCoordinatesOnly').setAttribute('aria-pressed','false');$('mutation').value='';mutationToken++;mutationResolved=null;$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';mapSelectionRecords=null;$('mapSelection').hidden=true;filter()
   });$('prev').addEventListener('click',()=> {
     page--;render();$('records').scrollIntoView( {
       behavior:'smooth'
