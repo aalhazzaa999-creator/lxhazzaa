@@ -1,0 +1,393 @@
+{
+  "source": "https://doi.org/10.1016/j.cell.2026.09.052",
+  "records": {
+    "I18198.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Almeria_Villaricos",
+      "yIfMissing": "",
+      "mtIfMissing": "L3f1b"
+    },
+    "I30587.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "",
+      "mtIfMissing": "M1a3b"
+    },
+    "I23762.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Merida_Blanes",
+      "yIfMissing": "",
+      "mtIfMissing": "U6a6b2"
+    },
+    "I23768.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Merida_Blanes",
+      "yIfMissing": "R1b1a1b1a1a2a7~",
+      "mtIfMissing": "H1bj"
+    },
+    "I20389.AG.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Girona_Pla",
+      "yIfMissing": "",
+      "mtIfMissing": "K1a3a"
+    },
+    "I19661.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Guadalajara_Gualda",
+      "yIfMissing": "",
+      "mtIfMissing": "H1t"
+    },
+    "I19796.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Tarragona_Antigons",
+      "yIfMissing": "",
+      "mtIfMissing": "K1a1a"
+    },
+    "I27078.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Tarragona_Jornet",
+      "yIfMissing": "",
+      "mtIfMissing": "U2e2a1a"
+    },
+    "I29525.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Tarragona_Masos",
+      "yIfMissing": "R1b1a1b1a1a2a1b1a1~",
+      "mtIfMissing": "J2b1a"
+    },
+    "I19659.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Guadalajara_Gualda",
+      "yIfMissing": "R2",
+      "mtIfMissing": "U5a1c"
+    },
+    "I19675.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Guadalajara_Cubillejo",
+      "yIfMissing": "",
+      "mtIfMissing": "HV0+195"
+    },
+    "I20278.AG.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Girona_Goges",
+      "yIfMissing": "J1a2a1a2d2b2b2~",
+      "mtIfMissing": "H1"
+    },
+    "I19667.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Guadalajara_Cubillejo",
+      "yIfMissing": "",
+      "mtIfMissing": "H+152"
+    },
+    "I23156.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Malaga_Acinipo",
+      "yIfMissing": "",
+      "mtIfMissing": "K1a+195"
+    },
+    "I19670.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Guadalajara_Cubillejo",
+      "yIfMissing": "R1b1a1b1a1a2a6",
+      "mtIfMissing": "H7"
+    },
+    "I19665.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Guadalajara_Cubillejo",
+      "yIfMissing": "",
+      "mtIfMissing": "H16"
+    },
+    "I30599.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "",
+      "mtIfMissing": "H14a2a"
+    },
+    "I30592.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "R1b1a1b1a1a2",
+      "mtIfMissing": "J2"
+    },
+    "I19666.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Guadalajara_Cubillejo",
+      "yIfMissing": "",
+      "mtIfMissing": "U3a"
+    },
+    "I30589.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "R1b1a1b1a1a2a",
+      "mtIfMissing": "U2e1c1"
+    },
+    "I30590.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "R1b1a1b1a1a2b1",
+      "mtIfMissing": "U5a2c"
+    },
+    "I30591.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "I2a1a1a1a2c1a1a~",
+      "mtIfMissing": "H3b5"
+    },
+    "I30597.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "G2a2a2",
+      "mtIfMissing": "HV0+195"
+    },
+    "I30930.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "R1b1a1b1b",
+      "mtIfMissing": "T1a1"
+    },
+    "I30932.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "R1b1a1b1a1a2a1b1a1~",
+      "mtIfMissing": "H1u"
+    },
+    "I30598.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "",
+      "mtIfMissing": "HV0+195"
+    },
+    "I32157.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Granada_Cortijo",
+      "yIfMissing": "",
+      "mtIfMissing": "U5b1"
+    },
+    "I30586.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Zaragoza_Lomas",
+      "yIfMissing": "",
+      "mtIfMissing": "U5b1b1g1a"
+    },
+    "I19673.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Guadalajara_Cubillejo",
+      "yIfMissing": "",
+      "mtIfMissing": "HV0+195"
+    },
+    "I29575.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Tarragona_Mineta",
+      "yIfMissing": "R1b1a1b1a1a2a1a",
+      "mtIfMissing": "U2e1a1"
+    },
+    "I20394.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Girona_Pla",
+      "yIfMissing": "R1b1a1b1a1a2",
+      "mtIfMissing": "H1e1a"
+    },
+    "I18401.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Almeria_Villaricos",
+      "yIfMissing": "",
+      "mtIfMissing": "H5b"
+    },
+    "I20271.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Girona_Pla",
+      "yIfMissing": "R1b1a1b1a1a2e1",
+      "mtIfMissing": "H55b"
+    },
+    "I20388.AG.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Girona_Pla",
+      "yIfMissing": "",
+      "mtIfMissing": "K1a3a1"
+    },
+    "I23280.AG.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Merida_Blanes",
+      "yIfMissing": "I1",
+      "mtIfMissing": "K1a24a"
+    },
+    "I23772.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Merida_Blanes",
+      "yIfMissing": "",
+      "mtIfMissing": "H27"
+    },
+    "I23763.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Merida_Blanes",
+      "yIfMissing": "R1b1a1b1a1a2c1",
+      "mtIfMissing": "U5b1+16189+@16192"
+    },
+    "I24953.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Merida_Blanes",
+      "yIfMissing": "G2a2b1a1b2a",
+      "mtIfMissing": "H"
+    },
+    "I23764.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Merida_Blanes",
+      "yIfMissing": "R1b1a1b1a1a2",
+      "mtIfMissing": "U5b1+16189+@16192"
+    },
+    "I23273.AG.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Merida_Blanes",
+      "yIfMissing": "I1",
+      "mtIfMissing": "J1b1a1"
+    },
+    "I28354.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Barcelona_Simanya",
+      "yIfMissing": "",
+      "mtIfMissing": "L1b1a"
+    },
+    "I19663.AG": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "South_Guadalajara_Gualda",
+      "yIfMissing": "",
+      "mtIfMissing": "J2a2b1a"
+    },
+    "I22103.AG.TW": {
+      "publication": {
+        "title": "Contrasting demographic impacts of Roman colonization and early medieval migrations in the Iberian Peninsula",
+        "doi": "https://doi.org/10.1016/j.cell.2026.09.052"
+      },
+      "siteIfMissing": "North_Castello_Alcolea",
+      "yIfMissing": "",
+      "mtIfMissing": "J1b1a1"
+    }
+  },
+  "locationConflicts": []
+}
