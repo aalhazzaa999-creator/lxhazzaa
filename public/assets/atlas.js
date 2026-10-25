@@ -121,7 +121,7 @@
   const shareButton=document.createElement('button');
   shareButton.type='button';shareButton.className='btn ghost';
   shareButton.textContent='مشاركة نتائج البحث';shareButton.setAttribute('aria-label','نسخ رابط نتائج البحث الحالية');
-  $('recenter').after(shareButton);
+  shareButton.hidden=true;document.body.append(shareButton);
   const resultsHead=$('records').closest('.results').querySelector('.results-head');
   const menu=document.createElement('details');menu.className='atlas-share-menu';
   menu.innerHTML='<summary aria-label="خيارات مشاركة النتائج" title="مشاركة النتائج">⋮</summary><div class="atlas-share-options"><button type="button" data-share-search>مشاركة نتائج البحث</button><button type="button" data-share-point>مشاركة قائمة الخريطة</button></div>';
