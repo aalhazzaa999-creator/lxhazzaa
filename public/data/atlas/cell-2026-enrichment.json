@@ -396,6 +396,54 @@
       "lng": 9.1829,
       "locationType": "city",
       "locationAccuracy": "نقطة تقريبية لمركز شتوتغارت؛ موقع العينة الدقيق غير محدد، ولا تمثل القبر"
+    },
+    "IRN57.SG": {
+      "lat": 32,
+      "lng": 53,
+      "locationType": "country",
+      "country": "Iran",
+      "locationAccuracy": "نقطة دولة تقريبية: الدراسة المنشورة تحدد الهضبة الإيرانية الشمالية؛ لا تمثل الموقع الأثري أو القبر",
+      "source": "https://doi.org/10.1038/s41598-025-99743-w"
+    },
+    "IRN61.TW": {
+      "lat": 32,
+      "lng": 53,
+      "locationType": "country",
+      "country": "Iran",
+      "locationAccuracy": "نقطة دولة تقريبية: الدراسة المنشورة تحدد الهضبة الإيرانية الشمالية؛ لا تمثل الموقع الأثري أو القبر",
+      "source": "https://doi.org/10.1038/s41598-025-99743-w"
+    },
+    "IRN65.TW": {
+      "lat": 32,
+      "lng": 53,
+      "locationType": "country",
+      "country": "Iran",
+      "locationAccuracy": "نقطة دولة تقريبية: الدراسة المنشورة تحدد الهضبة الإيرانية الشمالية؛ لا تمثل الموقع الأثري أو القبر",
+      "source": "https://doi.org/10.1038/s41598-025-99743-w"
+    },
+    "IRN68.TW": {
+      "lat": 32,
+      "lng": 53,
+      "locationType": "country",
+      "country": "Iran",
+      "locationAccuracy": "نقطة دولة تقريبية: الدراسة المنشورة تحدد الهضبة الإيرانية الشمالية؛ لا تمثل الموقع الأثري أو القبر",
+      "source": "https://doi.org/10.1038/s41598-025-99743-w"
+    },
+    "IRN69.SG": {
+      "lat": 32,
+      "lng": 53,
+      "locationType": "country",
+      "country": "Iran",
+      "locationAccuracy": "نقطة دولة تقريبية: الدراسة المنشورة تحدد الهضبة الإيرانية الشمالية؛ لا تمثل الموقع الأثري أو القبر",
+      "source": "https://doi.org/10.1038/s41598-025-99743-w"
+    },
+    "CAN.005.SG": {
+      "lat": 28.3,
+      "lng": -16.6,
+      "locationType": "country",
+      "country": "Spain",
+      "locationAccuracy": "نقطة تقريبية لجزر الكناري التابعة لإسبانيا وفق الدراسة؛ الجزيرة والموقع الفردي غير محسومين من السجل الحالي",
+      "source": "https://doi.org/10.1038/s41467-023-40198-w"
     }
   }
 }
