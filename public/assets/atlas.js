@@ -64,7 +64,7 @@
   }
   // Share only public search state; never include account or session information.
   const shareKeys={q:'q',mutation:'mutation',root:'root',country:'country',sex:'sex',locationType:'place',spatialClassification:'spatial',radius:'radius'};
-  let sharedRecordId='',pendingSharedRecord='',pendingSharedPage=0;
+  let sharedRecordId='',pendingSharedRecord='',pendingSharedPage=0,selectedGroup=null,pendingGroup=null;
   const initialShare=new URLSearchParams(location.search);
   function shareUrl(){
     const url=new URL('/lxhuman/',location.origin);
@@ -78,6 +78,7 @@
       const center=map.getCenter();
       url.searchParams.set('center',center.lat.toFixed(5)+','+center.lng.toFixed(5));
     }
+    if(selectedGroup){url.searchParams.set('point',selectedGroup.lat.toFixed(5)+','+selectedGroup.lng.toFixed(5));url.searchParams.set('zoom',String(selectedGroup.zoom));}
     if(page)url.searchParams.set('page',String(page+1));
     if(sharedRecordId)url.searchParams.set('record',sharedRecordId);
     return url.href;
@@ -96,6 +97,9 @@
       const match=/^(-?\d{1,2}(?:\.\d{1,5})?),(-?\d{1,3}(?:\.\d{1,5})?)$/.exec(center);
       if(match&&Math.abs(+match[1])<=90&&Math.abs(+match[2])<=180)map.setView([+match[1],+match[2]],map.getZoom());
     }
+    const point=initialShare.get('point'),zoom=Number(initialShare.get('zoom'));
+    const pointMatch=point&&/^(-?\d{1,2}(?:\.\d{1,5})?),(-?\d{1,3}(?:\.\d{1,5})?)$/.exec(point);
+    if(pointMatch&&zoom>=1&&zoom<=17&&map){pendingGroup={lat:+pointMatch[1],lng:+pointMatch[2],zoom};map.setView([pendingGroup.lat,pendingGroup.lng],zoom);}
     pendingSharedPage=Math.max(0,Math.min(2000,(Number(initialShare.get('page'))||1)-1));
     pendingSharedRecord=(initialShare.get('record')||'').slice(0,120);
     if($('mutation').value.trim())applyMutation();else filter();
@@ -234,6 +238,11 @@
       const lat = g.lat / g.count, lng = g.lng / g.count;
       if (map.getBounds().pad(.25).contains([lat, lng])) visible.push({ ...g, lat, lng });
     }
+    if(pendingGroup){
+      const target=pendingGroup;pendingGroup=null;
+      const chosen=[...groups.values()].find(g=>{const p=map.project([target.lat,target.lng],target.zoom);const gp=map.project([g.lat/g.count,g.lng/g.count],target.zoom);return Math.floor(p.x/cellSize)===Math.floor(gp.x/cellSize)&&Math.floor(p.y/cellSize)===Math.floor(gp.y/cellSize)});
+      if(chosen){selectedGroup={lat:target.lat,lng:target.lng,zoom:target.zoom};mapSelectionRecords=new Set(chosen.records);filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;queueMicrotask(()=>{render();$('mapSelectionTitle').textContent='عينات الموقع المشارك';$('mapSelectionBody').textContent='النتائج المعروضة تخص النقطة المختارة على الخريطة.';$('mapSelection').hidden=false;});}
+    }
     visible.sort((a,b) => b.count-a.count);
     for (const g of visible.slice(0, 1400)) {
       const color = g.country ? '#B08A56' : '#86AFC1';
@@ -248,7 +257,7 @@
     $('mapNote').textContent = 'تغطي الخريطة ' + fmt(points.length) + ' سجلًا بإحداثيات، مجمّعة في ' + fmt(groups.size) + ' مجموعة حسب مستوى التكبير. الذهبي: موقع دولة تقريبي. الأزرق: موقع أثري أو منطقة. لا تمثل النقاط قبورًا مؤكدة.';
   }
   function selectMapGroup(group) {
-    mapSelectionRecords=new Set(group.records);
+    selectedGroup={lat:group.lat,lng:group.lng,zoom:map.getZoom()};mapSelectionRecords=new Set(group.records);
     const panel=$('mapSelection');
     $('mapSelectionTitle').textContent=group.count===1?'عينة محددة على الخريطة':'مجموعة من '+fmt(group.count)+' عينات على الخريطة';
     const siteNames=[...new Set(group.records.map(r=>r.site||r.country).filter(Boolean))];
@@ -265,7 +274,7 @@
     panel.scrollIntoView({behavior:'smooth',block:'nearest'});
   }
   function clearMapGroup() {
-    mapSelectionRecords=null;
+    mapSelectionRecords=null;selectedGroup=null;
     $('mapSelection').hidden=true;
     filter();
   }
