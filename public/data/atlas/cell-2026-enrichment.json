@@ -389,5 +389,13 @@
       "mtIfMissing": "J1b1a1"
     }
   },
-  "locationConflicts": []
+  "locationConflicts": [],
+  "approximateLocations": {
+    "I0018.SG": {
+      "lat": 48.7758,
+      "lng": 9.1829,
+      "locationType": "city",
+      "locationAccuracy": "نقطة تقريبية لمركز شتوتغارت؛ موقع العينة الدقيق غير محدد، ولا تمثل القبر"
+    }
+  }
 }
