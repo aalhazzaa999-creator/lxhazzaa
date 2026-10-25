@@ -240,7 +240,7 @@
       group.count++;
       group.lat += Number(r.lat);
       group.lng += Number(r.lng);
-      if (r.locationType !== 'country') group.country = false;
+      if (r.locationType === 'site') group.country = false;
     }
     const visible = [];
     for (const g of groups.values()) {
@@ -263,7 +263,7 @@
       marker.on('click', () => selectMapGroup(g));
       marker.addTo(layer);
     }
-    $('mapNote').textContent = 'تغطي الخريطة ' + fmt(points.length) + ' سجلًا بإحداثيات، مجمّعة في ' + fmt(groups.size) + ' مجموعة حسب مستوى التكبير. الذهبي: موقع دولة تقريبي. الأزرق: موقع أثري أو منطقة. لا تمثل النقاط قبورًا مؤكدة.';
+    $('mapNote').textContent = 'تغطي الخريطة ' + fmt(points.length) + ' سجلًا بإحداثيات، مجمّعة في ' + fmt(groups.size) + ' مجموعة حسب مستوى التكبير. الذهبي: موقع تقريبي لدولة أو مدينة. الأزرق: موقع أثري. لا تمثل النقاط قبورًا مؤكدة.';
   }
   function selectMapGroup(group) {
     selectedGroup={lat:group.lat,lng:group.lng,zoom:map.getZoom()};sharedIds=group.records.map(r=>r.id);mapSelectionRecords=new Set(group.records);
