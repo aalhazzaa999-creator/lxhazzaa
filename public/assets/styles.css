@@ -863,3 +863,5 @@ body:has(.atlas-layout) .research-scope{color:#c5b7a1;font-size:11px}
 .atlas-title-share{position:absolute;left:0;top:0;display:grid;place-items:center;width:44px;height:44px;border:1px solid #b89564;border-radius:12px;background:#14191fe6;color:#d4af7c;cursor:pointer}
 .atlas-title-share:hover,.atlas-title-share:focus-visible{background:#d4af7c;color:#111820;outline:2px solid #f5f1e8;outline-offset:2px}
 .atlas-stats-title .smallnote[role=status]:empty{display:none}
+
+.atlas-export-menu{position:absolute;left:0;top:48px;z-index:1000;min-width:210px;padding:8px;border:1px solid #d4af7c;border-radius:10px;background:#0b1018;box-shadow:0 8px 25px #0008}.atlas-export-menu[hidden]{display:none}.atlas-export-menu button{display:block;width:100%;padding:11px;background:transparent;color:#f1ebd7;border:0;text-align:right;cursor:pointer}.atlas-export-menu button:hover{background:#1b2a3a}
