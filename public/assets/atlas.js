@@ -83,7 +83,7 @@
     return url.href;
   }
   function restoreShare(){
-    if(!initialShare.size)return;
+    if(!initialShare.size){filter();return;}
     for(const [id,key] of Object.entries(shareKeys)){
       const value=initialShare.get(key);
       if(value!==null&&($(id).tagName==='INPUT'||Array.from($(id).options||[]).some(o=>o.value===value)))$(id).value=value.slice(0,120);
