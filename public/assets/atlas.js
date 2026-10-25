@@ -122,7 +122,13 @@
   shareButton.type='button';shareButton.className='btn ghost';
   shareButton.textContent='مشاركة نتائج البحث';shareButton.setAttribute('aria-label','نسخ رابط نتائج البحث الحالية');
   $('recenter').after(shareButton);
-  const shareStatus=document.createElement('p');shareStatus.className='smallnote';shareStatus.setAttribute('role','status');shareButton.after(shareStatus);
+  const resultsHead=$('records').closest('.results').querySelector('.results-head');
+  const menu=document.createElement('details');menu.className='atlas-share-menu';
+  menu.innerHTML='<summary aria-label="خيارات مشاركة النتائج" title="مشاركة النتائج">⋮</summary><div class="atlas-share-options"><button type="button" data-share-search>مشاركة نتائج البحث</button><button type="button" data-share-point>مشاركة قائمة الخريطة</button></div>';
+  resultsHead.append(menu);
+  menu.querySelector('[data-share-search]').addEventListener('click',()=>{const previousIds=sharedIds,previousGroup=selectedGroup;sharedIds=null;selectedGroup=null;shareButton.click();sharedIds=previousIds;selectedGroup=previousGroup;menu.open=false;});
+  menu.querySelector('[data-share-point]').addEventListener('click',()=>{if(!mapSelectionRecords){shareStatus.textContent='اختر نقطة من الخريطة أولًا.';return;}shareButton.click();menu.open=false;});
+    const shareStatus=document.createElement('p');shareStatus.className='smallnote';shareStatus.setAttribute('role','status');shareButton.after(shareStatus);
   shareButton.addEventListener('click',async()=>{
     const url=shareUrl();
     try{
