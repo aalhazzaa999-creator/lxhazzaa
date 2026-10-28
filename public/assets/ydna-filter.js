@@ -70,7 +70,7 @@
    loading=(async()=>{
      sources.length=0;sourceErrors.length=0;
      const jobs=[
-       ['YFull','https://raw.githubusercontent.com/YFullTeam/YTree/master/current_tree.json',addYFull],
+       ['YFull','/data/phylogeny/ytree.json',addYFull],
        ['FamilyTreeDNA','https://www.familytreedna.com/public/y-dna-haplotree/get',addFTDNA]
      ];
      await Promise.all(jobs.map(async([name,url,parse])=>{
