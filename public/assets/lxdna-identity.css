@@ -83,3 +83,5 @@ html[data-lx-theme='light'] .lxdna .tree-nav button{background:#fffdf8;color:#18
 .lxdna .mt-compare,.lxdna .mt-database-info{padding:18px;border:1px solid var(--tree-line);border-radius:12px;margin:22px 0}
 html[data-lx-theme=light] .lxdna .mt-sample{--sample-accent:#8d4129}
 @media(max-width:600px){.lxdna .tree-choice{gap:12px}.lxdna .tree-choice button{padding:18px 8px;font-size:13px}.lxdna .mt-controls input,.lxdna .mt-controls select{flex-basis:100%;width:100%;font-size:16px}}
+
+.lxdna .mt-fields{display:flex;flex-wrap:wrap;gap:12px;border:0;padding:0;margin:0;min-width:0;width:100%;flex:1}.lxdna .mt-fields:disabled{opacity:.65}
