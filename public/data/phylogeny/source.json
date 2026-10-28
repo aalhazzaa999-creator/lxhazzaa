@@ -1,0 +1,10 @@
+{
+  "source": "YFullTeam/YTree",
+  "sourceURL": "https://github.com/YFullTeam/YTree",
+  "license": "CC BY 4.0",
+  "version": "14.06.0",
+  "retrieved": "2026-10-28",
+  "nodes": 69676,
+  "sourceSHA256": "98c6d8e0642533c01070142edad2a693c30ed86f972b1deb519218209a91df6d",
+  "changes": "Kept node names, SNP aliases and parent-child topology only. Sample data and age estimates omitted."
+}

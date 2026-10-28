@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="LXDNA Tree">
+ <rect width="160" height="160" rx="32" fill="#0e3b2e"/>
+ <g fill="none" stroke="#d3b77e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M69 137c24-24 25-44 8-65m13 65c-24-24-25-44-8-65M72 126h15m-18-13h23m-23-13h23m-17-13h12"/>
+  <path d="M80 75V45m0 22-25-22m25 17 28-25M64 52 43 63m49-10 23 11M79 48 62 28m20 20 16-28"/>
+ </g>
+ <g fill="#e4ce9f"><ellipse cx="62" cy="29" rx="6" ry="10" transform="rotate(-28 62 29)"/><ellipse cx="97" cy="21" rx="6" ry="10" transform="rotate(28 97 21)"/><ellipse cx="43" cy="62" rx="6" ry="10" transform="rotate(-65 43 62)"/><ellipse cx="116" cy="64" rx="6" ry="10" transform="rotate(65 116 64)"/><ellipse cx="53" cy="44" rx="6" ry="10" transform="rotate(-50 53 44)"/><ellipse cx="108" cy="38" rx="6" ry="10" transform="rotate(50 108 38)"/></g>
+</svg>

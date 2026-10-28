@@ -224,6 +224,7 @@
         (x.institution?'<small>الجهة البحثية: '+esc(x.institution)+'</small>':'<small>الجهة البحثية غير مذكورة في السجل</small>')+
         (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">رابط الدراسة أو المصدر ↗</a>':'<span class="unverified">لا يتوفر رابط موثق في البيانات الحالية</span>')+
         '</article>').join(''):'<p class="smallnote">لا توجد دراسات موثقة مرتبطة بهذه العينة أو الموقع في البيانات المحمّلة.</p>');
+    if(r.y)$('recordDetailBody').insertAdjacentHTML('afterbegin','<p><a class="btn" href="/lxdnatree/?mutation='+encodeURIComponent(r.y)+'">موضع التحور في LXDNA Tree ↗</a></p>');
     sharedRecordId=r.id;
     $('recordDetailClose').hidden=false;
     if(scrollToPanel&&window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
@@ -342,7 +343,7 @@
   // Text queries are committed deliberately, so pauses while typing do not consume the guest allowance.
   const qApply=document.createElement('button');qApply.type='button';qApply.className='btn ghost';qApply.textContent='بحث';qApply.setAttribute('aria-label','تنفيذ البحث بالنص');$('q').after(qApply);
   qApply.addEventListener('click',filter);$('q').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();filter();}});
-  const mutationMode=document.createElement('select');mutationMode.id='mutationMode';mutationMode.setAttribute('aria-label','طريقة مطابقة التحور');mutationMode.innerHTML='<option value="exact">التحور المكتوب نفسه</option><option value="descendants">التحور وفروعه المتحدرة</option>';
+  const mutationMode=document.createElement('select');mutationMode.id='mutationMode';mutationMode.setAttribute('aria-label','طريقة مطابقة التحور');mutationMode.innerHTML='<option value="descendants">التحور وفروعه المتحدرة</option><option value="exact">التحور المكتوب نفسه</option>';
   const modeLabel=document.createElement('label');modeLabel.htmlFor='mutationMode';modeLabel.textContent='طريقة مطابقة التحور';$('mutationStatus').after(modeLabel,mutationMode);
   const mutationApply=document.createElement('button');mutationApply.type='button';mutationApply.className='btn ghost';mutationApply.textContent='بحث التحور';mutationMode.after(mutationApply);
   const coverageNote=document.createElement('p');coverageNote.className='smallnote';mutationApply.after(coverageNote);
