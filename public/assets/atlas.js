@@ -229,7 +229,22 @@
     $('recordDetailClose').hidden=false;
     if(scrollToPanel&&window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
   }
+  let siteSummary={sites:[],excluded:0};
+  function renderSiteList() {
+    if(!$('siteListDetails')?.open)return;
+    const host=$('siteList');
+    host.innerHTML=siteSummary.sites.map(site=>'<div class="atlas-site-row"><div><bdi>'+esc(site.name)+'</bdi><small><bdi>'+esc(site.country||'دولة غير محددة')+'</bdi></small></div><div class="atlas-site-samples"><strong>'+fmt(site.count)+'</strong><span>سجل عينة</span></div></div>').join('')||'<p class="smallnote">لا توجد مواقع مسماة في النتائج الحالية.</p>';
+    $('siteListNote').innerHTML=siteSummary.excluded?'<span>سجلات دون موقع مسمى أو بإحداثيات دولة فقط:</span> <bdi>'+fmt(siteSummary.excluded)+'</bdi>':'';
+  }
+  $('siteListDetails')?.addEventListener('toggle',renderSiteList);
+  function renderSites() {
+    if(!$('siteCount')||!window.LXAtlasSites)return;
+    siteSummary=window.LXAtlasSites.summarize(filtered);
+    $('siteCount').textContent=fmt(siteSummary.sites.length);
+    renderSiteList();
+  }
   function render() {
+    renderSites();
     const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r.y).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${fmt(start+i+1)}. ${esc(r.name||r.id)}</strong><span>الدولة: ${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="record-right"><span class="y">${esc(r.y||'Y غير محدد')}</span><span class="record-hint">عرض التفاصيل والدراسات ←</span></span></button><div class="record-study">${studyUrl(r)?`<a href="${esc(studyUrl(r))}" target="_blank" rel="noopener noreferrer">فتح الدراسة ↗</a>`:'الدراسة: غير متوفر'}</div><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
   }
   function drawSearchCircle() {
@@ -290,11 +305,10 @@
     selectedGroup={lat:group.lat,lng:group.lng,zoom:map.getZoom()};sharedIds=group.records.map(r=>r.id);mapSelectionRecords=new Set(group.records);
     const panel=$('mapSelection');
     $('mapSelectionTitle').textContent=group.count===1?'عينة محددة على الخريطة':'مجموعة من '+fmt(group.count)+' عينات على الخريطة';
-    const siteNames=[...new Set(group.records.map(r=>r.site||r.country).filter(Boolean))];
+    const groupSiteCount=window.LXAtlasSites.summarize(group.records).sites.length;
     $('mapSelectionBody').innerHTML=
       '<p class="smallnote">عدد السجلات المرتبطة بالنقطة: <strong>'+fmt(group.count)+'</strong>. تم حصر قائمة نتائج البحث في هذه المجموعة؛ اضغط على أي عينة لقراءة بياناتها ودراساتها.</p>'+
-      '<p class="smallnote">المواقع الممثلة: '+esc(siteNames.slice(0,6).join('، ')||'غير محددة')+
-      (siteNames.length>6?'، وغيرها':'')+'</p>'+
+      '<p class="smallnote"><span>عدد المواقع:</span> <strong>'+fmt(groupSiteCount)+'</strong></p>'+
       '<p class="smallnote">تنبيه: قد تضم الدائرة مواقع متقاربة جُمعت بصريًا وفق مستوى تكبير الخريطة، وليست بالضرورة موقعًا أثريًا واحدًا.</p>'+
 '<button type="button" id="clearMapGroup" class="btn ghost">إظهار جميع النتائج من جديد</button>';
     panel.hidden=false;
