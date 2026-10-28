@@ -23,4 +23,19 @@ body:has(.universe-main) .globe-shine{display:none}
 @media(max-width:600px){.lx-visit-strip{gap:4px 10px;font-size:10px}}
 
 body:has(.universe-main) .node-dna{left:50%;top:87%}
-@media(max-width:700px){body:has(.universe-main) .node-dna{grid-column:1/-1;justify-self:center;max-width:50%}}
+/* Mobile cards belong to the grid; desktop orbit coordinates must not offset them. */
+@media(max-width:700px){
+ body:has(.universe-main) .universe-orbit{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 12px;padding-bottom:34px}
+ body:has(.universe-main) .orbit-node{position:static;inset:auto;transform:none;width:100%;max-width:none;min-width:0}
+ body:has(.universe-main) .node-dna{grid-column:1/-1;justify-self:center;width:min(100%,260px)}
+ body:has(.universe-main) .orbit-icon{flex-shrink:0}
+ body:has(.universe-main) .orbit-node strong{max-width:100%;line-height:1.6}
+ body:has(.universe-main) .topinner{gap:10px;flex-wrap:wrap;padding-block:10px}
+ body:has(.universe-main) .topinner .nav{flex-wrap:wrap;justify-content:flex-end;min-width:0}
+ body:has(.universe-main) .universe-bottom{margin-top:0}
+}
+@media(max-width:380px){
+ body:has(.universe-main) .lx-official-logo{max-width:62px;height:44px}
+ body:has(.universe-main) .topinner .nav{flex:1;gap:5px}
+ body:has(.universe-main) .nav button,body:has(.universe-main) .nav select{padding:8px 7px;font-size:10px}
+}

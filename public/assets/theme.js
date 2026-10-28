@@ -22,12 +22,14 @@
   apply(saved);
   const mount = () => {
     const language = document.querySelector('[data-lx-language]');
-    if (!language || document.querySelector('[data-lx-theme-toggle]')) return;
+    const slot = document.querySelector('[data-lx-theme-slot]');
+    if ((!language && !slot) || document.querySelector('[data-lx-theme-toggle]')) return;
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'lx-theme-toggle';
     button.dataset.lxThemeToggle = '';
-    language.insertAdjacentElement('afterend', button);
+    if (slot) slot.appendChild(button);
+    else language.insertAdjacentElement('afterend', button);
     button.addEventListener('click', () => {
       const next = document.documentElement.dataset.lxTheme === 'light' ? 'dark' : 'light';
       try { localStorage.setItem(key, next); } catch (_) { /* private browsing */ }

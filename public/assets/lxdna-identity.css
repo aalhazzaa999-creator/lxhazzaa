@@ -1,0 +1,64 @@
+/* LXDNA Tree — supplied identity artwork, shared LXHAZZAA account. */
+body.lxdna{--tree-bg:#071b15;--tree-panel:#102b22;--tree-text:#f0eadb;--tree-muted:#c1c9bc;--tree-line:#b4925c55;--tree-gold:#dcc18d;margin:0;background:var(--tree-bg);color:var(--tree-text);font-family:system-ui,sans-serif}
+.lxdna *{box-sizing:border-box}
+.lxdna a{color:inherit}
+.lxdna a:focus-visible,.lxdna button:focus-visible,.lxdna summary:focus-visible{outline:2px solid var(--tree-gold);outline-offset:5px}
+.lxdna .tree-header{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:10px max(24px,calc((100vw - 1240px)/2));border-bottom:1px solid var(--tree-line);background:#061a14}
+.lxdna .tree-brand{display:block;flex-shrink:0}
+/* The uploaded sheet contains dark and light versions. Display each original half. */
+.lxdna .tree-logo{display:block;width:84px;aspect-ratio:406/500;background:url('/assets/lxdna-identity/logo-variants.png') center top/100% auto no-repeat}
+.lxdna .tree-nav{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px 20px;min-width:0;font-size:14px}
+.lxdna .tree-nav a{text-decoration:none;line-height:1.7}
+.lxdna .tree-nav a[aria-current]{color:var(--tree-gold)}
+.lxdna .tree-nav button{font:inherit;padding:10px 14px;min-height:42px;border:1px solid #ab8b57;border-radius:24px;background:#102b22;color:#f1e8d7;cursor:pointer}
+.lxdna main{max-width:1240px;margin:auto;padding:28px 24px 50px;min-width:0}
+.lxdna .tree-hero{position:relative;isolation:isolate;display:flex;align-items:center;gap:32px;min-height:420px;padding:32px;border:1px solid var(--tree-line);border-radius:22px;overflow:hidden;background:#082219}
+.lxdna .tree-hero-image{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:center 48%}
+.lxdna .tree-hero:after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(270deg,#031810dd,transparent 80%),linear-gradient(0deg,#031810bb,transparent 70%)}
+.lxdna .tree-hero-identity{flex:0 0 auto;padding:14px;background:#031a14e8;border:1px solid #c5a66b66;border-radius:16px}
+.lxdna .tree-hero .tree-logo{width:180px}
+.lxdna .tree-hero-copy{max-width:660px;padding:22px;background:#031810ad;border-radius:16px;color:#fff8e8}
+.lxdna .tree-eyebrow{font:12px Georgia,serif;letter-spacing:3px;color:#e6ca91}
+.lxdna .tree-hero h1{margin:12px 0;font-size:clamp(27px,4vw,46px);line-height:1.5;color:#fff2d1}
+.lxdna .tree-hero-copy p{line-height:1.9;margin:12px 0;font-size:16px}
+.lxdna .controls{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 18px}
+.lxdna .controls input,.lxdna .controls select{font:inherit;border:1px solid var(--tree-line);border-radius:12px;padding:14px;min-height:48px;background:var(--tree-panel);color:var(--tree-text);min-width:0;max-width:100%}
+.lxdna .controls input{flex:1 1 300px}
+.lxdna .controls select{flex:0 1 250px}
+.lxdna .controls input::placeholder{color:var(--tree-muted)}
+.lxdna .note{font-size:14px;line-height:1.9;color:var(--tree-muted);overflow-wrap:anywhere}
+.lxdna #status{color:var(--tree-gold)}
+.lxdna .tree-node{margin:12px 0;border:1px solid var(--tree-line);border-radius:12px;background:var(--tree-panel);padding:16px;min-width:0}
+.lxdna summary{cursor:pointer;display:flex;gap:10px 16px;flex-wrap:wrap;align-items:center;min-height:30px;overflow-wrap:anywhere}
+.lxdna summary b{color:var(--tree-gold)}
+.lxdna summary small{color:var(--tree-muted);font-size:13px}
+.lxdna .tree-children{margin:16px 0 0;padding-inline-start:14px;border-inline-start:1px solid var(--tree-line);overflow-wrap:anywhere;min-width:0}
+.lxdna .sample{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--tree-line);font-size:14px}
+.lxdna .sample a,.lxdna .tree-children>a{color:var(--tree-gold)}
+.lxdna footer{border-top:1px solid var(--tree-line);padding:28px 24px;line-height:1.9;color:var(--tree-muted);text-align:center;font-size:13px}
+.lxdna .lx-auth-dialog input{min-width:0}
+.lxdna .lx-auth-dialog [hidden]{display:none!important}
+html[data-lx-theme='light'] body.lxdna{--tree-bg:#f6f1e7;--tree-panel:#fffdf8;--tree-text:#18382b;--tree-muted:#5c6458;--tree-line:#aa895454;--tree-gold:#78531e}
+html[data-lx-theme='light'] .lxdna .tree-header{background:#f6f1e7}
+html[data-lx-theme='light'] .lxdna .tree-logo{background-position:center bottom}
+html[data-lx-theme='light'] .lxdna .tree-hero-identity{background:#f3eee3;border-color:#c5a66b}
+html[data-lx-theme='light'] .lxdna .tree-nav button{background:#fffdf8;color:#18382b}
+@media(max-width:700px){
+ .lxdna .tree-header{padding:10px 16px;gap:12px;align-items:center}
+ .lxdna .tree-brand .tree-logo{width:65px}
+ .lxdna .tree-nav{gap:8px 12px;font-size:12px}
+ .lxdna .tree-nav button{font-size:11px;min-height:36px;padding:8px 10px}
+ .lxdna main{padding:20px 14px 36px}
+ .lxdna .tree-hero{min-height:510px;flex-direction:column;justify-content:center;gap:18px;padding:24px 16px}
+ .lxdna .tree-hero:after{background:linear-gradient(0deg,#031810d9,transparent 100%)}
+ .lxdna .tree-hero .tree-logo{width:140px}
+ .lxdna .tree-hero-identity{padding:8px}
+ .lxdna .tree-hero-copy{text-align:center;padding:14px;width:100%}
+ .lxdna .tree-hero h1{font-size:27px}
+ .lxdna .tree-hero-copy p{font-size:14px}
+ .lxdna .controls{margin-top:20px}
+ .lxdna .controls input,.lxdna .controls select{flex-basis:100%;width:100%;font-size:16px}
+ .lxdna .tree-node{padding:12px}
+ .lxdna .tree-children{padding-inline-start:10px}
+}
+@media(max-width:380px){.lxdna .tree-header{flex-direction:column}.lxdna .tree-nav{justify-content:center}.lxdna .tree-brand .tree-logo{width:62px}}
