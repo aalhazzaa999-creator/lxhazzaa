@@ -20,3 +20,5 @@ fs.writeFileSync('public/data/phylogeny/mtree.json',JSON.stringify(mtTree));
 await import('./build-research-data.mjs');
 const {spawnSync}=await import('node:child_process');
 const mtBuild=spawnSync('python3',['scripts/build-mt-database.py'],{stdio:'inherit'});if(mtBuild.status!==0)throw Error('mt database validation failed');
+
+for(const [command,args] of [[process.execPath,['tests/mt-research.cjs']],['python3',['tests/mt-sqlite.py']]]){const check=spawnSync(command,args,{stdio:'inherit'});if(check.status!==0)throw Error('mt regression checks failed');}

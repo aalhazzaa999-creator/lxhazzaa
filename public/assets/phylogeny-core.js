@@ -25,7 +25,7 @@ function build(raw,{type='y',meta={},crosswalk={}}={}){
  for(const x of crosswalk.entries||[]){const n=byId.get(clean(x.yfull));if(!n||x.status!=='shared-marker')continue;n.ftdna.push(x);add(key(x.ftdna,type),n);}
  const cache=new Map();
  function find(label,hint=''){
-  const k=key(label,type);const cacheKey=k+'|'+hint; if(cache.has(cacheKey))return cache.get(cacheKey);
+  const k=key(label,type);const cacheKey=k+'|'+(type==='y'?hint:''); if(cache.has(cacheKey))return cache.get(cacheKey);
   const state=callState(label,type);let result;
   if(state!=='reported')result={status:state,node:null,original:String(label||'')};
   else{
