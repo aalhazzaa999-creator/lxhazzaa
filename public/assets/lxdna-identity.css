@@ -6,7 +6,7 @@ body.lxdna{--tree-bg:#071b15;--tree-panel:#102b22;--tree-text:#f0eadb;--tree-mut
 .lxdna .tree-header{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:10px max(24px,calc((100vw - 1240px)/2));border-bottom:1px solid var(--tree-line);background:#061a14}
 .lxdna .tree-brand{display:block;flex-shrink:0}
 /* The uploaded sheet contains dark and light versions. Display each original half. */
-.lxdna .tree-logo{display:block;width:84px;aspect-ratio:406/500;background:url('/assets/lxdna-identity/logo-variants.png') center top/100% auto no-repeat}
+.lxdna .tree-logo{display:block;width:84px;aspect-ratio:405/498;background:url('/assets/lxdna-identity/logo-variants.png') center top/100% auto no-repeat}
 .lxdna .tree-nav{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px 20px;min-width:0;font-size:14px}
 .lxdna .tree-nav a{text-decoration:none;line-height:1.7}
 .lxdna .tree-nav a[aria-current]{color:var(--tree-gold)}
@@ -40,7 +40,7 @@ body.lxdna{--tree-bg:#071b15;--tree-panel:#102b22;--tree-text:#f0eadb;--tree-mut
 .lxdna .lx-auth-dialog [hidden]{display:none!important}
 html[data-lx-theme='light'] body.lxdna{--tree-bg:#f6f1e7;--tree-panel:#fffdf8;--tree-text:#18382b;--tree-muted:#5c6458;--tree-line:#aa895454;--tree-gold:#78531e}
 html[data-lx-theme='light'] .lxdna .tree-header{background:#f6f1e7}
-html[data-lx-theme='light'] .lxdna .tree-logo{background-position:center bottom}
+html[data-lx-theme='light'] .lxdna .tree-logo{aspect-ratio:405/387;background-position:center bottom}
 html[data-lx-theme='light'] .lxdna .tree-hero-identity{background:#f3eee3;border-color:#c5a66b}
 html[data-lx-theme='light'] .lxdna .tree-nav button{background:#fffdf8;color:#18382b}
 @media(max-width:700px){
@@ -62,3 +62,4 @@ html[data-lx-theme='light'] .lxdna .tree-nav button{background:#fffdf8;color:#18
  .lxdna .tree-children{padding-inline-start:10px}
 }
 @media(max-width:380px){.lxdna .tree-header{flex-direction:column}.lxdna .tree-nav{justify-content:center}.lxdna .tree-brand .tree-logo{width:62px}}
+
