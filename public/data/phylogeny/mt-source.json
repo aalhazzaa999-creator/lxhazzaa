@@ -1,0 +1,12 @@
+{
+  "source": "YFullTeam/MTree",
+  "sourceURL": "https://github.com/YFullTeam/MTree",
+  "license": "CC BY 4.0",
+  "version": "1.02.24043_2026-09-22",
+  "retrieved": "2026-10-28",
+  "nodes": 39865,
+  "sourceCommit": "bc10f195efe6c9d514dca9ec574671b3e3a3340e",
+  "sourcePath": "mtree/current_mtree.json",
+  "sourceSHA256": "f91680989965106e27063275ce98aff8d70d6f3f0e7bb7ff14b8e218c175e3f6",
+  "changes": "Preserved node names and parent-child topology. Variant strings retained; ages omitted."
+}

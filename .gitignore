@@ -14,3 +14,9 @@ node_modules/
 *.bak
 
 # Keep published atlas JSON and committed archival snapshots tracked.
+
+# Deterministic research artifacts are generated from pinned sources during builds.
+public/data/research/
+public/data/phylogeny/ytree.json
+public/data/phylogeny/mtree.json
+public/data/phylogeny/mt-database/
