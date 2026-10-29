@@ -20,3 +20,6 @@ public/data/research/
 public/data/phylogeny/ytree.json
 public/data/phylogeny/mtree.json
 public/data/phylogeny/mt-database/
+
+public/data/phylogeny/ftdna-reference.json
+public/data/phylogeny/ftdna-aliases.json

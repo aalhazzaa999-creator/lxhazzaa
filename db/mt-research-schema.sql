@@ -18,3 +18,6 @@ CREATE INDEX samples_mt ON samples(reported_mt);
 CREATE TABLE research_groups(group_id TEXT PRIMARY KEY,title TEXT NOT NULL,group_type TEXT NOT NULL CHECK(group_type IN ('sample-set','clade-set','research-set')),definition_json TEXT NOT NULL,evidence_reference TEXT);
 CREATE TABLE group_samples(group_id TEXT NOT NULL REFERENCES research_groups(group_id),sample_id TEXT NOT NULL REFERENCES samples(sample_id),PRIMARY KEY(group_id,sample_id));
 CREATE TABLE group_nodes(group_id TEXT NOT NULL REFERENCES research_groups(group_id),node_id TEXT NOT NULL REFERENCES nodes(node_id),PRIMARY KEY(group_id,node_id));
+-- Exact source joins retain raw assessments, intervals and conflicts independently of placement.
+CREATE TABLE sample_evidence(sample_id TEXT PRIMARY KEY REFERENCES samples(sample_id),reference_source_id TEXT REFERENCES sources(source_id),source_genetic_id TEXT,quality_status TEXT NOT NULL,quality_json TEXT NOT NULL,date_json TEXT NOT NULL,sex_evidence_json TEXT NOT NULL,original_json TEXT NOT NULL,flags_json TEXT NOT NULL);
+CREATE INDEX sample_quality ON sample_evidence(quality_status);

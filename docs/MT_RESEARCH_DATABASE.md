@@ -99,3 +99,7 @@ membership and evidence must be explicit. Shared mutations alone do not define i
   exports, return to Y, existing atlas navigation and account dialog.
 - Deploy preview first; production only after these checks. Previous production
   commit remains a rollback point. Account credentials/permissions are unchanged.
+
+## Research integration update
+
+The atlas and Y/mt explorers now use the same versioned research snapshot and pure selection engine. SQLite `people` is populated only by exact, version-qualified AADR Individual IDs for the existing project records; unreconciled identities remain null. `sample_evidence` preserves source assessment/quality, dating, effective-sex method, originals and conflicts separately from placement. Quality/date filters and exports do not infer missing fields. See `ARCHITECTURE.md` for the scientific contract and pinned sources. The previous statement that all person IDs are null describes the initial release only.

@@ -1,0 +1,5 @@
+/* One topology resolver and one pinned source set for atlas, Y and mt. */
+(()=>{'use strict';const pending=new Map();
+async function json(url){const r=await fetch(url,{cache:'no-cache'});if(!r.ok)throw Error('تعذر تحميل المرجع HTTP '+r.status);return r.json();}
+async function ready(type='y'){if(!['y','mt'].includes(type))throw Error('نوع المشجرة غير صالح');if(!pending.has(type))pending.set(type,(async()=>{const [meta,foreign]=await Promise.all([json('/data/phylogeny/'+(type==='y'?'source':'mt-source')+'.json'),type==='y'?json('/data/phylogeny/ftdna-reference.json'):Promise.resolve(null)]);const tree=await json('/data/phylogeny/'+(type==='y'?'ytree':'mtree')+'.json?v='+meta.sourceSHA256);return window.LXPhylogenyCore.build(tree,{type,meta,foreign,crosswalk:foreign?{entries:foreign.crosswalk}:undefined});})().catch(e=>{pending.delete(type);throw e}));return pending.get(type);}
+window.LXPhylogeny={ready,resolve:async(input,mode='descendants',type='y')=>(await ready(type)).query(input,mode)};})();

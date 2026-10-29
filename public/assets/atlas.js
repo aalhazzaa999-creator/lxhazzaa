@@ -1,8 +1,8 @@
 (()=> {
-  'use strict';const $=id=>document.getElementById(id);let all=[],filtered=[],page=0,map=null,layer=null,manifest=null,canvasRenderer=null,searchCircle=null,mapSelectionRecords=null;const PAGE=25,MAX_MARKERS=250;const fmt=n=>Number(n||0).toLocaleString('ar-SA');const esc=v=>String(v??'').replace(/[&<>"']/g,c=>( {
+  'use strict';const $=id=>document.getElementById(id);let treeIndex=null,queryResult=null,all=[],filtered=[],page=0,map=null,layer=null,manifest=null,canvasRenderer=null,searchCircle=null,mapSelectionRecords=null;const PAGE=25,MAX_MARKERS=250;const fmt=n=>Number(n||0).toLocaleString('ar-SA');const esc=v=>String(v??'').replace(/[&<>"']/g,c=>( {
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }
-  [c]));const fields=['q','root','country','sex','locationType','spatialClassification','radius'];let timer,mutationToken=0,mutationResolved=null;const spatialLabels={local:'ساكنة محلية',nonlocal:'وافد من خارج المنطقة',genetic_outlier:'مختلف وراثيًا عن المجموعة المقارنة',undetermined:'غير محسوم'};let spatialAnnotations={};
+  [c]));const fields=['q','root','country','sex','locationType','spatialClassification','radius','dnaType','quality','ageMinBP','ageMaxBP'];let timer,mutationToken=0,mutationResolved=null;const spatialLabels={local:'ساكنة محلية',nonlocal:'وافد من خارج المنطقة',genetic_outlier:'مختلف وراثيًا عن المجموعة المقارنة',undetermined:'غير محسوم'};let spatialAnnotations={};
   function spatialFor(r){const annotation=spatialAnnotations[r.id];return annotation&&Object.hasOwn(spatialLabels,annotation.status)&&annotation.status!=='undetermined'&&typeof annotation.evidence==='string'&&annotation.evidence.trim()&&typeof annotation.source==='string'&&/^https:\/\/[^\s]+$/i.test(annotation.source)?annotation:{status:'undetermined'};}
   function distance(a,b,c,d) {
     const R=6371,rad=Math.PI/180,x=(c-a)*rad,y=(d-b)*rad;return 2*R*Math.asin(Math.sqrt(Math.sin(x/2)**2+Math.cos(a*rad)*Math.cos(c*rad)*Math.sin(y/2)**2))
@@ -41,8 +41,8 @@
   function guestSearchAllowed(){
     if(window.LXAuth?.getUser()){removeGuestLock();return true;}
     if(showGuestLock())return false;
-    const ids=['q','mutation','root','country','sex','locationType','spatialClassification','radius'];
-    const signature=ids.map(id=>$(id)?.value?.trim()||'').join('|')+'|'+($('withCoordinatesOnly')?.getAttribute('aria-pressed')==='true'?'coordinates':'');
+    const ids=['q','mutation','root','country','sex','locationType','spatialClassification','radius','dnaType','quality','ageMinBP','ageMaxBP'];
+    const signature=ids.map(id=>id==='dnaType'?'':$(id)?.value?.trim()||'').join('|')+'|'+($('withCoordinatesOnly')?.getAttribute('aria-pressed')==='true'?'coordinates':'');
     if(!signature.replaceAll('|','')||signature===lastGuestSearch)return true;
     const used=guestUsed();
     if(used>=GUEST_DAILY_SEARCHES){showGuestLock();return false;}
@@ -59,11 +59,16 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',showGuestLock,{once:true});
   else showGuestLock();
   function filter() {
+    if(!treeIndex)return;
     if(!guestSearchAllowed())return;
-    const mutation=$('mutation').value.trim(),q=$('q').value.trim().toLocaleLowerCase(),root=$('root').value,country=$('country').value,sex=$('sex').value,lt=$('locationType').value,coordinatesOnly=$('withCoordinatesOnly').getAttribute('aria-pressed')==='true',spatial=$('spatialClassification').value,radius=Number($('radius').value),center=map?map.getCenter():null;filtered=all.filter(r=>(!q||[r.id,r.name,r.site,r.country,r.y,r.mt,r.geneticId,r.individualId].some(s=>(s||'').toLocaleLowerCase().includes(q)))&&(!root||r.yRoot===root)&&(!mutation||(mutationResolved&&mutationResolved.known&&mutationResolved.matches(r.y,r.yRoot)))&&(!country||r.country===country)&&(!sex||r.sex===sex)&&(!lt||r.locationType===lt)&&(!coordinatesOnly||(r.lat!==null&&r.lng!==null))&&(!spatial||spatialFor(r).status===spatial)&&(!radius||(center&&r.lat!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render();finishShareRestore()
+    const type=$('dnaType').value||'y',mutation=$('mutation').value.trim(),country=$('country').value,lt=$('locationType').value,coordinatesOnly=$('withCoordinatesOnly').getAttribute('aria-pressed')==='true',spatial=$('spatialClassification').value,radius=Number($('radius').value),center=map?map.getCenter():null;
+    queryResult=window.LXResearchQuery.select(all,{type,query:mutation,mode:$('mutationMode').value,root:$('root').value,sex:$('sex').value,quality:$('quality').value,ageMinBP:$('ageMinBP').value,ageMaxBP:$('ageMaxBP').value,text:$('q').value.trim()},treeIndex);
+    filtered=queryResult.records.filter(r=>(!country||r.country===country)&&(!lt||r.locationType===lt)&&(!coordinatesOnly||(r.lat!==null&&r.lng!==null))&&(!spatial||spatialFor(r).status===spatial)&&(!radius||(center&&r.lat!==null&&r.lng!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));
+    if(mutation)$('mutationStatus').textContent=queryResult.resolved.reason||('🌿 '+(type==='mt'?'mtDNA':'Y-DNA')+' · YFull '+treeIndex.meta.version+(type==='y'?' · FTDNA '+treeIndex.foreignMeta.sourceVersion:''));
+    if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render();finishShareRestore()
   }
   // Share only public search state; never include account or session information.
-  const shareKeys={q:'q',mutation:'mutation',root:'root',country:'country',sex:'sex',locationType:'place',spatialClassification:'spatial',radius:'radius'};
+  const shareKeys={q:'q',mutation:'mutation',root:'root',country:'country',sex:'sex',locationType:'place',spatialClassification:'spatial',radius:'radius',dnaType:'dna',quality:'quality',ageMinBP:'ageMinBP',ageMaxBP:'ageMaxBP'};
   let sharedRecordId='',pendingSharedRecord='',pendingSharedPage=0,selectedGroup=null,pendingGroup=null,sharedIds=null;
   const initialShare=new URLSearchParams(location.search);
   function shareUrl(){
@@ -128,13 +133,15 @@
   shareIcon.innerHTML='<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><path d="m8 11 8-5M8 13l8 5"/></svg>';
   titleBox.append(shareIcon);
   const exportMenu=document.createElement('div');exportMenu.className='atlas-export-menu';exportMenu.hidden=true;
-  exportMenu.innerHTML='<button type="button" data-action="link">مشاركة رابط النتائج</button><button type="button" data-action="print">تصدير PDF / طباعة</button>';
+  exportMenu.innerHTML='<button type="button" data-action="link">مشاركة رابط النتائج</button><button type="button" data-action="json">⤓ بيانات ومصادر JSON</button><button type="button" data-action="print">تصدير PDF / طباعة</button>';
   titleBox.append(exportMenu);
   shareIcon.addEventListener('click',()=>{exportMenu.hidden=!exportMenu.hidden});
   document.addEventListener('click',e=>{if(!titleBox.contains(e.target))exportMenu.hidden=true});
   exportMenu.querySelector('[data-action="link"]').addEventListener('click',()=>{exportMenu.hidden=true;shareButton.click()});
   exportMenu.querySelector('[data-action="print"]').addEventListener('click',()=>{exportMenu.hidden=true;printResults()});
+  exportMenu.querySelector('[data-action="json"]').onclick=()=>{exportMenu.hidden=true;if(!treeIndex||!queryResult)return;const type=$('dnaType').value||'y',user=window.LXAuth?.getUser(),role=user?window.LXAuth?.getRole():null,max=['owner','admin'].includes(role)?Infinity:user?100:20;const out={schemaVersion:2,treeType:type,dataSnapshot:manifest.snapshot,source:treeIndex.meta,foreignSource:type==='y'?treeIndex.foreignMeta:undefined,query:shareUrl(),totalResults:filtered.length,exportedAt:new Date().toISOString(),records:filtered.slice(0,max).map(r=>window.LXResearchQuery.exportRecord(r,{...queryResult.decisions.get(r.id),placement:queryResult.placements.get(r.id)},type))};const href=URL.createObjectURL(new Blob([JSON.stringify(out,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=href;a.download='LXHAZZAA-'+type+'-'+manifest.snapshot+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(href),1000);shareStatus.textContent='⤓ '+out.records.length+' نتيجة ومصادرها';};
   function printResults(){
+    if(!treeIndex||!manifest)return;
     const auth=window.LXAuth,user=auth?.getUser(),role=user?auth?.getRole():'guest';
     const max=role==='owner'||role==='admin'?Infinity:user?100:20;
     const rows=filtered.slice(0,max);
@@ -142,8 +149,8 @@
     const popup=window.open('','_blank');
     if(!popup){shareStatus.textContent='اسمح بفتح نافذة الطباعة لهذا الموقع ثم حاول مجددًا.';return;}
     const total=filtered.length,limit=Number.isFinite(max)?' (الحد '+max+' عينة)':'';const upgrade=!user&&total>20?' اشترك لتحصل على تصدير حتى ١٠٠ نتيجة.':'';
-    const body=rows.map((r,i)=>'<tr><td>'+fmt(i+1)+'</td><td dir="ltr">'+esc(r.id)+'</td><td>'+esc([r.site,r.country].filter(Boolean).join(' — ')||'غير متوفر')+'</td><td>'+esc(r.ageText||((r.ageBP!=null)?Math.round(r.ageBP).toLocaleString('ar-SA')+' سنة قبل الحاضر':'غير متوفر'))+'</td><td dir="ltr">'+esc(r.y||'غير متوفر')+'</td><td>'+(studyUrl(r)?'<a href="'+esc(studyUrl(r))+'" target="_blank" rel="noopener noreferrer">فتح الدراسة</a>':'غير متوفر')+'</td></tr>').join('');
-    const doc='<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><title>نتائج أطلس الرفات — LXHAZZAA</title><style>@page{size:A4 landscape;margin:12mm}body{font:14px Arial,Tahoma,sans-serif;color:#0b1018;margin:0}header{background:#0b1018;color:#d4af7c;padding:18px 24px;display:flex;align-items:center;gap:24px}header img{width:210px;max-height:100px;object-fit:contain}h1{font-size:23px}main{padding:18px}table{border-collapse:collapse;width:100%;table-layout:fixed}th{background:#1b2a3a;color:#f1ebd7}td,th{padding:8px 7px;border:1px solid #a6b8b6;text-align:right;overflow-wrap:anywhere}th:first-child,td:first-child{text-align:center;padding-inline:2px}th:last-child,td:last-child{white-space:nowrap;text-align:center;padding-inline:3px}td:nth-child(5){direction:ltr;text-align:right}td:nth-child(6){direction:rtl;text-align:center}tr{break-inside:avoid}thead{display:table-header-group}footer{margin-top:20px;color:#555}.controls{padding:12px;text-align:center}@media print{.controls{display:none}header{-webkit-print-color-adjust:exact;print-color-adjust:exact}th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style><header><img src="/assets/atlas-logo.webp" alt="شعار أطلس الرفات"><div><h1>أطلس الرفات القديمة · نتائج البحث</h1><span>LXHAZZAA · HUMAN REMAINS ATLAS</span></div></header><main><p>النتائج المطابقة: '+total+' · المعروضة في التصدير: '+rows.length+limit+upgrade+'</p><table><colgroup><col style="width:4%"><col style="width:14%"><col style="width:27%"><col style="width:23%"><col style="width:20%"><col style="width:12%"></colgroup><thead><tr><th>#</th><th>معرّف العينة</th><th>الموقع — الدولة</th><th>العمر</th><th>التحور Y</th><th>الدراسة</th></tr></thead><tbody>'+body+'</tbody></table><footer>بيانات أطلس LXHAZZAA حسب النتائج وقت التصدير. الحقول غير المتوفرة لا تُستنتج.</footer></main><div class="controls"><button onclick="window.print()">طباعة / حفظ PDF</button></div></html>';
+    const body=rows.map((r,i)=>'<tr><td>'+fmt(i+1)+'</td><td dir="ltr">'+esc(r.id)+'</td><td>'+esc([r.site,r.country].filter(Boolean).join(' — ')||'غير متوفر')+'</td><td>'+esc(r.ageText||((r.ageBP!=null)?Math.round(r.ageBP).toLocaleString('ar-SA')+' سنة قبل الحاضر':'غير متوفر'))+'</td><td dir="ltr">'+esc(r[$('dnaType').value||'y']||'غير متوفر')+'</td><td>'+(studyUrl(r)?'<a href="'+esc(studyUrl(r))+'" target="_blank" rel="noopener noreferrer">فتح الدراسة</a>':'غير متوفر')+'</td></tr>').join('');
+    const doc='<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><title>نتائج أطلس الرفات — LXHAZZAA</title><style>@page{size:A4 landscape;margin:12mm}body{font:14px Arial,Tahoma,sans-serif;color:#0b1018;margin:0}header{background:#0b1018;color:#d4af7c;padding:18px 24px;display:flex;align-items:center;gap:24px}header img{width:210px;max-height:100px;object-fit:contain}h1{font-size:23px}main{padding:18px}table{border-collapse:collapse;width:100%;table-layout:fixed}th{background:#1b2a3a;color:#f1ebd7}td,th{padding:8px 7px;border:1px solid #a6b8b6;text-align:right;overflow-wrap:anywhere}th:first-child,td:first-child{text-align:center;padding-inline:2px}th:last-child,td:last-child{white-space:nowrap;text-align:center;padding-inline:3px}td:nth-child(5){direction:ltr;text-align:right}td:nth-child(6){direction:rtl;text-align:center}tr{break-inside:avoid}thead{display:table-header-group}footer{margin-top:20px;color:#555}.controls{padding:12px;text-align:center}@media print{.controls{display:none}header{-webkit-print-color-adjust:exact;print-color-adjust:exact}th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style><header><img src="/assets/atlas-logo.webp" alt="شعار أطلس الرفات"><div><h1>أطلس الرفات القديمة · نتائج البحث</h1><span>LXHAZZAA · HUMAN REMAINS ATLAS</span></div></header><main><p>النتائج المطابقة: '+total+' · المعروضة في التصدير: '+rows.length+limit+upgrade+'</p><table><colgroup><col style="width:4%"><col style="width:14%"><col style="width:27%"><col style="width:23%"><col style="width:20%"><col style="width:12%"></colgroup><thead><tr><th>#</th><th>معرّف العينة</th><th>الموقع — الدولة</th><th>العمر</th><th>التحور '+esc($('dnaType').value||'y')+'</th><th>الدراسة</th></tr></thead><tbody>'+body+'</tbody></table><footer>نسخة البيانات '+esc(manifest.snapshot)+' · المرجع '+esc(treeIndex.meta.version)+' · '+esc(shareUrl())+'. بيانات أطلس LXHAZZAA حسب النتائج وقت التصدير. الحقول غير المتوفرة لا تُستنتج.</footer></main><div class="controls"><button onclick="window.print()">طباعة / حفظ PDF</button></div></html>';
     popup.document.open();popup.document.write(doc);popup.document.close();
     shareStatus.textContent='جاهز للطباعة: '+rows.length+' من '+total+' عينة'+limit+'.';
   }
@@ -174,7 +181,7 @@
     return '';
   }
   function detailMarkup(r) {
-    const spatial=spatialFor(r);const pairs=[['معرّف السجل',r.id],['AADR Genetic ID',r.geneticId],['AADR Individual ID',r.individualId],['الدولة',r.country],['الموقع الأثري',r.site],['التصنيف المكاني وفق الدراسة أو البيانات المنشورة',spatialLabels[spatial.status]],['أساس التصنيف المكاني',spatial.basis||''],['نص الدليل',spatial.evidence||''],['مصدر التصنيف',spatial.source||''],['نوع الموقع',r.locationType==='country'?'تقريبي على مستوى الدولة':r.locationType==='site'?'موقع أثري / محلية':'غير محدد'],['دقة الموقع',r.locationAccuracy],['خط العرض',r.lat],['خط الطول',r.lng],['Y-DNA',r.y],['تصنيف Y',r.yRoot],['mtDNA',r.mt],['العمر BP',r.ageBP],['العمر النصي',r.ageText],['طريقة التأريخ',r.dating],['الثقافة الأثرية',r.culture],['الجنس الجزيئي',r.sex],['حالة الربط',r.match],['المصدر',r.source],['المرجع',r.reference],['عنوان الدراسة',r.study],['DOI',r.doi],['ملاحظات',r.notes]];
+    const spatial=spatialFor(r);const pairs=[['معرّف السجل',r.id],['AADR Genetic ID',r.geneticId],['AADR Individual ID',r.individualId],['الدولة',r.country],['الموقع الأثري',r.site],['التصنيف المكاني وفق الدراسة أو البيانات المنشورة',spatialLabels[spatial.status]],['أساس التصنيف المكاني',spatial.basis||''],['نص الدليل',spatial.evidence||''],['مصدر التصنيف',spatial.source||''],['نوع الموقع',r.locationType==='country'?'تقريبي على مستوى الدولة':r.locationType==='site'?'موقع أثري / محلية':r.locationType==='city'?'مدينة تقريبية':'غير محدد'],['دقة الموقع',r.locationAccuracy],['خط العرض',r.lat],['خط الطول',r.lng],['Y-DNA',r.y],['تصنيف Y',r.yRoot],['mtDNA',r.mt],['العمر BP',r.ageBP],['العمر النصي',r.ageText],['طريقة التأريخ',r.dating],['الثقافة الأثرية',r.culture],['الجنس الجزيئي',r.sex],['حالة الربط',r.match],['المصدر',r.source],['المرجع',r.reference],['عنوان الدراسة',r.study],['DOI',r.doi],['ملاحظات',r.notes],['الجنس وفق المصدر / المرجع',r.sexEvidence?.effective],['◉ تقييم الجودة الأصلي',r.quality?.assessment||'غير متوفر'],['مصدر الجودة',r.quality?.source],['متوسط العمر BP — قبل 1950',r.dateEvidence?.bp],['تأريخ AADR الأصلي',r.dateEvidence?.reference?.fullDate],['هوية الفرد',r.personId||'غير موحدة؛ لا تُستنتج من تشابه الاسم'],['إصدار البيانات',manifest.snapshot]];
     const link=studyUrl(r);
     return '<div class="inline-detail-grid">'+pairs.filter(([,v])=>v!==''&&v!==null&&v!==undefined).map(([k,v])=>'<div class="inline-detail-cell"><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div>').join('')+'</div><div class="study-actions">'+(link?'<a class="study-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">فتح الدراسة أو المصدر العلمي ↗</a>':'<span class="study-unavailable">رابط الدراسة غير متوفر لهذه العينة</span>')+'</div>';
   }
@@ -194,12 +201,12 @@
       if(!url&&!item.url)url=studyUrl(record);
       const key=(doi||url||title).toLocaleLowerCase();
       if(!key||seen.has(key))return;
-      seen.add(key);studies.push({title,institution,url,doi});
+      seen.add(key);studies.push({title,institution,url,doi,scope:record===r?'مرتبط بالعينة':'مرتبط بالموقع؛ لا يثبت دراسة هذه العينة'});
     };
-    const relevant=all.filter(x=>x===r||(
+    const relevant=[r,...all.filter(x=>x!==r&&(
       r.site&&x.site&&r.site.trim().toLocaleLowerCase()===x.site.trim().toLocaleLowerCase()&&
       (!r.country||!x.country||r.country===x.country)
-    ));
+    ))];
     for(const record of relevant){
       const collections=[record.studies,record.publications,record.references,record.research];
       for(const items of collections){
@@ -221,10 +228,12 @@
     $('recordDetailBody').innerHTML=detailMarkup(r).replace(/<div class="study-actions">[\s\S]*?<\/div>$/,'')+
       '<h4 class="research-heading">الدراسات والجهات البحثية المرتبطة ('+fmt(studies.length)+')</h4>'+
       (studies.length?studies.map(x=>'<article class="research-item"><strong>'+esc(x.title)+'</strong>'+
-        (x.institution?'<small>الجهة البحثية: '+esc(x.institution)+'</small>':'<small>الجهة البحثية غير مذكورة في السجل</small>')+
+        '<small>'+esc(x.scope)+'</small>'+(x.institution?'<small>الجهة البحثية: '+esc(x.institution)+'</small>':'<small>الجهة البحثية غير مذكورة في السجل</small>')+
         (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">رابط الدراسة أو المصدر ↗</a>':'<span class="unverified">لا يتوفر رابط موثق في البيانات الحالية</span>')+
         '</article>').join(''):'<p class="smallnote">لا توجد دراسات موثقة مرتبطة بهذه العينة أو الموقع في البيانات المحمّلة.</p>');
-    if(r.y)$('recordDetailBody').insertAdjacentHTML('afterbegin','<p><a class="btn" href="/lxdnatree/?mutation='+encodeURIComponent(r.y)+'">موضع التحور في LXDNA Tree ↗</a></p>');
+    const links=['y','mt'].filter(t=>r[t]).map(t=>'<a class="btn" href="/lxdnatree/?dna='+t+'&mutation='+encodeURIComponent(r.id)+'" aria-label="موضع العينة في مشجرة '+t+'"><span aria-hidden="true">🌿</span> '+(t==='mt'?'mtDNA':'Y-DNA')+'</a>').join(' ');
+    const siblings=r.personId?all.filter(x=>x.personId===r.personId&&x!==r):[];
+    $('recordDetailBody').insertAdjacentHTML('afterbegin','<p>'+links+'</p><details><summary>ⓘ الربط والملاحظات</summary><p>روابط المشجرتين تعرض التصنيف المبلغ؛ ↥ أصل مدعوم لا يعني حسم الموضع التفصيلي. الجنس مستقل عن نوع المشجرة، والجودة ليست تقييمًا لصحة التحور.</p><p>'+esc((r.dataFlags||[]).join(' · '))+'</p>'+(siblings.length?'<p>تحاليل أخرى لنفس معرّف الفرد في المصدر: '+siblings.map(x=>'<a href="/lxhuman/?record='+encodeURIComponent(x.id)+'">'+esc(x.id)+'</a>').join(' · ')+'</p>':'')+'</details>');
     sharedRecordId=r.id;
     $('recordDetailClose').hidden=false;
     if(scrollToPanel&&window.matchMedia('(max-width:1150px)').matches)panel.scrollIntoView({behavior:'smooth',block:'start'});
@@ -245,7 +254,7 @@
   }
   function render() {
     renderSites();
-    const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r.y).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${fmt(start+i+1)}. ${esc(r.name||r.id)}</strong><span>الدولة: ${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="record-right"><span class="y">${esc(r.y||'Y غير محدد')}</span><span class="record-hint">عرض التفاصيل والدراسات ←</span></span></button><div class="record-study">${studyUrl(r)?`<a href="${esc(studyUrl(r))}" target="_blank" rel="noopener noreferrer">فتح الدراسة ↗</a>`:'الدراسة: غير متوفر'}</div><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
+    const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r[$('dnaType').value||'y']).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${fmt(start+i+1)}. ${esc(r.name||r.id)}</strong><span>الدولة: ${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="record-right"><span class="y">${esc(r[$('dnaType').value||'y']||'قراءة غير متوفرة')}</span><span class="record-hint">عرض التفاصيل والدراسات ←</span></span></button><div class="record-study">${studyUrl(r)?`<a href="${esc(studyUrl(r))}" target="_blank" rel="noopener noreferrer">فتح الدراسة ↗</a>`:'الدراسة: غير متوفر'}</div><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
   }
   function drawSearchCircle() {
     if(!map || typeof L==='undefined')return;
@@ -343,15 +352,18 @@
       padding:0.3
     });layer=L.layerGroup().addTo(map);map.on('moveend',()=>{drawSearchCircle();renderMap()});map.on('zoomend',renderMap);setTimeout(()=>map.invalidateSize(),200)
   }
+  function rootOptions(type){const groups=type==='mt'?['L','L0','L1','L2','L3','L4','L5','L6','M','N','R','H','U','J','T','K','V','W','X','I','A','B','C','D','E','F','G','Z']:[...new Set(all.map(r=>r.yRoot))];$('root').replaceChildren(new Option('🌿 الفروع: الكل',''));opt('root',groups);$('root').previousElementSibling.textContent=type==='mt'?'🌿 فرع mtDNA':'🌿 سلالة Y-DNA';$('mutation').previousElementSibling.textContent='🧬 '+(type==='mt'?'mtDNA':'Y-DNA');$('ycount').nextElementSibling.textContent='بقراءة '+(type==='mt'?'mtDNA':'Y-DNA');}
+  async function switchDNA(){const type=$('dnaType').value||'y',token=++mutationToken;treeIndex=null;mutationResolved=null;$('root').value='';$('mutation').value='';$('mutationStatus').textContent='جارٍ تحميل المشجرة…';try{const index=await window.LXPhylogeny.ready(type);if(token!==mutationToken)return;treeIndex=index;rootOptions(type);$('mutationStatus').textContent='🌿 اختر التحور ثم ابحث';filter();}catch(e){if(token===mutationToken)$('mutationStatus').textContent='تعذر تحميل المشجرة: '+e.message;}}
   async function load() {
     try {
-      const r=await fetch('/data/atlas/manifest.json');if(!r.ok)throw Error('تعذر تحميل فهرس البيانات');manifest=await r.json();$('loading').textContent=`جارٍ تحميل ${manifest.parts.length} أجزاء من البيانات…`;all=[];for(let i=0;i<manifest.parts.length;i++) {
-        const p=manifest.parts[i];$('loading').textContent=`جارٍ تحميل البيانات (${i+1} من ${manifest.parts.length})…`;const response=await fetch('/data/atlas/'+encodeURIComponent(p));if(!response.ok)throw Error('تعذر تحميل '+p+' (HTTP '+response.status+')');const part=await response.json();if(!Array.isArray(part))throw Error('صيغة بيانات غير صحيحة في '+p);for(const record of part){if(/^israel$/i.test(String(record.country||'').trim())||String(record.country||'').trim()==='إسرائيل')record.country='Palestine Occupied';}all.push(...part);await new Promise(resolve=>setTimeout(resolve,0));
-      }
-      if(all.length!==manifest.total)throw Error('عدد السجلات لا يطابق الفهرس');try{const sr=await fetch('/data/atlas/spatial-classifications.json');if(sr.ok){const parsed=await sr.json();if(parsed&&typeof parsed.records==='object'&&!Array.isArray(parsed.records))spatialAnnotations=parsed.records;}}catch(e){console.warn('تعذر تحميل التصنيف المكاني:',e)}try{const er=await fetch('/data/atlas/cell-2026-enrichment.json');if(er.ok){const enrichment=await er.json();for(const record of all){const position=enrichment.approximateLocations?.[record.id];if(position&&record.lat===null&&record.lng===null){record.lat=position.lat;record.lng=position.lng;record.locationType=position.locationType;record.locationAccuracy=position.locationAccuracy;if(!record.country&&position.country)record.country=position.country;}const update=enrichment.records?.[record.id];if(!update)continue;record.publications=[...(record.publications||[]),update.publication];if(!record.site&&update.siteIfMissing){record.site=update.siteIfMissing.replaceAll('_',' ');record.label=record.site;}if(!record.y&&update.yIfMissing){record.y=update.yIfMissing;record.yRoot=record.y[0].toUpperCase();}if(!record.mt&&update.mtIfMissing)record.mt=update.mtIfMissing;}}}catch(e){console.warn('تعذر تحميل إثراء الدراسة',e)}opt('root',[...new Set(all.map(r=>r.yRoot))]);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';document.dispatchEvent(new Event('lx-atlas-data-loaded'));initMap();restoreShare()
+      $('loading').textContent='جارٍ تحميل نسخة البيانات والمشجرة…';
+      const type=initialShare.get('dna')==='mt'?'mt':'y';$('dnaType').value=type;
+      const [data,index]=await Promise.all([window.LXResearchData.load(),window.LXPhylogeny.ready(type)]);manifest=data.manifest;all=data.records;treeIndex=index;
+      try{const sr=await fetch('/data/atlas/spatial-classifications.json');if(sr.ok){const parsed=await sr.json();if(parsed&&typeof parsed.records==='object'&&!Array.isArray(parsed.records))spatialAnnotations=parsed.records;}}catch(e){console.warn('تعذر تحميل التصنيف المكاني',e)}
+      rootOptions(type);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';document.dispatchEvent(new Event('lx-atlas-data-loaded'));initMap();restoreShare()
     }
     catch(e) {
-      $('loading').textContent='خطأ في تحميل البيانات: '+e.message+' — تأكد من رفع مجلد data/atlas كاملًا إلى GitHub.';console.error(e)
+      $('loading').textContent='خطأ في تحميل البيانات: '+e.message+' — أعد المحاولة لاحقًا.';console.error(e)
     }
 }
   // Text queries are committed deliberately, so pauses while typing do not consume the guest allowance.
@@ -361,7 +373,7 @@
   const modeLabel=document.createElement('label');modeLabel.htmlFor='mutationMode';modeLabel.textContent='طريقة مطابقة التحور';$('mutationStatus').after(modeLabel,mutationMode);
   const mutationApply=document.createElement('button');mutationApply.type='button';mutationApply.className='btn ghost';mutationApply.textContent='بحث التحور';mutationMode.after(mutationApply);
   const coverageNote=document.createElement('p');coverageNote.className='smallnote';mutationApply.after(coverageNote);
-  document.addEventListener('lx-atlas-data-loaded',()=>{const broad=all.filter(r=>r.y&&!window.LXYdna?.norm(r.y)).length;coverageNote.textContent=broad.toLocaleString('ar-SA')+' سجلًا يحمل وصف Y عامًا أو صيغة غير قابلة للمطابقة برقم تحور؛ ابحث عنها عبر فلتر السلالة أو معرّف العينة.';});
+  document.addEventListener('lx-atlas-data-loaded',()=>{coverageNote.textContent='🗄 '+manifest.snapshot+' · 👤 '+manifest.knownIndividuals+' معرّف فرد مثبت · '+manifest.unreconciledIdentities+' سجلًا بهوية غير موحدة. الأعداد من معالجتنا وليست إحصاءً رسميًا للمصدر.';});
   const applyMutation=()=>{
     const value=$('mutation').value.trim(),token=++mutationToken;
     mutationResolved=null;mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;
@@ -371,9 +383,9 @@
     // Fail closed while resolving a mutation: do not show unrelated records.
     timer=setTimeout(async()=>{
       try{
-        if(!window.LXYdna)throw Error('تعذر تشغيل فهرس التحورات.');
-        const scopedValue=$('root').value&&!/^[A-T](?:\d+[A-Z0-9]*)?-/i.test(value)?$('root').value+'-'+value:value;
-        const result=await window.LXYdna.resolve(scopedValue,mutationMode.value);
+        if(!treeIndex)throw Error('تعذر تشغيل فهرس التحورات.');
+        const scopedValue=$('dnaType').value==='y'&&$('root').value&&$('root').value!=='Other'&&!/^[A-T](?:\d+[A-Z0-9]*)?-/i.test(value)?$('root').value+'-'+value:value;
+        const result=treeIndex.query(scopedValue,mutationMode.value);
         if(token!==mutationToken)return;
         mutationResolved=result;
         $('mutationStatus').textContent=result.reason||(
@@ -393,9 +405,9 @@
   mutationMode.addEventListener('change',applyMutation);
   fields.filter(id=>id!=='q').forEach(id=>$(id).addEventListener('change',()=> {
     mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;
-    clearTimeout(timer);if(id==='root'&&$('mutation').value.trim())applyMutation();else timer=setTimeout(filter,0)
+    clearTimeout(timer);if(id==='dnaType'){switchDNA();return;}if(id==='root'&&$('mutation').value.trim())applyMutation();else timer=setTimeout(filter,0)
   }));$('withCoordinatesOnly').addEventListener('click',()=>{const button=$('withCoordinatesOnly');button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;filter()});$('recenter').addEventListener('click',filter);$('reset').addEventListener('click',()=> {
-    sharedRecordId='';pendingSharedRecord='';pendingSharedPage=0;history.replaceState(null,'',location.pathname);fields.forEach(id=>$(id).value='');$('withCoordinatesOnly').setAttribute('aria-pressed','false');$('mutation').value='';mutationToken++;mutationResolved=null;$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;filter()
+    sharedRecordId='';pendingSharedRecord='';pendingSharedPage=0;history.replaceState(null,'',location.pathname);fields.filter(id=>id!=='dnaType').forEach(id=>$(id).value='');$('withCoordinatesOnly').setAttribute('aria-pressed','false');$('mutation').value='';mutationToken++;mutationResolved=null;$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;filter()
   });$('prev').addEventListener('click',()=> {
     page--;render();$('records').scrollIntoView( {
       behavior:'smooth'
