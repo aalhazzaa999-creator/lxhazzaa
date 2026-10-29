@@ -1,9 +1,6 @@
 # LXDNA mt research database
 
-This phase adds mt data and an independent mt explorer. The existing Y resolver,
-atlas map, document gateway, account client, roles, and guest allowance remain on
-their current paths. Only the legacy Y page URL handling is guarded while its
-panel is hidden. A later Y migration can use the same interfaces after review.
+The independent mt and Y explorers and atlas share one pinned resolver and research snapshot. The map, documentary gateway, account client, roles and guest allowance retain their existing behavior. See `ARCHITECTURE.md` for the shared scientific data contract.
 
 ## Sources and reproducibility
 
@@ -35,7 +32,7 @@ panel is hidden. A later Y migration can use the same interfaces after review.
 These are generated in builds and ignored by Git. Source code, source lock and
 schema are versioned in the repository. Published samples are existing public
 ancient-remains records only. Living-person import and private-group interfaces
-are not enabled. The people and research-group tables start empty.
+are not enabled. People contain only exact source Individual IDs for existing records; research-group tables remain empty.
 
 ## Scientific rules
 
@@ -94,7 +91,7 @@ membership and evidence must be explicit. Shared mutations alone do not define i
   mt isolation, actual H1/H10 boundary, recurrent event handling, LCA behavior,
   full tree intervals and placed/unplaced accounting across sex groups.
 - `python3 tests/mt-sqlite.py`: integrity, foreign keys, interval queries, LCA and
-  empty living/person/group tables.
+  empty living/group tables, source-backed people and sample evidence.
 - Browser: chooser, mt branch search, sex filters, sample links, common ancestor,
   exports, return to Y, existing atlas navigation and account dialog.
 - Deploy preview first; production only after these checks. Previous production
