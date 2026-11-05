@@ -10,3 +10,29 @@
 @media(max-width:900px){.control-header{gap:18px;padding-inline:4%}.control-header nav{gap:15px}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace-layout{grid-template-columns:150px minmax(0,1fr)}.control-intro{gap:22px}.workspace-sidebar{padding-inline:7px}}
 @media(max-width:700px){.control-header{padding:13px 5%;gap:13px;flex-wrap:wrap}.control-brand>img{width:44px;height:46px}.control-brand>span{font-size:22px}.control-brand small{font-size:10px}.control-header nav{width:100%;justify-content:space-between;gap:9px;border-top:1px solid #c4a95222;padding-top:11px;font-size:11px}.control-header [data-lx-account]{font-size:10px;padding:7px 12px;max-width:170px}.control-main{width:92%;margin:18px auto 32px}.brand-stage{border-radius:12px}.brand-banner{aspect-ratio:1.5;object-fit:cover;object-position:center}.brand-stage>.stage-status{top:12px;right:12px;font-size:10px;padding:4px 12px}.control-intro{padding:24px 3px 28px;display:block;text-align:center}.mobile-wordmark{display:block;font:clamp(31px,8.5vw,45px) Georgia,serif;white-space:nowrap;margin:0 0 10px}.mobile-wordmark span{color:var(--gold)}.mobile-subtitle{display:block;font-size:16px;color:#e4d9bf;margin:0 0 17px}.control-intro h2{font-size:18px;font-weight:400;color:#bba973;margin-bottom:14px}.control-intro .section-kicker{display:none}.intro-description{font-size:13px}.intro-actions{margin:22px auto 0;max-width:340px;min-width:0;gap:10px}.control-button{font-size:12px;padding:10px 16px;min-height:43px}#controlGateStatus{margin:auto}.control-services{padding:28px 3px}.section-heading{align-items:flex-start;gap:12px;margin-bottom:19px}.section-heading h1,.section-heading h2{font-size:20px}.section-kicker{font-size:8px;letter-spacing:2px;margin-bottom:8px}.subtle-label{font-size:9px;max-width:100px;text-align:left}.service-grid{gap:10px}.service-card{padding:19px 14px}.service-card h2,.service-card h3{font-size:15px}.service-card p{font-size:11px;margin-bottom:16px}.feature-icon{width:32px;height:32px;margin-bottom:14px}.card-status{font-size:9px;padding:2px 7px}.tree-connection{margin:0 3px;display:block;padding:20px 17px}.tree-connection h2{font-size:16px}.tree-connection p{font-size:11px}.tree-connection>div{grid-template-columns:32px 1fr;gap:0 12px}.tree-connection .text-link{display:block;margin:16px 44px 0 0;font-size:12px}.control-footer{font-size:10px;padding:22px 5%;gap:15px}.workspace-layout{display:block}.workspace-sidebar{display:none}.workspace-main .service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace-heading .stage-status{font-size:9px;padding:4px 10px}.workspace-heading>a{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+
+/* LXDNA Control: administrator-only local STR evidence laboratory */
+.predictor-lab{margin:8px 0 25px;border:1px solid #c4a95255;border-radius:14px;background:#09271e77;padding:30px!important}
+.predictor-lab .intro-description{max-width:100%;margin-bottom:22px}
+.predictor-lab strong{color:#d8c286;font-weight:600}
+.predictor-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.predictor-fields>div{min-width:0;display:flex;flex-direction:column;gap:8px}
+.predictor-fields label,.predictor-actions label{font-size:13px;color:#e8d7ad}
+.predictor-fields textarea,.predictor-actions input{width:100%;border:1px solid #c4a95266;border-radius:9px;background:#041a14;color:#efe6d2;padding:12px;font:12px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;resize:vertical}
+.predictor-fields textarea{min-height:158px;direction:ltr;text-align:left}
+.predictor-fields textarea:focus,.predictor-actions input:focus{outline:2px solid #bda96c;outline-offset:2px}
+.predictor-fields small{font-size:11px;color:#a9baac;line-height:1.7}
+.predictor-upload{padding-top:6px}
+.predictor-fields input[type=file]{width:100%;font-size:12px;color:#b9c4b4}
+.predictor-actions{display:flex;align-items:center;gap:14px;margin:20px 0;flex-wrap:wrap}
+.predictor-actions input{width:190px;max-width:100%}
+#predictorResultStatus{font-size:12px;color:#b8caaa}
+#predictorResultStatus[data-state=error]{color:#ffc1b9}
+#predictorResultStatus[data-state=success]{color:#c7e5bd}
+#predictorOutcome{font-size:19px;font-weight:500;color:#e7d09a}
+.predictor-audit{border:1px solid #c4a95244;border-radius:9px;padding:10px 14px;margin-bottom:20px}
+.predictor-audit summary{cursor:pointer;font-size:13px;color:#d9cba5}
+.predictor-audit pre{overflow:auto;max-height:380px;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.65 ui-monospace,Consolas,monospace;color:#dce5db}
+.predictor-lab a{color:#d9c177!important;text-decoration:underline}
+@media(max-width:760px){.predictor-lab{padding:20px 12px!important}.predictor-fields{grid-template-columns:1fr}.predictor-actions{align-items:stretch;flex-direction:column}.predictor-actions input{width:100%}.predictor-lab .section-heading{display:block}.predictor-lab .subtle-label{max-width:none}}
