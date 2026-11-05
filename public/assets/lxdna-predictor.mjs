@@ -53,8 +53,7 @@ function rateWeight(marker, rates) {
   return Number.isFinite(rate) && rate > 0 && rate < 1
     ? Math.max(0.5, Math.min(3, Math.sqrt(0.002 / rate))) : 1;
 }
-export function compareSTR(target, reference, mutationRates={}) {
-  const x=normalizeMarkers(target), y=normalizeMarkers(reference);
+function compareNormalized(x,y,mutationRates={}) {
   let diff=0, weight=0, overlap=0;
   for(const [marker, alleles] of Object.entries(x)){
     if(!y[marker]) continue;
@@ -65,11 +64,14 @@ export function compareSTR(target, reference, mutationRates={}) {
   }
   return {overlap, distance:weight?diff/weight:null, totalDifferences:diff};
 }
+export function compareSTR(target, reference, mutationRates={}) {
+  return compareNormalized(normalizeMarkers(target),normalizeMarkers(reference),mutationRates);
+}
 function pathOf(ref){
   const path=ref?.path;
   if(!Array.isArray(path)||!path.length||path.length>50)return null;
   const normalized=path.map(x=>String(x||"").trim().toUpperCase());
-  return normalized.every(x=>/^[A-T][A-Z0-9-]{0,60}$/.test(x))?normalized:null;
+  return normalized.every(x=>/^[A-Z][A-Z0-9-]{0,60}$/.test(x))?normalized:null;
 }
 function sameRecord(a,b){
   return JSON.stringify(a.path)===JSON.stringify(b.path) &&
@@ -111,7 +113,7 @@ export function predictYSTR({target, references=[], knownAncestor=null, mutation
   if(!Array.isArray(references)||references.length>100000) return empty("Invalid or oversized reference collection.");
   const refs=makeRefs(references,ancestor,warnings);
   const neighbors=refs.map(ref=>{
-    const d=compareSTR(markers,ref.markers,mutationRates);
+    const d=compareNormalized(markers,ref.markers,mutationRates);
     return {...ref,...d};
   }).filter(r=>r.overlap>=Math.max(12,Number(minOverlap)||12)&&r.distance!==null)
     .sort((a,b)=>a.distance-b.distance||b.overlap-a.overlap||a.kitId.localeCompare(b.kitId));
