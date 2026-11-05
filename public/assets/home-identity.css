@@ -41,3 +41,8 @@ body:has(.universe-main) .universe-bottom{margin-top:42px}
  body:has(.universe-main) .nav button,body:has(.universe-main) .nav select{padding:8px 7px;font-size:10px}
 }
 
+
+/* Fourth platform: balanced lower orbit; two mobile cards. */
+body:has(.universe-main) .node-dna{left:30%;top:87%}
+body:has(.universe-main) .node-control{left:70%;top:87%}
+@media(max-width:700px){body:has(.universe-main) .node-dna,body:has(.universe-main) .node-control{grid-column:auto;position:static;inset:auto;transform:none;width:100%;max-width:none}}
