@@ -66,3 +66,26 @@ body:has(.universe-main) .node-control{left:70%;top:87%}
  body:has(.universe-main) .globe-brand{top:57%;width:46%;min-width:0;max-width:270px}
  body:has(.universe-main) .universe-bottom{margin-top:8px}
 }
+
+/* Compact desktop orbit: keep all four platforms visible on laptop screens. */
+@media(min-width:701px){
+ body:has(.universe-main) .topinner{min-height:64px}
+ body:has(.universe-main) .lx-official-logo{height:46px}
+ body:has(.universe-main) .universe-stage{padding:12px 22px 18px}
+ body:has(.universe-main) .universe-intro #heroTitle{font-size:19px;margin:7px 0 3px}
+ body:has(.universe-main) .universe-intro #heroDesc{font-size:12px}
+ body:has(.universe-main) .universe-intro .eyebrow{font-size:9px;letter-spacing:3px}
+ body:has(.universe-main) .universe-orbit{width:min(1000px,100%);height:clamp(340px,48svh,430px);margin:8px auto 0}
+ body:has(.universe-main) .universe-globe{width:min(40%,400px,42svh)}
+ body:has(.universe-main) .orbit-node{width:clamp(150px,17vw,210px);gap:4px}
+ body:has(.universe-main) .orbit-icon{width:clamp(88px,9vw,120px);height:clamp(88px,9vw,120px)}
+ body:has(.universe-main) .orbit-node strong{font-size:clamp(12px,1.15vw,15px);line-height:1.4}
+ body:has(.universe-main) .orbit-node small{font-size:8px;letter-spacing:.4px}
+ body:has(.universe-main) .node-remains{left:18%;top:26%}
+ body:has(.universe-main) .node-documents{left:82%;top:26%}
+ body:has(.universe-main) .node-dna{left:18%;top:74%}
+ body:has(.universe-main) .node-control{left:82%;top:74%}
+ body:has(.universe-main) .universe-bottom{margin-top:4px}
+ body:has(.universe-main) .universe-bottom h2{font-size:17px;margin-bottom:4px}
+ body:has(.universe-main) .universe-bottom p{font-size:11px}
+}
