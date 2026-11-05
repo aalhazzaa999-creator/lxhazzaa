@@ -1,3 +1,4 @@
+import {markerName as canonicalMarker} from "./lxdna-str-input.mjs";
 /**
  * LXDNA Control / auditable STR-based Y haplogroup candidate finder.
  * Pure ESM; no network, no persistence, no asserted SNP calls.
@@ -5,19 +6,19 @@
  * Training rows MUST be SNP-confirmed (snpVerified:true) and contain a full
  * ancestor-to-terminal path. Output is NOT calibrated probability or diagnosis.
  */
-export const PREDICTOR_VERSION = "str-neighbors-v1.0.0";
+export const PREDICTOR_VERSION = "str-neighbors-v1.1.0";
 const VALID_MARKER = /^[A-Z][A-Z0-9_-]{2,32}$/;
 
 function markerName(name) {
-  return String(name || "").toUpperCase().replace(/[\s.]/g, "").replace(/_/g, "-");
+  return canonicalMarker(name) || "";
 }
 function allele(value) {
   if (Array.isArray(value)) {
     const out = value.map(Number);
-    return out.length && out.length <= 8 && out.every(x => Number.isInteger(x) && x >= 5 && x <= 100)
+    return out.length && out.length <= 8 && out.every(x => Number.isInteger(x) && x >= 1 && x <= 100)
       ? out.sort((a,b) => a-b) : null;
   }
-  if (typeof value === "number" && Number.isInteger(value) && value >= 5 && value <= 100) return [value];
+  if (typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 100) return [value];
   if (typeof value === "string" && /^\s*\d{1,3}(?:\s*[-,/]\s*\d{1,3}){0,7}\s*$/.test(value)) {
     return allele(value.split(/\s*[-,/]\s*/).map(Number));
   }
@@ -36,7 +37,7 @@ export function normalizeMarkers(input) {
   // DYS389II contains DYS389I; use the non-overlapping segment for distance.
   if (output.DYS389I?.length === 1 && output.DYS389II?.length === 1) {
     const b = output.DYS389II[0] - output.DYS389I[0];
-    if (b >= 5 && b <= 100) output.DYS389II = [b];
+    if (b >= 1 && b <= 100) output.DYS389II = [b];
     else delete output.DYS389II;
   } else {
     // Without DYS389I, II cannot be normalized consistently across panels.
@@ -69,22 +70,22 @@ export function compareSTR(target, reference, mutationRates={}) {
 }
 function pathOf(ref){
   const path=ref?.path;
-  if(!Array.isArray(path)||!path.length||path.length>50)return null;
+  if(!Array.isArray(path)||!path.length||path.length>200)return null;
   const normalized=path.map(x=>String(x||"").trim().toUpperCase());
-  return normalized.every(x=>/^[A-Z][A-Z0-9-]{0,60}$/.test(x))?normalized:null;
+  return normalized.every(x=>/^[A-Z][A-Z0-9_'*.+-]{0,100}$/.test(x))?normalized:null;
 }
 function sameRecord(a,b){
   return JSON.stringify(a.path)===JSON.stringify(b.path) &&
-    JSON.stringify(a.markers)===JSON.stringify(b.markers);
+    JSON.stringify(Object.entries(a.markers).sort())===JSON.stringify(Object.entries(b.markers).sort());
 }
-function makeRefs(references, knownAncestor, warnings) {
+function makeRefs(references, knownAncestor, warnings, targetKit) {
   const byKit=new Map(), excluded=new Set();
   for(const raw of references) {
     if(raw?.snpVerified!==true)continue;
     const kit=String(raw.kitId||"").trim();
     const path=pathOf(raw), markers=normalizeMarkers(raw.markers);
     if(!kit||!path||Object.keys(markers).length<12)continue;
-    if(knownAncestor && !path.includes(knownAncestor))continue;
+    if(targetKit && kit===targetKit)continue;
     const ref={kitId:kit,path,markers};
     if(excluded.has(kit))continue;
     if(byKit.has(kit)&&!sameRecord(byKit.get(kit),ref)){
@@ -92,7 +93,7 @@ function makeRefs(references, knownAncestor, warnings) {
       warnings.push("Excluded conflicting duplicate kit "+kit);
     }else byKit.set(kit,ref);
   }
-  return [...byKit.values()];
+  return [...byKit.values()].filter(r=>!knownAncestor||r.path.includes(knownAncestor));
 }
 /**
  * Does not overwrite a verified SNP call or automatically update any tree.
@@ -111,17 +112,17 @@ export function predictYSTR({target, references=[], knownAncestor=null, mutation
   }
   if(typed<12) return empty("At least 12 valid common Y-STR markers are required.",{matchedLoci:typed});
   if(!Array.isArray(references)||references.length>100000) return empty("Invalid or oversized reference collection.");
-  const refs=makeRefs(references,ancestor,warnings);
+  const refs=makeRefs(references,ancestor,warnings,String(target?.kitId||" ").trim());
   const neighbors=refs.map(ref=>{
     const d=compareNormalized(markers,ref.markers,mutationRates);
     return {...ref,...d};
   }).filter(r=>r.overlap>=Math.max(12,Number(minOverlap)||12)&&r.distance!==null)
     .sort((a,b)=>a.distance-b.distance||b.overlap-a.overlap||a.kitId.localeCompare(b.kitId));
-  if(!neighbors.length) return empty("No independent SNP-confirmed reference shares enough markers.",{matchedLoci:typed,warnings});
+  if(!neighbors.length) return empty("No distinct SNP-confirmed reference shares enough markers.",{matchedLoci:typed,referenceKits:refs.length,referenceCompared:0,warnings});
   const near=neighbors.slice(0,Math.max(3,Math.min(21,Math.floor(Number(k)||11))));
   const proposed=[],audit=[];
   let group=near;
-  for(let depth=0;depth<50;depth++){
+  for(let depth=0;depth<200;depth++){
     const available=group.filter(r=>r.path.length>depth);
     if(available.length<2)break;
     const votes=new Map();

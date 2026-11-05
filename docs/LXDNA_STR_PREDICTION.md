@@ -54,3 +54,20 @@ Optional `knownAncestor` restricts the comparison to reference paths containing 
 
 ## Project rollout note
 The user-supplied public FTDNA projects (J2-M172, E3b, R1b, R1a and others) have **not** been bulk imported or transformed into a verified reference dataset in this changeset. This implementation is a safe predictor core and manual administrator evaluation surface; public bulk prediction and reference ingestion are separate data-provenance and validation work. Production build and Cloudflare deployment must be verified after code merge.
+## STR review workspace update (2026-11-05)
+
+The owner/admin lab now accepts named marker/value lines, two-row headers and values, JSON, and explicitly selected FTDNA 12/25/37/67/111 panels in grouped or expanded copy order. Panel 12 contains 11 grouped loci and is **below this engine's minimum of 12 comparable loci**. Incomplete panels must use named markers so a missing token cannot shift every following marker. Duplicate aliases, unknown loci, malformed values and wrong copy counts stop parsing. Microvariants such as 17.2 are retained exactly in the parsed input and reported as excluded from the integer step-distance model; they are never rounded. Null/no-call values are not zero-repeat matches.
+
+Panel order reference: FamilyTreeDNA's own Y-DNA results table headers, https://www.familytreedna.com/public/FTDNALearningCenter?iframe=ydna-results-overview ; introductory 12-marker report: https://www.familytreedna.com/pdfs/?path=%2Fpdf-docs%2Ftr_y12m.pdf . These are vendor sources for its panel format, not independent validation of this predictor. General Y-STR locus reference: US NIST STRBase https://strbase-archive.nist.gov/ystr_fact.htm .
+
+Reference import contract for the lab is now a versioned source bundle:
+```json
+{"schemaVersion":1,"source":{"title":"Source title","url":"https://example.org/dataset","version":"release-id","date":"2026-11-05"},"records":[]}
+```
+Populate `records` with authorized, SNP-confirmed kits, `kitId`, `haplogroup` and `markers`. `path` remains an optional consistency check. The interface requires source metadata, but this is a declaration by the importer: **neither an HTTPS URL nor snpVerified:true proves a study's authority or the SNP call's validity**. No STR reference data is bundled or fetched automatically. A blank template is downloadable; it intentionally cannot produce a result.
+
+A worker fetches only this site's public pinned tree snapshots, resolves SNP aliases and generates each reference path from the selected YFull or FTDNA topology. Unknown/ambiguous terminal labels and incompatible submitted ancestors are excluded. A known SNP scope must resolve in that same tree; no branch is inferred using a text prefix. Conflicting duplicate kits are reconciled before scope filtering; an optional target kit ID prevents self-matching. Different IDs for the same person still require source reconciliation outside the engine.
+
+The worker keeps large comparison tasks off the main interface. Cancel and clear terminate it. Nothing in the prediction code transmits input values or writes them to persistent storage. Existing site authentication and public-snapshot downloads still use the network. Results show nearest-reference branch alternatives, compared loci, distances, the nearest results' common ancestor, links to the existing tree and a local JSON audit export with source and snapshot metadata. The links open existing records without publishing a predicted placement. Nearest-five alternative counts are not population frequencies or calibrated probabilities. Missing/unequal panels and related reference kits remain limitations; synthetic regression tests do not establish biological accuracy.
+
+Validation: parser and engine regression suite, topology/path tests, complete pinned-data build and worker integration tests. No calibrated Bayesian model, independent accuracy percentage, or public reference population was added. Those require an authorized reference collection and held-out SNP-confirmed profiles as described above.
