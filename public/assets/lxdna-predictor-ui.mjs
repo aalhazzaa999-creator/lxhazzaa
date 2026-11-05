@@ -2,6 +2,13 @@ import {importProjectCSV,selectTargetCSV} from './lxdna-csv.mjs';
 import {parseSTR} from './lxdna-str-input.mjs';
 const $=id=>document.getElementById(id),refs=$('predictorRefs'),target=$('predictorTarget'),run=$('predictorRun'),status=$('predictorResultStatus'),outcome=$('predictorOutcome'),detail=$('predictorDetail');
 let worker,lastResult;
+function controlView(id){
+ for(const name of ['predictorLab','referenceManager'])$(name).hidden=name!==id;
+ for(const button of document.querySelectorAll('.workspace-switcher button[data-control-view]')){const active=button.dataset.controlView===id;button.setAttribute('aria-pressed',String(active));button.classList.toggle('secondary',!active);}
+ if(id==='referenceManager')$('referenceManagerTitle').focus();else $('predictorRun').focus();
+}
+for(const link of document.querySelectorAll('[data-control-view]'))link.addEventListener('click',e=>{e.preventDefault();controlView(link.dataset.controlView);});
+
 function inputMode(paste){
  $('predictorFileArea').hidden=paste;$('predictorPasteArea').hidden=!paste;
  for(const [id,active] of [['predictorFileMode',!paste],['predictorPasteMode',paste]]){const b=$(id);b.setAttribute('aria-pressed',String(active));b.classList.toggle('secondary',!active);}
@@ -34,7 +41,7 @@ $('predictorClear').onclick=()=>{stop();clearResult();target.value='';$('targetP
 $('predictorTemplate').onclick=()=>download({schemaVersion:1,source:{title:'',url:'https://',version:'',date:'YYYY-MM-DD'},records:[{kitId:'',haplogroup:'',snpVerified:false,markers:{DYS393:13,DYS390:24}}]},'LXDNA-reference-template.json');
 $('predictorExport').onclick=()=>{if(lastResult)download({...lastResult,exportedAt:new Date().toISOString()},'LXDNA-STR-review.json');};
 run.addEventListener('click',()=>{
- clearResult();if(!target.value.trim()){show('أضف ملف النتيجة أو الصق قيم STR أولًا.','error');return;}if(!refs.value.trim()){$('referenceSettings').open=true;show('أضف مرجع مقارنة مصرحًا به من «إدارة مراجع المقارنة» أولًا.','error');$('predictorFile').focus();return;}if(target.value.length>100000||refs.value.length>5*1024*1024){show('حجم الإدخال أكبر من الحد المدعوم.','error');return;}
+ clearResult();if(!target.value.trim()){show('أضف ملف النتيجة أو الصق قيم STR أولًا.','error');return;}if(!refs.value.trim()){show('لم يُجهّز مرجع المقارنة؛ افتح «إدارة المراجع» من لوحة التحكم أولًا.','error');return;}if(target.value.length>100000||refs.value.length>5*1024*1024){show('حجم الإدخال أكبر من الحد المدعوم.','error');return;}
  run.disabled=true;$('predictorCancel').hidden=false;show('جارٍ قراءة الإدخال وتحميل المشجرة العامة والمقارنة محليًا…');
  worker??=new Worker('/assets/lxdna-predictor-worker.js');
  worker.onerror=()=>{stop();show('تعذر تشغيل التحليل؛ تحقق من الاتصال لتحميل المشجرة العامة ثم أعد المحاولة.','error');};
