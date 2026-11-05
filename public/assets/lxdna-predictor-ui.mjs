@@ -2,7 +2,7 @@ const $=id=>document.getElementById(id),refs=$('predictorRefs'),target=$('predic
 let worker,lastResult;
 const show=(text,mode='notice')=>{status.textContent=text;status.dataset.state=mode;};
 function download(value,name){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function clearResult(){lastResult=null;outcome.textContent='';detail.textContent='';$('predictorAlternatives').replaceChildren();$('predictorPath').replaceChildren();$('predictorExport').disabled=true;}
+function clearResult(){lastResult=null;$('predictorSource').textContent='';$('predictorWarnings').textContent='';outcome.textContent='';detail.textContent='';$('predictorAlternatives').replaceChildren();$('predictorPath').replaceChildren();$('predictorExport').disabled=true;}
 function stop(){worker?.terminate();worker=null;run.disabled=false;$('predictorCancel').hidden=true;}
 $('predictorFile').addEventListener('change',async e=>{
  const f=e.target.files?.[0];if(!f)return;
@@ -26,6 +26,8 @@ run.addEventListener('click',()=>{
   const labels={candidate:'مرشح للمراجعة',limited:'دعم محدود',unresolved:'غير محسوم'};
   outcome.textContent=(r.proposedHaplogroup||'لا يوجد فرع مرجح')+' · '+labels[r.supportLevel];
   show(`${r.input.format} · ${r.input.loci} موضعًا / ${r.input.slots} قراءة · ${r.referenceKits} مرجعًا مقبولًا · ${r.referenceCompared||0} قابلًا للمقارنة. ${r.commonAncestor?'السلف المشترك لأقرب النتائج: '+r.commonAncestor+'. ':''}درجة الدعم ليست نسبة دقة.`);
+  $('predictorSource').textContent=`المصدر المصرّح به: ${r.source.title} · ${r.source.version} · ${r.source.date}. ${r.provenanceNotice}`;
+  $('predictorWarnings').textContent=[r.reviewNote,...r.input.warnings,...r.warnings, ...(r.excludedCount?[r.excludedCount+' سجلًا مستبعدًا أو غير صالح؛ راجع تفاصيل المقارنة.']:[])].join(' · ');
   const table=document.createElement('table'),head=document.createElement('thead');
   const tr=document.createElement('tr');for(const label of ['الفرع','عدد أقرب المراجع','متوسط فرق التكرارات','المواضع المشتركة']){const th=document.createElement('th');th.textContent=label;tr.append(th);}head.append(tr);table.append(head);
   const body=document.createElement('tbody');for(const a of r.alternatives){const row=document.createElement('tr');for(const value of [a.branch,a.kits,a.distance,a.overlap]){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}body.append(row);}table.append(body);$('predictorAlternatives').append(table);

@@ -16,7 +16,7 @@ if(!isMainThread){
  const send=data=>new Promise((resolve,reject)=>{worker.once('message',resolve);worker.once('error',reject);worker.postMessage(data);});
  try{
   const records=['a','b','c'].map(kitId=>({kitId,haplogroup:'J-M47',snpVerified:true,markers}));
-  const input={text:JSON.stringify({markers}),references:JSON.stringify({source:{title:'Synthetic test fixture',url:'https://example.org/synthetic',version:'test',date:'2026-11-05'},records}),ancestor:'M172',panel:'named',layout:'grouped',tree:'yfull',kitId:'a'};
+  const input={text:JSON.stringify({markers}),references:JSON.stringify({schemaVersion:1,source:{title:'Synthetic test fixture',url:'https://example.org/synthetic',version:'test',date:'2026-11-05'},records}),ancestor:'M172',panel:'named',layout:'grouped',tree:'yfull',kitId:'a'};
   for(const tree of ['yfull','ftdna']){
    const r=await send({...input,tree});assert.equal(r.ok,true,r.error);assert.equal(r.result.referenceKits,2);assert.equal(r.result.proposedHaplogroup,'J-M47');assert.equal(r.result.probability,null);assert.ok(r.result.treeSource);assert.ok(r.result.treePath.includes(r.result.knownAncestor));assert.equal(r.result.alternatives[0].kits,2);
   }

@@ -16,14 +16,14 @@ self.onmessage=async({data})=>{
   const parsed=parseSTR(data.text,{panel:data.panel,layout:data.layout});
   if(data.kitId)parsed.target.kitId=data.kitId.trim();
   const bundle=JSON.parse(data.references),source=bundle?.source,rows=bundle?.records;
-  if(!source||!Array.isArray(rows))throw Error('المرجع يحتاج source وrecords؛ استخدم قالب المرجع');
+  if(bundle?.schemaVersion!==1||!source||!Array.isArray(rows))throw Error('المرجع يحتاج source وrecords؛ استخدم قالب المرجع');
   if(!source.title||!source.version||!/^https:\/\//.test(source.url||'')||!/^\d{4}-\d{2}-\d{2}$/.test(source.date||''))throw Error('أكمل عنوان المرجع ورابط HTTPS والإصدار وتاريخ المصدر YYYY-MM-DD');
   if(!rows.length||rows.length>10000)throw Error('المرجع يقبل من 1 إلى 10000 سجل');
   const active=data.tree==='ftdna'?index.foreign:index;
-  const invalid=[],clean=[];
+  const invalid=[],referenceWarnings=[],clean=[];
   for(const r of rows){try{
    const input=parseSTR(JSON.stringify({markers:r.markers}));clean.push({...r,markers:input.target.markers});
-   invalid.push(...input.warnings.map(reason=>({kitId:r.kitId,reason})));
+   referenceWarnings.push(...input.warnings.map(reason=>({kitId:r.kitId,reason})));
   }catch(e){invalid.push({kitId:r?.kitId,reason:e.message});}}
   const bound=bindReferences(clean,active,data.ancestor.trim());
   const result=predictYSTR({target:parsed.target,references:bound.references,knownAncestor:bound.knownAncestor});
@@ -34,8 +34,9 @@ self.onmessage=async({data})=>{
   const path=result.proposedHaplogroup?active.ancestors(result.proposedHaplogroup).reverse().filter(n=>n!==active.tree).map(n=>n.id):[];
   self.postMessage({ok:true,result:{...result,source,tree:data.tree,treeSource:data.tree==='ftdna'?index.foreignMeta:index.meta,
    input:{format:parsed.format,loci:parsed.loci,slots:parsed.slots,warnings:parsed.warnings},
-   referenceInput:rows.length,excludedCount:bound.excluded.length+invalid.length,excluded:[...bound.excluded,...invalid].slice(0,100),
+   referenceWarnings:referenceWarnings.slice(0,100),referenceInput:rows.length,excludedCount:bound.excluded.length+invalid.length,excluded:[...bound.excluded,...invalid].slice(0,100),
    alternatives:[...alternatives.values()],commonAncestor:common?.id||null,treePath:path,knownAncestor:bound.knownAncestor,
+   reviewNote:result.status==='unresolved'?'لم تتوفر أدلة كافية لاقتراح فرع؛ راجع عدد المواضع المشتركة والمراجع المقبولة وأي تأكيد SNP موجود للعينة.':'اقتراح مبني على تشابه STR ضمن المراجع المدخلة، ويحتاج تأكيدًا بفحص SNP.',
    provenanceNotice:'بيانات المصدر وتأكيد SNP مقدمة من مستورد المرجع؛ لم تتحقق المنصة مستقلًا من صحتها.'}});
  }catch(e){self.postMessage({ok:false,error:e.message});}
 };
