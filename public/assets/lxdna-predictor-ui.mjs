@@ -43,7 +43,7 @@ $('predictorExport').onclick=()=>{if(lastResult)download({...lastResult,exported
 run.addEventListener('click',()=>{
  clearResult();if(!target.value.trim()){show('أضف ملف النتيجة أو الصق قيم STR أولًا.','error');return;}if(!refs.value.trim()){show('لم يُجهّز مرجع المقارنة؛ افتح «إدارة المراجع» من لوحة التحكم أولًا.','error');return;}if(target.value.length>100000||refs.value.length>5*1024*1024){show('حجم الإدخال أكبر من الحد المدعوم.','error');return;}
  run.disabled=true;$('predictorCancel').hidden=false;show('جارٍ قراءة الإدخال وتحميل المشجرة العامة والمقارنة محليًا…');
- worker??=new Worker('/assets/lxdna-predictor-worker.js');
+ worker??=new Worker('/assets/lxdna-predictor-worker.js?v=str-neighbors-1.2.0');
  worker.onerror=()=>{stop();show('تعذر تشغيل التحليل؛ تحقق من الاتصال لتحميل المشجرة العامة ثم أعد المحاولة.','error');};
  worker.onmessage=({data})=>{
   run.disabled=false;$('predictorCancel').hidden=true;

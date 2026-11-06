@@ -63,3 +63,18 @@ test("Too few loci must be unresolved",()=>{
  const x=predictYSTR({target:{DYS393:13,DYS390:24},references:[ref("A1","J-M47")]});
  assert.equal(x.status,"unresolved");
 });
+
+
+test("Descent retains dissenting parent votes in its cumulative support",()=>{
+ const refs=Array.from({length:10},(_,i)=>({...ref("CUM"+i,"J-M47"),path:i<5?["J-M172","J-M47","J-Z1"]:i<7?["J-M172","J-M47","J-Z2"]:["J-M172","J-M67"]}));
+ const result=predictYSTR({target:{markers:base},references:refs,k:10});
+ assert.equal(result.proposedHaplogroup,"J-M47");
+ assert.equal(result.audit.at(-1).cumulativeShare,0.5);
+ assert.equal(result.probability,null);
+});
+test("Short reference paths cannot inflate support by abstaining at deeper levels",()=>{
+ const refs=Array.from({length:10},(_,i)=>({...ref("SHORT"+i,"J-M47"),path:i<3?["J-M172","J-M47"]:["J-M172"]}));
+ const result=predictYSTR({target:{markers:base},references:refs,k:10});
+ assert.equal(result.proposedHaplogroup,"J-M172");
+ assert.equal(result.audit.at(-1).cumulativeShare,0.3);
+});

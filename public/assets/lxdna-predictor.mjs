@@ -6,7 +6,7 @@ import {markerName as canonicalMarker} from "./lxdna-str-input.mjs";
  * Training rows MUST be SNP-confirmed (snpVerified:true) and contain a full
  * ancestor-to-terminal path. Output is NOT calibrated probability or diagnosis.
  */
-export const PREDICTOR_VERSION = "str-neighbors-v1.1.0";
+export const PREDICTOR_VERSION = "str-neighbors-v1.2.0";
 const VALID_MARKER = /^[A-Z][A-Z0-9_-]{2,32}$/;
 
 function markerName(name) {
@@ -121,6 +121,7 @@ export function predictYSTR({target, references=[], knownAncestor=null, mutation
   if(!neighbors.length) return empty("No distinct SNP-confirmed reference shares enough markers.",{matchedLoci:typed,referenceKits:refs.length,referenceCompared:0,warnings});
   const near=neighbors.slice(0,Math.max(3,Math.min(21,Math.floor(Number(k)||11))));
   const proposed=[],audit=[];
+  const totalVoteWeight=near.reduce((sum,r)=>sum+Math.exp(-Math.min(10,r.distance)*2),0);
   let group=near;
   for(let depth=0;depth<200;depth++){
     const available=group.filter(r=>r.path.length>depth);
@@ -137,9 +138,10 @@ export function predictYSTR({target, references=[], knownAncestor=null, mutation
     const sum=sorted.reduce((v,a)=>v+a.weight,0);
     const top=sorted[0], share=top.weight/sum, other=sorted[1]?.weight||0;
     const margin=(top.weight-other)/sum;
+    const cumulativeShare=top.weight/totalVoteWeight;
     audit.push({depth,node:top.node,referenceKits:top.count,share:Number(share.toFixed(3)),
-      margin:Number(margin.toFixed(3)),alternatives:sorted.length});
-    if(top.count<2 || share<0.7 || margin<0.2)break;
+      margin:Number(margin.toFixed(3)),cumulativeShare:Number(cumulativeShare.toFixed(3)),alternatives:sorted.length});
+    if(top.count<2 || share<0.7 || margin<0.2 || cumulativeShare<0.7)break;
     proposed.push(top.node);
     group=available.filter(r=>r.path[depth]===top.node);
   }
