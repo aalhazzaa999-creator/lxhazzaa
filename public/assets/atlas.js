@@ -42,7 +42,7 @@
     if(window.LXAuth?.getUser()){removeGuestLock();return true;}
     if(showGuestLock())return false;
     const ids=['q','mutation','root','country','sex','locationType','spatialClassification','radius','dnaType','quality','ageMinBP','ageMaxBP'];
-    const signature=ids.map(id=>id==='dnaType'?'':$(id)?.value?.trim()||'').join('|')+'|'+($('withCoordinatesOnly')?.getAttribute('aria-pressed')==='true'?'coordinates':'');
+    const signature=ids.map(id=>id==='dnaType'?'':$(id)?.value?.trim()||'').join('|')+'|'+window.LXTimeline.signature()+'|'+($('withCoordinatesOnly')?.getAttribute('aria-pressed')==='true'?'coordinates':'');
     if(!signature.replaceAll('|','')||signature===lastGuestSearch)return true;
     const used=guestUsed();
     if(used>=GUEST_DAILY_SEARCHES){showGuestLock();return false;}
@@ -63,7 +63,8 @@
     if(!guestSearchAllowed())return;
     const type=$('dnaType').value||'y',mutation=$('mutation').value.trim(),country=$('country').value,lt=$('locationType').value,coordinatesOnly=$('withCoordinatesOnly').getAttribute('aria-pressed')==='true',spatial=$('spatialClassification').value,radius=Number($('radius').value),center=map?map.getCenter():null;
     queryResult=window.LXResearchQuery.select(all,{type,query:mutation,mode:$('mutationMode').value,root:$('root').value,sex:$('sex').value,quality:$('quality').value,ageMinBP:$('ageMinBP').value,ageMaxBP:$('ageMaxBP').value,text:$('q').value.trim()},treeIndex);
-    filtered=queryResult.records.filter(r=>(!country||r.country===country)&&(!lt||r.locationType===lt)&&(!coordinatesOnly||(r.lat!==null&&r.lng!==null))&&(!spatial||spatialFor(r).status===spatial)&&(!radius||(center&&r.lat!==null&&r.lng!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));
+    const dateWindow=window.LXTimeline.options();
+    filtered=queryResult.records.filter(r=>window.LXChronology.match(r,dateWindow).matched).filter(r=>(!country||r.country===country)&&(!lt||r.locationType===lt)&&(!coordinatesOnly||(r.lat!==null&&r.lng!==null))&&(!spatial||spatialFor(r).status===spatial)&&(!radius||(center&&r.lat!==null&&r.lng!==null&&distance(center.lat,center.lng,r.lat,r.lng)<=radius)));
     if(mutation)$('mutationStatus').textContent=queryResult.resolved.reason||('🌿 '+(type==='mt'?'mtDNA':'Y-DNA')+' · YFull '+treeIndex.meta.version+(type==='y'?' · FTDNA '+treeIndex.foreignMeta.sourceVersion:''));
     if(mapSelectionRecords)filtered=filtered.filter(r=>mapSelectionRecords.has(r));page=0;drawSearchCircle();render();finishShareRestore()
   }
@@ -77,6 +78,7 @@
       const value=$(id)?.value?.trim();
       if(value)url.searchParams.set(key,value);
     }
+    window.LXTimeline.write(url.searchParams);
     if($('mutation')?.value.trim())url.searchParams.set('mode',$('mutationMode').value);
     if($('withCoordinatesOnly').getAttribute('aria-pressed')==='true')url.searchParams.set('coords','1');
     if($('radius').value&&map){
@@ -90,6 +92,7 @@
     return url.href;
   }
   function restoreShare(){
+    window.LXTimeline.restore(initialShare);
     if(!initialShare.size){filter();return;}
     for(const [id,key] of Object.entries(shareKeys)){
       const value=initialShare.get(key);
@@ -252,9 +255,10 @@
     $('siteCount').textContent=fmt(siteSummary.sites.length);
     renderSiteList();
   }
+  function dateBadge(r){const m=window.LXChronology.match(r,window.LXTimeline.options());const notes=[];if(m.partial)notes.push('تداخل جزئي مع الفترة المختارة');if(m.basis==='mean-bp-approximation')notes.push('متوسط BP تقريبي؛ لا يتوفر مجال تأريخ');if(m.basis==='unknown')notes.push('التأريخ غير محدد — أُدرج باختيارك');return notes.length?'<span class="date-match-note">'+notes.map(esc).join(' · ')+'</span>':'';}
   function render() {
     renderSites();
-    const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r[$('dnaType').value||'y']).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${fmt(start+i+1)}. ${esc(r.name||r.id)}</strong><span>الدولة: ${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small></div><span class="record-right"><span class="y">${esc(r[$('dnaType').value||'y']||'قراءة غير متوفرة')}</span><span class="record-hint">عرض التفاصيل والدراسات ←</span></span></button><div class="record-study">${studyUrl(r)?`<a href="${esc(studyUrl(r))}" target="_blank" rel="noopener noreferrer">فتح الدراسة ↗</a>`:'الدراسة: غير متوفر'}</div><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
+    const count=filtered.length;$('all').textContent=fmt(all.length);$('matching').textContent=fmt(count);$('geo').textContent=fmt(filtered.filter(r=>r.lat!==null).length);$('ycount').textContent=fmt(filtered.filter(r=>r[$('dnaType').value||'y']).length);const start=page*PAGE,subset=filtered.slice(start,start+PAGE);$('range').textContent=count?`${fmt(start+1)}–${fmt(Math.min(start+PAGE,count))} من ${fmt(count)}`:'لا توجد نتائج';$('records').innerHTML=subset.map((r,i)=>`<article class="record-item"><button type="button" class="record record-expand" aria-expanded="false" data-idx="${start+i}"><div><strong>${fmt(start+i+1)}. ${esc(r.name||r.id)}</strong><span>الدولة: ${esc(r.country||'دولة غير محددة')} · ${esc(r.site||'موقع غير محدد')}</span><small>${esc(r.ageText||'تأريخ غير محدد')} · ${esc(r.match||'')}</small>${dateBadge(r)}</div><span class="record-right"><span class="y">${esc(r[$('dnaType').value||'y']||'قراءة غير متوفرة')}</span><span class="record-hint">عرض التفاصيل والدراسات ←</span></span></button><div class="record-study">${studyUrl(r)?`<a href="${esc(studyUrl(r))}" target="_blank" rel="noopener noreferrer">فتح الدراسة ↗</a>`:'الدراسة: غير متوفر'}</div><div class="inline-detail" hidden></div></article>`).join('')||'<div class="record">لا توجد سجلات تطابق هذه الفلاتر.</div>';$('pageLabel').textContent=`${fmt(page+1)} / ${fmt(Math.max(1,Math.ceil(count/PAGE)))}`;$('prev').disabled=page===0;$('next').disabled=(page+1)*PAGE>=count;renderMap()
   }
   function drawSearchCircle() {
     if(!map || typeof L==='undefined')return;
@@ -350,78 +354,7 @@
     L.marker([31.55,34.85],{icon:palestineLabel,interactive:false,keyboard:false,zIndexOffset:1000}).addTo(map);
     canvasRenderer=L.canvas( {
       padding:0.3
-    });layer=L.layerGroup().addTo(map);map.on('moveend',()=>{drawSearchCircle();renderMap()});map.on('zoomend',renderMap);setTimeout(()=>map.invalidateSize(),200)
-  }
-  function rootOptions(type){const groups=type==='mt'?['L','L0','L1','L2','L3','L4','L5','L6','M','N','R','H','U','J','T','K','V','W','X','I','A','B','C','D','E','F','G','Z']:[...new Set(all.map(r=>r.yRoot))];$('root').replaceChildren(new Option('🌿 الفروع: الكل',''));opt('root',groups);$('root').previousElementSibling.textContent=type==='mt'?'🌿 فرع mtDNA':'🌿 سلالة Y-DNA';$('mutation').previousElementSibling.textContent='🧬 '+(type==='mt'?'mtDNA':'Y-DNA');$('ycount').nextElementSibling.textContent='بقراءة '+(type==='mt'?'mtDNA':'Y-DNA');}
-  async function switchDNA(){const type=$('dnaType').value||'y',token=++mutationToken;treeIndex=null;mutationResolved=null;$('root').value='';$('mutation').value='';$('mutationStatus').textContent='جارٍ تحميل المشجرة…';try{const index=await window.LXPhylogeny.ready(type);if(token!==mutationToken)return;treeIndex=index;rootOptions(type);$('mutationStatus').textContent='🌿 اختر التحور ثم ابحث';filter();}catch(e){if(token===mutationToken)$('mutationStatus').textContent='تعذر تحميل المشجرة: '+e.message;}}
-  async function load() {
-    try {
-      $('loading').textContent='جارٍ تحميل نسخة البيانات والمشجرة…';
-      const type=initialShare.get('dna')==='mt'?'mt':'y';$('dnaType').value=type;
-      const [data,index]=await Promise.all([window.LXResearchData.load(),window.LXPhylogeny.ready(type)]);manifest=data.manifest;all=data.records;treeIndex=index;
-      try{const sr=await fetch('/data/atlas/spatial-classifications.json');if(sr.ok){const parsed=await sr.json();if(parsed&&typeof parsed.records==='object'&&!Array.isArray(parsed.records))spatialAnnotations=parsed.records;}}catch(e){console.warn('تعذر تحميل التصنيف المكاني',e)}
-      rootOptions(type);opt('country',[...new Set(all.map(r=>r.country))]);$('loading').style.display='none';document.dispatchEvent(new Event('lx-atlas-data-loaded'));initMap();restoreShare()
-    }
-    catch(e) {
-      $('loading').textContent='خطأ في تحميل البيانات: '+e.message+' — أعد المحاولة لاحقًا.';console.error(e)
-    }
-}
-  // Text queries are committed deliberately, so pauses while typing do not consume the guest allowance.
-  const qApply=document.createElement('button');qApply.type='button';qApply.className='btn ghost';qApply.textContent='بحث';qApply.setAttribute('aria-label','تنفيذ البحث بالنص');$('q').after(qApply);
-  qApply.addEventListener('click',filter);$('q').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();filter();}});
-  const mutationMode=document.createElement('select');mutationMode.id='mutationMode';mutationMode.setAttribute('aria-label','طريقة مطابقة التحور');mutationMode.innerHTML='<option value="descendants">التحور وفروعه المتحدرة</option><option value="exact">التحور المكتوب نفسه</option>';
-  const modeLabel=document.createElement('label');modeLabel.htmlFor='mutationMode';modeLabel.textContent='طريقة مطابقة التحور';$('mutationStatus').after(modeLabel,mutationMode);
-  const mutationApply=document.createElement('button');mutationApply.type='button';mutationApply.className='btn ghost';mutationApply.textContent='بحث التحور';mutationMode.after(mutationApply);
-  const coverageNote=document.createElement('p');coverageNote.className='smallnote';mutationApply.after(coverageNote);
-  document.addEventListener('lx-atlas-data-loaded',()=>{coverageNote.textContent='🗄 '+manifest.snapshot+' · 👤 '+manifest.knownIndividuals+' معرّف فرد مثبت · '+manifest.unreconciledIdentities+' سجلًا بهوية غير موحدة. الأعداد من معالجتنا وليست إحصاءً رسميًا للمصدر.';});
-  const applyMutation=()=>{
-    const value=$('mutation').value.trim(),token=++mutationToken;
-    mutationResolved=null;mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;
-    clearTimeout(timer);
-    if(!value){$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';filter();return;}
-    $('mutationStatus').textContent='جارٍ التحقق من التحور وفروعه في المشجرات…';
-    // Fail closed while resolving a mutation: do not show unrelated records.
-    timer=setTimeout(async()=>{
-      try{
-        if(!treeIndex)throw Error('تعذر تشغيل فهرس التحورات.');
-        const scopedValue=$('dnaType').value==='y'&&$('root').value&&$('root').value!=='Other'&&!/^[A-T](?:\d+[A-Z0-9]*)?-/i.test(value)?$('root').value+'-'+value:value;
-        const result=treeIndex.query(scopedValue,mutationMode.value);
-        if(token!==mutationToken)return;
-        mutationResolved=result;
-        $('mutationStatus').textContent=result.reason||(
-          result.exact?'مطابقة اسم التحور نفسه فقط — المصدر: سجل الأطلس.':
-          'يشمل التحور وفروعه المتحدرة — المصادر: '+result.sources.join('، ')+(result.partial?'؛ إحدى المشجرات غير متاحة، وقد تنقص النتائج.':''));
-      }catch(e){
-        if(token!==mutationToken)return;
-        mutationResolved={known:false,matches:()=>false};
-        $('mutationStatus').textContent='تعذر التحقق من المشجرة؛ لا تُعرض نتائج غير مؤكدة. '+e.message;
-      }
-      filter();
-    },0);
-  };
-  mutationApply.addEventListener('click',applyMutation);
-  $('mutation').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applyMutation();}});
-  $('mutation').addEventListener('input',()=>{$('mutationStatus').textContent='اضغط «بحث التحور» لتطبيق الاسم الجديد.';});
-  mutationMode.addEventListener('change',applyMutation);
-  fields.filter(id=>id!=='q').forEach(id=>$(id).addEventListener('change',()=> {
-    mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;
-    clearTimeout(timer);if(id==='dnaType'){switchDNA();return;}if(id==='root'&&$('mutation').value.trim())applyMutation();else timer=setTimeout(filter,0)
-  }));$('withCoordinatesOnly').addEventListener('click',()=>{const button=$('withCoordinatesOnly');button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;filter()});$('recenter').addEventListener('click',filter);$('reset').addEventListener('click',()=> {
-    sharedRecordId='';pendingSharedRecord='';pendingSharedPage=0;history.replaceState(null,'',location.pathname);fields.filter(id=>id!=='dnaType').forEach(id=>$(id).value='');$('withCoordinatesOnly').setAttribute('aria-pressed','false');$('mutation').value='';mutationToken++;mutationResolved=null;$('mutationStatus').textContent='يشمل التحور وجميع فروعه المتحدرة عند توفر المشجرة.';mapSelectionRecords=null;selectedGroup=null;sharedIds=null;$('mapSelection').hidden=true;filter()
-  });$('prev').addEventListener('click',()=> {
-    page--;render();$('records').scrollIntoView( {
-      behavior:'smooth'
-    })
-  });$('next').addEventListener('click',()=> {
-    page++;render();$('records').scrollIntoView( {
-      behavior:'smooth'
-    })
-  });function expandRecord(button) {
-    const record=filtered[Number(button.dataset.idx)];
-    if(record)selectRecord(record,button);
-  }
-  $('records').addEventListener('click',e=>{const button=e.target.closest('button.record-expand');if(button)expandRecord(button);});
-  $('recordDetailClose').addEventListener('click',()=>{ $('recordDetailTitle').textContent='تفاصيل الرفاة والدراسات';$('recordDetailBody').innerHTML='<p class="smallnote">اختر عينة من نتائج البحث لعرض بياناتها ومراجعها هنا.</p>';$('recordDetailClose').hidden=true;document.querySelectorAll('.record-expand').forEach(b=>{b.setAttribute('aria-selected','false');b.setAttribute('aria-expanded','false')}); });
+    });layer…2095 tokens truncated… البحث لعرض بياناتها ومراجعها هنا.</p>';$('recordDetailClose').hidden=true;document.querySelectorAll('.record-expand').forEach(b=>{b.setAttribute('aria-selected','false');b.setAttribute('aria-expanded','false')}); });
   $('mapSelectionClose').addEventListener('click',clearMapGroup);$('close').addEventListener('click',()=>$('detail').style.display='none');$('detail').addEventListener('click',e=> {
     if(e.target===$('detail'))$('detail').style.display='none'
   });document.addEventListener('keydown',e=> {
