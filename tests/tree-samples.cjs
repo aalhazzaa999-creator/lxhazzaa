@@ -8,3 +8,5 @@ test('attach a sample once at its reported node, not to every ancestor',()=>{con
 test('supported ancestor is flagged rather than becoming a confirmed terminal',()=>{const node={id:'J-M172'};const tree={placement:()=>({node,status:'ancestor-supported',terminalUnresolved:true})};const out=S.index([{id:'a',recordType:'ancient',y:'J-FAKE123'}],tree,'y');assert.equal(out.byNode.get(node)[0].terminalUnresolved,true);});
 
 test('country flags follow reported country; missing and unknown countries are not guessed',()=>{assert.equal(S.country({country:'Saudi Arabia'}).flag,'🇸🇦');assert.equal(S.country({country:'Syria'}).code,'SY');assert.equal(S.country({country:'Turkey'}).code,'TR');for(const country of ['',null,'Not recorded'])assert.equal(S.country({country}).flag,'🌐');});
+
+test('current country names do not inherit deprecated country-code flags',()=>{assert.equal(S.country({country:'Serbia'}).code,'RS');assert.equal(S.country({country:'Russia'}).code,'RU');assert.equal(S.country({country:'United Kingdom'}).code,'GB');});
