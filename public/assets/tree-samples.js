@@ -20,5 +20,9 @@
   }
   return {byNode,unplaced};
  }
- return {state,publicId,index};
+ const countryAliases={'Saudi Arabia':'SA','Turkey':'TR','Türkiye':'TR','Palestine Occupied':'PS','Palestine':'PS','Iran':'IR','Russia':'RU','Syria':'SY','South Korea':'KR','North Korea':'KP','United States':'US','Unknown':null,'Not specified':null};
+ let countries;
+ function country(r){const name=String(r.country||'').trim();if(!name)return {code:null,name:'البلد غير مذكور',flag:'🌐'};if(!countries){countries=new Map();if(typeof Intl.DisplayNames==='function'){for(const locale of ['en','ar']){const names=new Intl.DisplayNames([locale],{type:'region'});for(let a=65;a<=90;a++)for(let b=65;b<=90;b++){const code=String.fromCharCode(a,b),label=names.of(code);if(label!==code)countries.set(label.toLowerCase(),code);}}}for(const [label,code] of Object.entries(countryAliases))countries.set(label.toLowerCase(),code);}
+ const code=countries.get(name.toLowerCase())||null;return {code,name,flag:code?Array.from(code,c=>String.fromCodePoint(127397+c.charCodeAt(0))).join(''):'🌐'};}
+ return {state,publicId,index,country};
 });

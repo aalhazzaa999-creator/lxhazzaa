@@ -47,10 +47,20 @@
 .lxdna .tree-horizontal .tree-node[open]:not(.tree-leaf)>summary::after{left:-16px;width:16px}
 .lxdna .tree-horizontal .tree-children>.tree-node::before,.lxdna .tree-horizontal .tree-children>.tree-node::after{right:-16px;height:calc(50% + 8px)}
 .lxdna .tree-horizontal .tree-children>.tree-node>summary>.tree-entry{right:-18px;width:16px}
-/* Public IDs are connected leaves, not a detached record list. */
-.lxdna .tree-canvas .sample-leaf{min-width:156px;display:block}
-.sample-leaf-card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:156px;min-height:88px;padding:10px;border:1px solid var(--tree-line);border-radius:8px;background:var(--tree-panel);color:var(--tree-text);font:inherit;cursor:pointer;direction:rtl;box-sizing:border-box}
-.sample-leaf-card>bdi{font-size:12px;font-weight:700;overflow-wrap:anywhere}.sample-leaf-card>small{font-size:9px;line-height:1.5;text-align:center;max-width:100%}.sample-leaf-card .sample-type-icon{width:23px;height:23px}.sample-leaf-icon{display:inline-flex;border:1px solid var(--tree-line);border-radius:7px;padding:3px}.sample-leaf.developed .sample-leaf-icon{border-color:#71c99d}.sample-leaf.nondeveloped .sample-leaf-icon{border-color:#71a8d2}.sample-leaf.ancient .sample-leaf-card{border-color:#bc7c62}
-.sample-leaf.predicted .sample-leaf-card{border:2px solid #c74343}.sample-leaf.predicted small{color:#ff8b8b}.sample-leaf.predicted .sample-leaf-icon{border-color:#e75555;background:#7b2323}.sample-type-icon[src$="#predicted"]{filter:sepia(1) saturate(5) hue-rotate(315deg)}
-.placement-warning{color:#e2ba65!important}.sample-more{min-width:156px!important}.sample-more>button{width:156px;min-height:70px;font:inherit;font-size:12px;background:var(--tree-panel);color:var(--tree-gold);border:1px dashed var(--tree-gold);border-radius:8px;cursor:pointer}
-.tree-horizontal .tree-children>.sample-leaf>.sample-leaf-card>.tree-entry{display:block;position:absolute;top:50%;right:-18px;width:16px;border-top:2px solid var(--tree-gold)}
+/* Individual sample rows share a branch stem; they are not branch cards. */
+.lxdna .tree-canvas .sample-group{min-width:240px;padding:0 0 0 20px;border-left:2px solid var(--tree-gold)}
+.lxdna .tree-canvas .sample-group::before{right:50%}.lxdna .tree-canvas .sample-group::after{left:50%}
+.sample-group>.sample-leaf{position:relative;width:max-content;min-width:220px;margin:0;padding:0;border:0;background:none}
+.sample-group>.sample-leaf::before{content:'';position:absolute;left:-20px;top:50%;width:20px;border-top:1px solid var(--tree-gold)}
+.lxdna .tree-canvas .sample-leaf-card{position:relative;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:7px;width:max-content;max-width:420px;min-height:34px;margin:0;padding:3px 8px;border:0;border-radius:3px;background:transparent;color:var(--tree-text);font:inherit;cursor:pointer;direction:ltr;box-sizing:border-box}
+.sample-leaf-card:hover,.sample-leaf-card:focus-visible{background:var(--tree-panel);outline:1px solid var(--tree-line)}
+.sample-leaf-card>bdi{font-size:13px;font-weight:600;overflow-wrap:anywhere;max-width:190px;color:var(--sample-color)}
+.sample-leaf-card .sample-type-icon{width:21px!important;height:21px!important}.sample-leaf-icon{display:inline-flex;flex:none}.sample-country{font-size:20px;line-height:1;flex:none}.sample-state{font-size:10px;direction:rtl;color:var(--sample-color);white-space:nowrap}.sample-info{color:var(--tree-gold);font-size:14px}.placement-warning{color:#e2ba65!important;font-size:14px}
+.sample-leaf.ancient{--sample-color:#d79777}.sample-leaf.developed{--sample-color:#71c99d}.sample-leaf.nondeveloped{--sample-color:#80baf0}.sample-leaf.predicted{--sample-color:#ff7777}.sample-leaf.unverified{--sample-color:#c0b6a6}
+.sample-leaf.ancient bdi{background:#bc7c621c}.sample-leaf.predicted bdi{background:#c743431c}.sample-leaf.predicted .sample-leaf-icon{border-radius:3px;background:#7b2323}.sample-type-icon[src$="#predicted"]{filter:sepia(1) saturate(5) hue-rotate(315deg)}
+.sample-more>button{min-height:34px;padding:4px 8px;font:inherit;font-size:11px;background:none;color:var(--tree-gold);border:0;cursor:pointer}
+.lxdna .tree-horizontal .sample-group{min-width:240px;padding:0 20px 0 0;border-left:0;border-right:2px solid var(--tree-gold);align-self:center}
+.lxdna .tree-horizontal .sample-group>.sample-leaf::before{left:auto;right:-20px;width:20px}
+.lxdna .tree-horizontal .sample-leaf-card{direction:rtl}
+
+.sample-branch-entry{position:absolute;left:-2px;top:-24px;width:calc(50% + 2px);height:24px;border-top:2px solid var(--tree-gold);border-left:2px solid var(--tree-gold);pointer-events:none;box-sizing:border-box}.tree-horizontal .sample-branch-entry{left:auto;right:-18px;top:50%;width:16px;height:0;border-left:0}

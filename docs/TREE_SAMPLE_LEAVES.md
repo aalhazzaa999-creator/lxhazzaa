@@ -11,3 +11,6 @@ The source tree resolver supplies placement. Ancestor-supported placements remai
 Main-tree leaves and counts use the available full snapshot. The lower selected subtree and leaves use the active search/filter result. Existing SNP evidence, identifiers, import deduplication and chronological data are not overwritten. Sample leaves do not count as genetic child branches.
 
 Checks: `tests/tree-samples.cjs` covers identity labels, confirmation versus declared test, source/LX predictions, no ancestor duplication and ancestor-supported warnings. Existing research integration tests verify unchanged node/alias placement. Browser checks must cover an ancient leaf, developed and non-developed living leaves, red prediction leaves, pagination, both orientations, and the preserved compact cards/age information.
+
+## Compact sample children
+Sample leaves are rows on one shared stem under their assigned branch, in both diagrams. Each row shows public ID, reported country flag (globe if absent/unrecognized), status icon and short status label. ID colors: ancient brown, developed green, non-developed blue, prediction red, unresolved neutral. The full evidence state and supported-ancestor warning remain accessible through the row's information dialog. Countries are never inferred from a haplogroup or project.
