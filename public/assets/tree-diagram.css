@@ -47,3 +47,10 @@
 .lxdna .tree-horizontal .tree-node[open]:not(.tree-leaf)>summary::after{left:-16px;width:16px}
 .lxdna .tree-horizontal .tree-children>.tree-node::before,.lxdna .tree-horizontal .tree-children>.tree-node::after{right:-16px;height:calc(50% + 8px)}
 .lxdna .tree-horizontal .tree-children>.tree-node>summary>.tree-entry{right:-18px;width:16px}
+/* Public IDs are connected leaves, not a detached record list. */
+.lxdna .tree-canvas .sample-leaf{min-width:156px;display:block}
+.sample-leaf-card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:156px;min-height:88px;padding:10px;border:1px solid var(--tree-line);border-radius:8px;background:var(--tree-panel);color:var(--tree-text);font:inherit;cursor:pointer;direction:rtl;box-sizing:border-box}
+.sample-leaf-card>bdi{font-size:12px;font-weight:700;overflow-wrap:anywhere}.sample-leaf-card>small{font-size:9px;line-height:1.5;text-align:center;max-width:100%}.sample-leaf-card .sample-type-icon{width:23px;height:23px}.sample-leaf-icon{display:inline-flex;border:1px solid var(--tree-line);border-radius:7px;padding:3px}.sample-leaf.developed .sample-leaf-icon{border-color:#71c99d}.sample-leaf.nondeveloped .sample-leaf-icon{border-color:#71a8d2}.sample-leaf.ancient .sample-leaf-card{border-color:#bc7c62}
+.sample-leaf.predicted .sample-leaf-card{border:2px solid #c74343}.sample-leaf.predicted small{color:#ff8b8b}.sample-leaf.predicted .sample-leaf-icon{border-color:#e75555;background:#7b2323}.sample-type-icon[src$="#predicted"]{filter:sepia(1) saturate(5) hue-rotate(315deg)}
+.placement-warning{color:#e2ba65!important}.sample-more{min-width:156px!important}.sample-more>button{width:156px;min-height:70px;font:inherit;font-size:12px;background:var(--tree-panel);color:var(--tree-gold);border:1px dashed var(--tree-gold);border-radius:8px;cursor:pointer}
+.tree-horizontal .tree-children>.sample-leaf>.sample-leaf-card>.tree-entry{display:block;position:absolute;top:50%;right:-18px;width:16px;border-top:2px solid var(--tree-gold)}
