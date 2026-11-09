@@ -1,0 +1,6 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {authorized,onRequestPost} from '../functions/api/control-session.js';
+const fetchOriginal=globalThis.fetch;
+function profile(role,suspended=false){globalThis.fetch=async url=>new Response(JSON.stringify(url.includes('/auth/')?{id:'00000000-0000-0000-0000-000000000001'}:[{role,permissions_suspended:suspended}]),{status:200});}
+test('account session accepts active ordinary profiles, admin route remains role checked',async()=>{try{for(const role of ['researcher','verified_researcher','scientific_moderator','admin','owner']){profile(role);assert.equal(await authorized('valid.token',false),true);assert.equal(await authorized('valid.token'),['admin','owner'].includes(role));}profile('owner',true);assert.equal(await authorized('valid.token',false),false);assert.equal(await authorized(''),false);}finally{globalThis.fetch=fetchOriginal;}});
+test('session rejects cross-origin requests before creating cookies',async()=>{const r=await onRequestPost({request:new Request('https://example.org/api/control-session',{method:'POST',headers:{Origin:'https://other.example'}})});assert.equal(r.status,403);assert.equal(r.headers.has('set-cookie'),false);});

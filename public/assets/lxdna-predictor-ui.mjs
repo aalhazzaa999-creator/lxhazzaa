@@ -1,3 +1,4 @@
+import {sampleReady} from './lxdna-sample-account.mjs';
 import {importProjectCSV,selectTargetCSV} from './lxdna-csv.mjs';
 import {parseSTR} from './lxdna-str-input.mjs';
 const $=id=>document.getElementById(id),refs=$('predictorRefs'),target=$('predictorTarget'),run=$('predictorRun'),status=$('predictorResultStatus'),outcome=$('predictorOutcome'),detail=$('predictorDetail');
@@ -41,7 +42,8 @@ $('predictorClear').onclick=()=>{stop();clearResult();target.value='';$('targetP
 $('predictorTemplate').onclick=()=>download({schemaVersion:1,source:{title:'',url:'https://',version:'',date:'YYYY-MM-DD'},records:[{kitId:'',haplogroup:'',snpVerified:false,markers:{DYS393:13,DYS390:24}}]},'LXDNA-reference-template.json');
 $('predictorExport').onclick=()=>{if(lastResult)download({...lastResult,exportedAt:new Date().toISOString()},'LXDNA-STR-review.json');};
 run.addEventListener('click',()=>{
- clearResult();if(!target.value.trim()){show('أضف ملف النتيجة أو الصق قيم STR أولًا.','error');return;}if(!refs.value.trim()){show('لم يُجهّز مرجع المقارنة؛ افتح «إدارة المراجع» من لوحة التحكم أولًا.','error');return;}if(target.value.length>100000||refs.value.length>5*1024*1024){show('حجم الإدخال أكبر من الحد المدعوم.','error');return;}
+ if(!sampleReady())return;
+ clearResult();if(!target.value.trim()){show('أضف ملف النتيجة أو الصق قيم STR أولًا.','error');return;}if(!refs.value.trim()){show('التنبؤ غير متاح لهذه الجلسة: لم يُجهّز مرجع المقارنة المعتمد بعد. لم تُحفظ أو تُنشر عينة.','error');return;}if(target.value.length>100000||refs.value.length>5*1024*1024){show('حجم الإدخال أكبر من الحد المدعوم.','error');return;}
  run.disabled=true;$('predictorCancel').hidden=false;show('جارٍ قراءة الإدخال وتحميل المشجرة العامة والمقارنة محليًا…');
  worker??=new Worker('/assets/lxdna-predictor-worker.js?v=str-neighbors-1.2.0');
  worker.onerror=()=>{stop();show('تعذر تشغيل التحليل؛ تحقق من الاتصال لتحميل المشجرة العامة ثم أعد المحاولة.','error');};
@@ -59,7 +61,9 @@ run.addEventListener('click',()=>{
   const body=document.createElement('tbody');for(const a of r.alternatives){const row=document.createElement('tr');for(const value of [a.branch,a.kits,a.distance,a.overlap]){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}body.append(row);}table.append(body);$('predictorAlternatives').append(table);
   for(const node of r.treePath){const a=document.createElement('a');a.textContent=node;a.dir='ltr';a.href='/lxdnatree/?dna=y&mutation='+encodeURIComponent(node);a.target='_blank';a.rel='noopener noreferrer';$('predictorPath').append(a);}
   detail.textContent=JSON.stringify(r,null,2);
+ document.dispatchEvent(new CustomEvent('lx-dna-result',{detail:r}));
  };
  let text=target.value;try{if(!text.trim().startsWith('{')&&/kit(?:id| number)?|sample.?id|marker[,;\t]|locus[,;\t]/i.test(text.split(/\r?\n/)[0]))text=JSON.stringify(selectTargetCSV(text,$('predictorKit').value));}catch(e){stop();show(e.message,'error');return;}
  worker.postMessage({text,references:refs.value,ancestor:$('predictorAncestor').value,panel:$('predictorPanel').value,layout:$('predictorLayout').value,tree:$('predictorTree').value,kitId:$('predictorKit').value});
 });
+
