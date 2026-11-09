@@ -1,1 +1,0 @@
-(()=>{document.addEventListener('lx-auth-change',async e=>{if(!e.detail.signedIn||!['owner','admin'].includes(window.LXAuth?.getRole())){await fetch('/api/control-session',{method:'DELETE',credentials:'same-origin'});location.replace('/lxdnacontrole/');}});})();

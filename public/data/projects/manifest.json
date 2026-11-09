@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "snapshot": "ftdna-projects-20261109-v1",
+  "total": 9436,
+  "confirmed": 7587,
+  "sourcePredicted": 1849,
+  "lxPredicted": 0,
+  "privateReview": 9,
+  "parts": [
+    "project-samples-01.json",
+    "project-samples-02.json",
+    "project-samples-03.json",
+    "project-samples-04.json",
+    "project-samples-05.json",
+    "project-samples-06.json",
+    "project-samples-07.json",
+    "project-samples-08.json",
+    "project-samples-09.json",
+    "project-samples-10.json"
+  ],
+  "source": "FTDNA project PDFs supplied with permission",
+  "namesPublished": false,
+  "markersPublished": false,
+  "confirmationRule": "FTDNA green SNP-confirmed call; Y-111 alone never confirms a haplogroup",
+  "predictionRule": "Red source calls are explicitly source predictions; no invented LX prediction",
+  "deduplication": "provider + kit; highest actually readable marker slots, then declared panel; compatible source calls only"
+}
