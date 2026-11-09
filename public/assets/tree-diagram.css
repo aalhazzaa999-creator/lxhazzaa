@@ -59,7 +59,7 @@
 .sample-leaf.ancient{--sample-color:#d79777}.sample-leaf.developed{--sample-color:#71c99d}.sample-leaf.nondeveloped{--sample-color:#80baf0}.sample-leaf.predicted{--sample-color:#ff7777}.sample-leaf.unverified{--sample-color:#c0b6a6}
 .sample-leaf.ancient bdi{background:#bc7c621c}.sample-leaf.predicted bdi{background:#c743431c}.sample-leaf.predicted .sample-leaf-icon{border-radius:3px;background:#7b2323}.sample-type-icon[src$="#predicted"]{filter:sepia(1) saturate(5) hue-rotate(315deg)}
 .sample-more>button{min-height:34px;padding:4px 8px;font:inherit;font-size:11px;background:none;color:var(--tree-gold);border:0;cursor:pointer}
-.lxdna .tree-horizontal .sample-group{min-width:240px;padding:0 20px 0 0;border-left:0;border-right:2px solid var(--tree-gold);align-self:center}
+.lxdna .tree-horizontal .sample-group{display:block;min-width:240px;padding:0 20px 0 0;border-left:0;border-right:2px solid var(--tree-gold);align-self:center}
 .lxdna .tree-horizontal .sample-group>.sample-leaf::before{left:auto;right:-20px;width:20px}
 .lxdna .tree-horizontal .sample-leaf-card{direction:rtl}
 
