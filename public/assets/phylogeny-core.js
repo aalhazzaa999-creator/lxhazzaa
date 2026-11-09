@@ -20,7 +20,7 @@ function build(raw,{type='y',meta={},crosswalk={},foreign=null}={}){
  const nodes=[],byId=new Map(),aliases=new Map();let clock=0;
  function add(k,n){if(!k)return;let a=aliases.get(k);if(!a)aliases.set(k,a=[]);if(!a.includes(n))a.push(n);}
  function visit(item,parent){
-  const n={id:item.label||item.id||`${type.toUpperCase()}-ROOT`,uid:item.id,parent,children:[],tin:clock++,tout:0,ftdna:[],type};n.root=major(n.id)||parent?.root||'';nodes.push(n);const nk=clean(n.id);byId.set(nk,byId.has(nk)?null:n);add(key(n.id,type),n);for(const alias of item.aliases||[])add(key(alias,type),n);
+  const n={id:item.label||item.id||`${type.toUpperCase()}-ROOT`,uid:item.id,parent,children:[],tin:clock++,tout:0,ftdna:[],type,ageEstimate:item.ageEstimate||null};n.root=major(n.id)||parent?.root||'';nodes.push(n);const nk=clean(n.id);byId.set(nk,byId.has(nk)?null:n);add(key(n.id,type),n);for(const alias of item.aliases||[])add(key(alias,type),n);
   // mt substitutions recur on independent branches; search mt haplogroup names only.
   if(type==='y')for(const token of String(item.snps||'').split(/[,/]/)){if(!token.includes('!'))add(key(token,type),n);}
   n.children=(item.children||[]).map(c=>visit(c,n));n.tout=clock;return n;

@@ -8,5 +8,12 @@
   "sourceCommit": "bc10f195efe6c9d514dca9ec574671b3e3a3340e",
   "sourcePath": "mtree/current_mtree.json",
   "sourceSHA256": "f91680989965106e27063275ce98aff8d70d6f3f0e7bb7ff14b8e218c175e3f6",
-  "changes": "Preserved node names and parent-child topology. Variant strings retained; ages omitted."
+  "changes": "Preserved names, SNP aliases and topology. Included published node age estimates and reported ranges where present; zero/missing ages remain unavailable. No sample ages, recalibration or inherited estimates.",
+  "ageEstimates": {
+    "unit": "ybp",
+    "method": "published-source-estimate",
+    "unavailable": "zero or missing; never inherited",
+    "included": "formed, tmrca and published lower/upper bounds",
+    "methodologyURL": "https://www.yfull.com/faq/how-does-yfull-determine-formed-age-tmrca-and-ci/"
+  }
 }

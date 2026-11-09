@@ -6,5 +6,12 @@
   "retrieved": "2026-10-28",
   "nodes": 69676,
   "sourceSHA256": "98c6d8e0642533c01070142edad2a693c30ed86f972b1deb519218209a91df6d",
-  "changes": "Kept node names, SNP aliases and parent-child topology only. Sample data and age estimates omitted."
+  "changes": "Preserved names, SNP aliases and topology. Included published node age estimates and reported ranges where present; zero/missing ages remain unavailable. No sample ages, recalibration or inherited estimates.",
+  "ageEstimates": {
+    "unit": "ybp",
+    "method": "published-source-estimate",
+    "unavailable": "zero or missing; never inherited",
+    "included": "formed, tmrca and published lower/upper bounds",
+    "methodologyURL": "https://www.yfull.com/faq/how-does-yfull-determine-formed-age-tmrca-and-ci/"
+  }
 }

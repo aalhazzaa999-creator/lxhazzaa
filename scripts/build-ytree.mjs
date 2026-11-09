@@ -1,12 +1,13 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import Ages from '../public/assets/branch-ages.js';
 const meta=JSON.parse(fs.readFileSync('public/data/phylogeny/source.json'));
 const response=await fetch('https://raw.githubusercontent.com/YFullTeam/YTree/bdc9bb4d8db72abc7658362f258dbc2a63e34789/current_tree.json');
 if(!response.ok)throw Error('YFull source HTTP '+response.status);
 const raw=Buffer.from(await response.arrayBuffer());
 if(crypto.createHash('sha256').update(raw).digest('hex')!==meta.sourceSHA256)throw Error('YFull checksum mismatch');
 let count=0;
-function clean(n){count++;return {id:n.id||'Y-ROOT',snps:n.snps||'',children:(n.children||[]).map(clean)}}
+function clean(n){count++;return {id:n.id||'Y-ROOT',snps:n.snps||'',ageEstimate:Ages.fromSource(n),children:(n.children||[]).map(clean)}}
 const tree=clean(JSON.parse(raw));if(count!==meta.nodes)throw Error('Node count mismatch');
 fs.writeFileSync('public/data/phylogeny/ytree.json',JSON.stringify(tree));
 console.log('Prepared local YFull tree:',count,'nodes; version',meta.version);
@@ -29,4 +30,4 @@ await import('./build-research-data.mjs');
 const audit=spawnSync(process.execPath,['scripts/check-v88.cjs'],{stdio:'inherit'});if(audit.status!==0)throw Error('V88 review failed');
 const mtBuild=spawnSync('python3',['scripts/build-mt-database.py'],{stdio:'inherit'});if(mtBuild.status!==0)throw Error('mt database validation failed');
 
-for(const [command,args] of [[process.execPath,['--test','tests/atlas-chronology.cjs','tests/lxdna-predictor.mjs','tests/lxdna-str-input.mjs']],[process.execPath,['tests/lxdna-str-worker.mjs']],[process.execPath,['tests/research-integration.cjs']],[process.execPath,['tests/mt-research.cjs']],['python3',['tests/mt-sqlite.py']]]){const check=spawnSync(command,args,{stdio:'inherit'});if(check.status!==0)throw Error('mt regression checks failed');}
+for(const [command,args] of [[process.execPath,['--test','tests/branch-ages.cjs','tests/atlas-chronology.cjs','tests/lxdna-predictor.mjs','tests/lxdna-str-input.mjs']],[process.execPath,['tests/lxdna-str-worker.mjs']],[process.execPath,['tests/research-integration.cjs']],[process.execPath,['tests/mt-research.cjs']],['python3',['tests/mt-sqlite.py']]]){const check=spawnSync(command,args,{stdio:'inherit'});if(check.status!==0)throw Error('mt regression checks failed');}
