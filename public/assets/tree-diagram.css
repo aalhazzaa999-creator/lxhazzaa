@@ -20,3 +20,15 @@
 .lxdna .tree-canvas .tree-children>.tree-node::after{height:24px;border-left:2px solid var(--tree-gold);box-sizing:border-box}
 .lxdna .tree-canvas .tree-children>.tree-node:only-child::before{display:block;width:0;border-top:0}
 .tree-stem{display:none}
+/* Main explorer grows leftward: parent at right, sibling branches in a column. */
+.lxdna .tree-horizontal .tree-node{display:flex;flex-direction:row-reverse;align-items:center}
+.lxdna .tree-horizontal .tree-node>summary{margin:0;flex:0 0 248px}
+.lxdna .tree-horizontal .tree-children{flex-direction:column;align-items:flex-end;justify-content:center;min-width:0;margin:0 48px 0 0;gap:24px}
+.lxdna .tree-horizontal .tree-node[open]:not(.tree-leaf)>summary::after{top:50%;left:-24px;width:24px;height:0;border-left:0;border-top:2px solid var(--tree-gold)}
+.lxdna .tree-horizontal .tree-children>.tree-node::before,.lxdna .tree-horizontal .tree-children>.tree-node::after{width:0;height:calc(50% + 12px);left:auto;right:-24px;border:0;border-right:2px solid var(--tree-gold)}
+.lxdna .tree-horizontal .tree-children>.tree-node::before{top:auto;bottom:50%}
+.lxdna .tree-horizontal .tree-children>.tree-node::after{top:50%}
+.lxdna .tree-horizontal .tree-children>.tree-node:first-child::before,.lxdna .tree-horizontal .tree-children>.tree-node:last-child::after,.lxdna .tree-horizontal .tree-children>.tree-node:only-child::before{display:none}
+.tree-entry{display:none}.tree-horizontal .tree-children>.tree-node>summary>.tree-entry{display:block;position:absolute;top:50%;right:-26px;width:24px;border-top:2px solid var(--tree-gold)}
+.lxdna .tree-selected>summary{border:2px solid var(--tree-gold)!important;box-shadow:0 0 0 3px #b08a5622}
+.selected-branch-section{margin-top:30px;padding-top:22px;border-top:1px solid var(--tree-line)}.branch-atlas-link{display:inline-block;color:var(--tree-gold);padding:10px 0}.branch-atlas-link[hidden]{display:none}
