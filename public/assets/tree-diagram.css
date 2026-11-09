@@ -15,3 +15,8 @@
 .tree-diagram-tools,.tree-trail{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}.tree-diagram-tools button,.tree-trail button{font:inherit;font-size:12px;min-height:40px;padding:7px 12px;border:1px solid var(--tree-line);border-radius:7px;background:var(--tree-panel);color:var(--tree-gold);cursor:pointer}.tree-diagram-tools span{font-size:12px;color:var(--tree-muted)}.tree-trail{max-height:110px;overflow:auto}.tree-trail button+button::before{content:'← ';color:var(--tree-muted)}
 .lxdna .tree-node-dialog{max-width:min(620px,92vw);max-height:80vh;overflow:auto;background:var(--tree-panel);color:var(--tree-text);border:1px solid var(--tree-gold);border-radius:14px;padding:24px;direction:rtl}.tree-node-dialog::backdrop{background:#000a}.tree-node-dialog a{color:var(--tree-gold)}.tree-node-dialog>button{float:left;min-height:40px;cursor:pointer}
 @media(max-width:600px){.lxdna .tree-viewport{height:65vh;min-height:320px}.tree-diagram-tools{gap:6px}.tree-diagram-tools button{padding:7px 9px}.tree-canvas{padding:24px}.tree-diagram-tools span{flex-basis:100%}}
+/* Native closed details hide non-summary children: draw entry stems on the node itself. */
+.lxdna .tree-canvas .tree-children>.tree-node::before{height:24px;border-right:2px solid var(--tree-gold);box-sizing:border-box}
+.lxdna .tree-canvas .tree-children>.tree-node::after{height:24px;border-left:2px solid var(--tree-gold);box-sizing:border-box}
+.lxdna .tree-canvas .tree-children>.tree-node:only-child::before{display:block;width:0;border-top:0}
+.tree-stem{display:none}
