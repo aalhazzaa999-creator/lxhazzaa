@@ -10,6 +10,14 @@ class ImportTests(unittest.TestCase):
  def test_str_disagreement_is_reviewed(self):
   r=m.reconcile([self.row({'DYS393':[13]},700,confirmed=True),self.row({'DYS393':[14]},111)])[0]
   self.assertFalse(r['snpVerified']);self.assertTrue(r['reviewReasons'])
+ def test_multicopy_column_keeps_leading_digit_at_left_edge(self):
+  # Synthetic STR cell reproduces a digit at the left edge of the wide DYS385 column.
+  chars=[{'c':c,'bbox':(513.0+i*3,0,515.0+i*3,1)} for i,c in enumerate('14-19')]
+  start=m.PROFILES['J-FGC31318']['markers'][4];end=m.PROFILES['J-FGC31318']['markers'][5]-.2
+  self.assertEqual(m.text_in(chars,start-.3,end),'14-19')
+ def test_invisible_format_character_cannot_change_marker_value(self):
+  chars=[{'c':c,'bbox':(10+i,0,11+i,1)} for i,c in enumerate('\u200b11')]
+  self.assertEqual(m.text_in(chars,0,30),'11')
  def test_y111_does_not_confirm_snp(self):
   self.assertFalse(m.reconcile([self.row({'DYS393':[13]},111)])[0]['snpVerified'])
  def test_public_fields_never_contain_names_or_markers(self):

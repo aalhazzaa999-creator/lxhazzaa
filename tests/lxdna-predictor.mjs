@@ -78,3 +78,6 @@ test("Short reference paths cannot inflate support by abstaining at deeper level
  assert.equal(result.proposedHaplogroup,"J-M172");
  assert.equal(result.audit.at(-1).cumulativeShare,0.3);
 });
+
+test('marker names bind values regardless of object order; swapped loci are not realigned',()=>{const reversed=Object.fromEntries(Object.entries(base).reverse());assert.equal(compareSTR(base,reversed).distance,0);const swapped={...base,DYS393:base.DYS390,DYS390:base.DYS393};assert(compareSTR(base,swapped).distance>0);assert.equal(compareSTR({DYS393:13},{DYS390:13}).overlap,0);});
+test('direct engine input excludes alias collisions and incorrect copy counts',()=>{const r=normalizeMarkers({DYS19:14,DYS394:14,DYS385:11,DYS459:'9-10-11',DYS393:13});assert.equal(r.DYS19,undefined);assert.equal(r.DYS385,undefined);assert.equal(r.DYS459,undefined);assert.deepEqual(r.DYS393,[13]);});

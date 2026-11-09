@@ -1,4 +1,4 @@
-import {markerName as canonicalMarker} from "./lxdna-str-input.mjs";
+import {markerName as canonicalMarker, COPIES} from "./lxdna-str-input.mjs";
 /**
  * LXDNA Control / auditable STR-based Y haplogroup candidate finder.
  * Pure ESM; no network, no persistence, no asserted SNP calls.
@@ -6,7 +6,7 @@ import {markerName as canonicalMarker} from "./lxdna-str-input.mjs";
  * Training rows MUST be SNP-confirmed (snpVerified:true) and contain a full
  * ancestor-to-terminal path. Output is NOT calibrated probability or diagnosis.
  */
-export const PREDICTOR_VERSION = "str-neighbors-v1.2.0";
+export const PREDICTOR_VERSION = "str-neighbors-v1.2.1";
 const VALID_MARKER = /^[A-Z][A-Z0-9_-]{2,32}$/;
 
 function markerName(name) {
@@ -26,12 +26,14 @@ function allele(value) {
 }
 export function normalizeMarkers(input) {
   if (!input || typeof input !== "object" || Array.isArray(input)) return {};
-  const output = {};
+  const output = {}, seen = new Set();
   for (const [name, value] of Object.entries(input)) {
     const key = markerName(name);
     if (VALID_MARKER.test(key)) {
+      if(seen.has(key)){delete output[key];continue;}
+      seen.add(key);
       const parsed = allele(value);
-      if (parsed) output[key] = parsed;
+      if (parsed && parsed.length === (COPIES[key] || 1)) output[key] = parsed;
     }
   }
   // DYS389II contains DYS389I; use the non-overlapping segment for distance.

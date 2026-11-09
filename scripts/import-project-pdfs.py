@@ -12,7 +12,7 @@ PROFILES = {
  'AlArid': dict(match='AlArid', kit=(55.5,85.5), name=(85.5,368.5), country=(368.5,454.3), hap=454.6, test=495.8, markers=[]),
  'Alarab': dict(match='Alarab', kit=(55.5,85.5), name=(85.5,411.9), country=(411.9,497.7), hap=498.0, test=540.3, markers=[]),
  'J2-M172': dict(match='J2-M172', kit=(33,63), name=(63,206.3), country=(206.3,282.4), hap=282.7, test=322.5, markers=[397.2,409.2,421.2,433.2,445.2,464.7,476.7,488.7,500.7,512.7,524.7,536.7,548.7]),
- 'J-FGC31318': dict(match='J-FGC31318', kit=(33,63), name=(63,294.6), country=(294.6,345.8), hap=346.1, test=385.9, markers=[465.7,477.7,489.7,501.7,514.7,536.7,548.7,560.7]),
+ 'J-FGC31318': dict(match='J-FGC31318', kit=(33,63), name=(63,294.6), country=(294.6,345.8), hap=346.1, test=385.9, markers=[465.7,477.7,489.7,501.7,511.7,536.7,548.7,560.7]),
  'Arab_T': dict(match='العربية T', kit=(33,63), name=(63,202.5), country=(202.5,284.3), hap=284.6, test=326.9, markers=[443,455,470,485,500,527.7,539.7,551.7]),
  'AboMubarak': dict(match='مبارك', kit=(33,63), name=(63,63), country=(63,120.2), hap=120.5, test=160.3, markers=[280.7,292.7,304.7,316.7,328.2,348.2,360.2,374.2,388.2,400.2,412.2,424.2,436.2,464.7,476.7,488.7,500.7,514.7,528.7]),
 }
@@ -22,7 +22,7 @@ TRANSLATED={'70إم-تي':'T-M70','184 إم-تي':'T-M184','77 بي-تي':'T-P77
 COUNTRIES={'البحرين':'Bahrain','الكويت':'Kuwait','المملكة العربية السعودية':'Saudi Arabia','السعودية':'Saudi Arabia','قطر':'Qatar','العراق':'Iraq','اليمن':'Yemen','عمان':'Oman','اإلمارات العربية المتحدة':'United Arab Emirates','الإمارات العربية المتحدة':'United Arab Emirates','مصر':'Egypt','األردن':'Jordan','الأردن':'Jordan','سوريا':'Syria','لبنان':'Lebanon','فلسطين':'Palestine','أصل غير معروف':'','غير معروف':'','Unknown Origin':''}
 
 def text_in(chars,lo,hi):
- return ''.join(c['c'] for c in chars if lo <= (c['bbox'][0]+c['bbox'][2])/2 <hi).replace('\xa0',' ').replace('\x00','').strip()
+ return ''.join(c['c'] for c in chars if lo <= (c['bbox'][0]+c['bbox'][2])/2 <hi).replace('\xa0',' ').replace('\x00','').replace('\u200b','').replace('\ufeff','').strip()
 
 def parse(path, project, cfg):
  doc=fitz.open(path); digest=hashlib.sha256(path.read_bytes()).hexdigest(); rows=[]; rejects=collections.Counter()

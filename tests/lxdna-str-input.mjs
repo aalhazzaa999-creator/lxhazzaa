@@ -37,3 +37,5 @@ test('duplicate conflict outside chosen branch cannot evade deduplication',()=>{
 test('same reference with reordered marker keys is counted once',()=>{
  const a=ref('a',['J-M172','J-M47']);const r=predictYSTR({target:{markers},references:[a,{...a,markers:Object.fromEntries(Object.entries(markers).reverse())}]});assert.equal(r.referenceKits,1);assert.equal(r.warnings.length,0);
 });
+
+test('independent fixed Y12 example assigns every allele to the named FTDNA locus',()=>{const r=parseSTR('12 23 12 10 16 16 11 11 12 13 13 28',{panel:'12',layout:'expanded'});assert.deepEqual(r.target.markers,{DYS393:[12],DYS390:[23],DYS19:[12],DYS391:[10],DYS385:[16,16],DYS426:[11],DYS388:[11],DYS439:[12],DYS389I:[13],DYS392:[13],DYS389II:[28]});});

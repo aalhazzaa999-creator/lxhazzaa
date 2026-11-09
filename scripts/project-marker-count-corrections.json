@@ -1,0 +1,105 @@
+{
+  "version": "pdf-column-audit-20261109",
+  "records": [
+    {
+      "id": "FTDNA:18066",
+      "availableMarkerLoci": 13,
+      "availableMarkerSlots": 15
+    },
+    {
+      "id": "FTDNA:208012",
+      "availableMarkerLoci": 11,
+      "availableMarkerSlots": 12
+    },
+    {
+      "id": "FTDNA:279257",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:29089",
+      "availableMarkerLoci": 13,
+      "availableMarkerSlots": 15
+    },
+    {
+      "id": "FTDNA:293636",
+      "availableMarkerLoci": 12,
+      "availableMarkerSlots": 14
+    },
+    {
+      "id": "FTDNA:318073",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:34809",
+      "availableMarkerLoci": 13,
+      "availableMarkerSlots": 15
+    },
+    {
+      "id": "FTDNA:355096",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:423319",
+      "availableMarkerLoci": 6,
+      "availableMarkerSlots": 7
+    },
+    {
+      "id": "FTDNA:508235",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:721276",
+      "availableMarkerLoci": 13,
+      "availableMarkerSlots": 15
+    },
+    {
+      "id": "FTDNA:776053",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:B687358",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:BP30439",
+      "availableMarkerLoci": 13,
+      "availableMarkerSlots": 15
+    },
+    {
+      "id": "FTDNA:BP37579",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:M10825",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:M7065",
+      "availableMarkerLoci": 13,
+      "availableMarkerSlots": 15
+    },
+    {
+      "id": "FTDNA:M8206",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:M9601",
+      "availableMarkerLoci": 8,
+      "availableMarkerSlots": 9
+    },
+    {
+      "id": "FTDNA:MI57820",
+      "availableMarkerLoci": 13,
+      "availableMarkerSlots": 15
+    }
+  ]
+}

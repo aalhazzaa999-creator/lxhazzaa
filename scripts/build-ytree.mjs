@@ -27,6 +27,7 @@ const temporary=fs.mkdtempSync(os.tmpdir()+'/lx-aadr-');
 try{const filename=temporary+'/source.anno';fs.writeFileSync(filename,aadrRaw);const importResult=spawnSync('python3',['scripts/build-aadr-metadata.py',filename],{stdio:'inherit'});if(importResult.status!==0)throw Error('AADR annotation validation failed');}finally{fs.rmSync(temporary,{recursive:true,force:true});}
 await import('./build-ftdna-reference.mjs');
 await import('./build-research-data.mjs');
+const markerCounts=spawnSync('python3',['scripts/apply-project-marker-count-corrections.py'],{stdio:'inherit'});if(markerCounts.status!==0)throw Error('Marker count correction failed');
 const audit=spawnSync(process.execPath,['scripts/check-v88.cjs'],{stdio:'inherit'});if(audit.status!==0)throw Error('V88 review failed');
 const mtBuild=spawnSync('python3',['scripts/build-mt-database.py'],{stdio:'inherit'});if(mtBuild.status!==0)throw Error('mt database validation failed');
 

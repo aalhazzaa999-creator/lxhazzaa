@@ -12,7 +12,7 @@ async function trees(){
 }
 self.onmessage=async({data})=>{
  try{
-  const [{predictYSTR},{bindReferences},{parseSTR},index]=await Promise.all([import('./lxdna-predictor.mjs?v=1.2.0'),import('./lxdna-str-topology.mjs'),import('./lxdna-str-input.mjs'),trees()]);
+  const [{predictYSTR},{bindReferences},{parseSTR},index]=await Promise.all([import('./lxdna-predictor.mjs?v=1.2.1'),import('./lxdna-str-topology.mjs'),import('./lxdna-str-input.mjs'),trees()]);
   const parsed=parseSTR(data.text,{panel:data.panel,layout:data.layout});
   if(data.kitId)parsed.target.kitId=data.kitId.trim();
   const bundle=JSON.parse(data.references),source=bundle?.source,rows=bundle?.records;

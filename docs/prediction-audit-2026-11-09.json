@@ -1,0 +1,29 @@
+{
+  "version": "str-neighbors-v1.2.1",
+  "referenceInput": 859,
+  "acceptedReferences": 662,
+  "excludedReferences": 197,
+  "validation": {
+    "tested": 662,
+    "compatibleCoarserOrExact": 504,
+    "exact": 44,
+    "incompatiblePublishedBranch": 114,
+    "unverifiedFinerBranch": 44,
+    "unresolved": 0
+  },
+  "targets": {
+    "total": 1849,
+    "insufficientMarkers": 1781,
+    "evaluated": 68,
+    "limited": 68,
+    "candidate": 0,
+    "unresolved": 0,
+    "deeperCompatible": 59
+  },
+  "automaticallyPublished": 0,
+  "limitations": [
+    "Internal leave-one-kit-out audit; related reference kits and population bias are not independently controlled.",
+    "Compatible/coarser is not exact terminal accuracy. Finer-than-reported is unverified, not necessarily incorrect.",
+    "Heuristic support is not calibrated probability; limited STR data are not an SNP confirmation."
+  ]
+}

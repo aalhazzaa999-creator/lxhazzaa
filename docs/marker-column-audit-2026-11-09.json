@@ -1,0 +1,32 @@
+{
+  "totals": {
+    "pages": 150,
+    "checkedCells": 34263,
+    "mismatchedCells": 0,
+    "unverifiedCells": 0
+  },
+  "projects": {
+    "AlArid": {
+      "pages": 32
+    },
+    "Alarab": {
+      "pages": 71
+    },
+    "Arab_T": {
+      "checkedCells": 15285,
+      "pages": 28
+    },
+    "AboMubarak": {
+      "checkedCells": 15143,
+      "pages": 11
+    },
+    "J-FGC31318": {
+      "checkedCells": 1600,
+      "pages": 5
+    },
+    "J2-M172": {
+      "checkedCells": 2235,
+      "pages": 3
+    }
+  }
+}
