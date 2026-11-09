@@ -1,0 +1,4 @@
+.lx-language-switch{min-width:92px;padding:8px 10px;border:1px solid #aa854b;border-radius:8px;background:#10151dcc;color:#f2d9ab;font:inherit;font-size:13px;cursor:pointer}
+.lx-language-switch:focus-visible{outline:2px solid #e7bc75;outline-offset:2px}
+html[lang="en"] .lx-language-switch{direction:ltr}
+@media(max-width:600px){.lx-language-switch{min-width:78px;padding:7px;font-size:12px}}

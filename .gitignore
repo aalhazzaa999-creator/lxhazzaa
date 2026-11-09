@@ -1,0 +1,25 @@
+# Local and generated files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+node_modules/
+*.log
+*.tmp
+*.bak
+
+# Keep published atlas JSON and committed archival snapshots tracked.
+
+# Deterministic research artifacts are generated from pinned sources during builds.
+public/data/research/
+public/data/phylogeny/ytree.json
+public/data/phylogeny/mtree.json
+public/data/phylogeny/mt-database/
+
+public/data/phylogeny/ftdna-reference.json
+public/data/phylogeny/ftdna-aliases.json

@@ -1,0 +1,13 @@
+{
+  "source": "Allen Ancient DNA Resource (AADR)",
+  "version": "v66.p1_1240K",
+  "sourceURL": "https://dataverse.harvard.edu/api/access/datafile/13994515",
+  "datasetDOI": "https://doi.org/10.7910/DVN/FFIDCW",
+  "fileId": 13994515,
+  "fileName": "v66.p1_1240K.aadr.PUB.anno",
+  "sourceMD5": "a2db1ac16f0f3558ed66fb251e1d5c7d",
+  "sourceSHA256": "4a8e15d0b8d5a8bd6c929ccab7ff83a17091dc91b5e0d8015d9896dd9a5f7f7a",
+  "retrieved": "2026-10-28",
+  "userFileVerifiedIdentical": true,
+  "note": "Exact Genetic ID joins only. Source fields remain separate from existing project classifications."
+}

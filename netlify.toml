@@ -1,0 +1,29 @@
+[build]
+  command = "node scripts/build-ytree.mjs"
+  publish = "public"
+  functions = "netlify/functions"
+
+[[headers]]
+  for = "/data/atlas/*.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Content-Type-Options = "nosniff"
+
+[[redirects]]
+  from = "/lxhuman/atlas/"
+  to = "/lxhuman/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/manuscripts/"
+  to = "/lxdocumentary/"
+  status = 301
+  force = true

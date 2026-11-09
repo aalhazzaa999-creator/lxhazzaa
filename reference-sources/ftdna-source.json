@@ -1,0 +1,16 @@
+{
+  "source": {
+    "source": "FamilyTreeDNA public Y-DNA haplotree",
+    "sourceURL": "https://www.familytreedna.com/public/y-dna-haplotree/get",
+    "sourceVersion": "8333",
+    "publishedDate": "2026-10-27T16:00:44.55",
+    "retrieved": "2026-10-28",
+    "sourceSHA256": "ea42c1091343b71bc84f50b50be69c5b5d8ed5347f04a75e1b7a6e97f97b0678",
+    "method": "Conservative recorded subset: at least two distinct shared defining marker names, same major lineage, compatible source ancestor anchors, no recorded conflicting shared markers, reciprocal node mapping. Marker-name evidence is not a claim of identical tree topology.",
+    "crosswalkPolicy": "conservative-v2"
+  },
+  "archive": "reference-sources/ftdna-y-8333.json.gz",
+  "archiveSHA256": "e9c09e601a21dec9351458a4d14d3dee76c943e831b7e292754bb9ea3dc56807",
+  "normalizedSHA256": "265868ca051c004b40d8ef064d062d61d9ecb5e5126b0a1fabeb6e00899915ae",
+  "nodeCount": 110387
+}

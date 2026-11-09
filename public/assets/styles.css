@@ -1,0 +1,867 @@
+:root {
+  --bg:#0B1018;
+  --panel:#1B2A3A;
+  --panel2:#202B36;
+  --gold:#D4AF7C;
+  --muted:#C8BBA8;
+  --text:#F1E8D7;
+  --line:#665641;
+  --green:#A68B6B
+}
+* {
+  box-sizing:border-box
+}
+html {
+  scroll-behavior:smooth
+}
+body {
+  margin:0;
+  font-family:Tahoma,system-ui,-apple-system,sans-serif;
+  background:radial-gradient(ellipse at 15% -10%,#1B2A3A,transparent 44%),linear-gradient(150deg,#0B1018,#111B28 65%,#090D14);
+  color:var(--text);
+  min-height:100vh
+}
+a {
+  color:inherit;
+  text-decoration:none
+}
+button,input,select {
+  font:inherit
+}
+button {
+  cursor:pointer
+}
+.container {
+  width:min(1180px,92%);
+  margin:auto
+}
+.topbar {
+  border-bottom:1px solid #c0a16a40;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:#0B1018f2;
+  backdrop-filter:blur(16px)
+}
+.topinner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  min-height:76px
+}
+.brand {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  font-weight:900;
+  letter-spacing:3px;
+  font-size:24px
+}
+.brandmark {
+  height:42px;
+  width:42px;
+  border:1px solid var(--gold);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:var(--gold);
+  font-family:Georgia,serif;
+  font-size:20px;
+  letter-spacing:-2px
+}
+.nav {
+  display:flex;
+  gap:13px;
+  align-items:center;
+  flex-wrap:wrap
+}
+.nav a,.nav button {
+  color:#e4ddc8
+}
+.nav button {
+  border:1px solid #816d47;
+  background:transparent;
+  border-radius:10px;
+  padding:10px 14px
+}
+.nav select {
+  background:#151D29;
+  color:var(--text);
+  border:1px solid #665641;
+  padding:9px;
+  border-radius:9px;
+  max-width:110px
+}
+.hero {
+  padding:100px 0 72px;
+  position:relative
+}
+.eyebrow {
+  color:var(--gold);
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase
+}
+.hero h1 {
+  font-size:clamp(48px,9vw,112px);
+  line-height:1.05;
+  margin:14px 0 22px;
+  letter-spacing:5px
+}
+.hero h2 {
+  font-size:clamp(21px,3.5vw,36px);
+  font-weight:500;
+  margin:0 0 14px
+}
+.lead {
+  font-size:17px;
+  color:var(--muted);
+  line-height:2;
+  max-width:750px
+}
+.goldline {
+  height:2px;
+  width:100px;
+  background:var(--gold);
+  margin:26px 0
+}
+.section-head {
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:12px;
+  margin:24px 0
+}
+.section-head h2 {
+  margin:0;
+  font-size:27px
+}
+.section-head p {
+  color:var(--muted);
+  margin:8px 0 0
+}
+.cards {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:22px;
+  margin:24px 0 70px
+}
+.portal-card {
+  border:1px solid #957c4f;
+  border-radius:22px;
+  padding:35px;
+  min-height:300px;
+  background:linear-gradient(145deg,#1B2A3A,#101824);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:.2s
+}
+.portal-card:hover {
+  transform:translateY(-4px);
+  border-color:#f0d79d
+}
+.portal-card h3 {
+  font-size:27px;
+  margin:10px 0
+}
+.portal-card p {
+  line-height:1.9;
+  color:var(--muted)
+}
+.portal-icon {
+  font-size:40px;
+  color:var(--gold)
+}
+.pill {
+  border:1px solid #a68e5c;
+  border-radius:999px;
+  padding:6px 12px;
+  font-size:12px;
+  color:#e3c992;
+  display:inline-block
+}
+.cta {
+  color:var(--gold);
+  font-weight:700
+}
+.footer {
+  border-top:1px solid #b69b6744;
+  padding:26px 0;
+  color:#C8BBA8;
+  font-size:13px
+}
+.footer .container {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap
+}
+.overlay {
+  position:fixed;
+  inset:0;
+  background:#02090bcc;
+  z-index:5000;
+  display:grid;
+  place-items:center;
+  padding:16px
+}
+.dialog {
+  max-width:480px;
+  width:100%;
+  border:1px solid #b79b65;
+  border-radius:24px;
+  background:linear-gradient(160deg,#1B2A3A,#0B1018);
+  padding:34px;
+  text-align:center;
+  box-shadow:0 30px 90px #000a
+}
+.dialog h2 {
+  font-size:30px
+}
+.dialog p {
+  line-height:1.9;
+  color:var(--muted)
+}
+.btn {
+  border:1px solid #b89a5e;
+  background:var(--gold);
+  color:#0B1018;
+  font-weight:bold;
+  border-radius:11px;
+  padding:13px 19px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px
+}
+.btn.ghost {
+  background:transparent;
+  color:var(--gold)
+}
+.btn:disabled {
+  opacity:.5;
+  cursor:not-allowed
+}
+.dialog .btn {
+  width:100%;
+  margin:6px 0
+}
+.smallnote {
+  font-size:12px;
+  color:#C8BBA8
+}
+.atlas-layout {
+  display:grid;
+  grid-template-columns:minmax(280px,320px) minmax(0,1fr);
+  gap:20px;
+  padding-top:25px
+}
+.sidebar {
+  border:1px solid #665641;
+  border-radius:17px;
+  background:#151D29ed;
+  padding:20px;
+  align-self:start
+}
+.sidebar h2 {
+  margin:0 0 15px;
+  font-size:22px
+}
+.field {
+  display:block;
+  margin:12px 0
+}
+.field label {
+  display:block;
+  color:#F1E8D7;
+  font-size:13px;
+  margin-bottom:7px
+}
+.field input,.field select {
+  width:100%;
+  background:#0B1018;
+  border:1px solid #665641;
+  border-radius:9px;
+  color:white;
+  padding:11px;
+  outline:none
+}
+.field input:focus,.field select:focus {
+  border-color:var(--gold)
+}
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:15px
+}
+.stat {
+  background:#1B2A3A;
+  border:1px solid #665641;
+  border-radius:13px;
+  padding:14px
+}
+.stat strong {
+  display:block;
+  font-size:22px;
+  color:var(--gold)
+}
+.stat span {
+  font-size:12px;
+  color:var(--muted)
+}
+#map {
+  height:430px;
+  background:#151B1F;
+  border-radius:15px;
+  border:1px solid #665641;
+  z-index:1
+}
+.map-note {
+  font-size:12px;
+  color:#C8BBA8;
+  line-height:1.7;
+  margin:8px 0 16px
+}
+.results {
+  border:1px solid #665641;
+  border-radius:15px;
+  overflow:hidden;
+  background:#151B1F
+}
+.results-head {
+  padding:15px 18px;
+  border-bottom:1px solid #665641;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center
+}
+.record {
+  padding:14px 18px;
+  border-bottom:1px solid #514333;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  gap:12px
+}
+.record:hover {
+  background:#29261F
+}
+.record:last-child {
+  border:0
+}
+.record strong {
+  display:block;
+  margin-bottom:5px
+}
+.record span,.record small {
+  color:#C8BBA8;
+  font-size:12px
+}
+.record small {
+  display:block;
+  margin-top:6px
+}
+.record .y {
+  color:#e3c992;
+  white-space:nowrap
+}
+.pagination {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
+  padding:16px
+}
+.pagination button {
+  background:#1B2A3A;
+  color:#f2e6ca;
+  border:1px solid #665641;
+  border-radius:8px;
+  padding:8px 13px
+}
+.pagination button:disabled {
+  opacity:.35
+}
+.detail-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  text-align:start;
+  margin:15px 0
+}
+.detail-grid div {
+  background:#151B1F;
+  border:1px solid #514333;
+  border-radius:9px;
+  padding:10px;
+  overflow-wrap:anywhere
+}
+.detail-grid b {
+  display:block;
+  color:var(--gold);
+  font-size:12px;
+  margin-bottom:5px
+}
+.detail-grid span {
+  font-size:13px;
+  color:#F1E8D7
+}
+.dialog.wide {
+  max-width:760px;
+  max-height:90vh;
+  overflow:auto;
+  text-align:start
+}
+.muted {
+  color:var(--muted)
+}
+.banner {
+  padding:13px 16px;
+  border:1px solid #907948;
+  border-radius:11px;
+  background:#3c35244d;
+  color:#e9d9b1;
+  line-height:1.8;
+  margin:20px 0
+}
+.loader {
+  margin:25px 0;
+  padding:25px;
+  border:1px solid #665641;
+  border-radius:12px;
+  color:var(--gold)
+}
+@media(max-width:800px) {
+  .atlas-layout {
+    grid-template-columns:1fr
+  }
+  .sidebar {
+    position:static
+  }
+  .stats {
+    grid-template-columns:repeat(2,1fr)
+  }
+  .cards {
+    grid-template-columns:1fr
+  }
+  .hero {
+    padding:65px 0 40px
+  }
+  .nav {
+    gap:7px
+  }
+  .nav a {
+    display:none
+  }
+  .topinner {
+    min-height:68px
+  }
+  .brand {
+    font-size:19px
+  }
+  .brandmark {
+    width:36px;
+    height:36px
+  }
+  .portal-card {
+    min-height:250px
+  }
+  .detail-grid {
+    grid-template-columns:1fr
+  }
+}
+.leaflet-container {
+  font-family:Tahoma,system-ui,sans-serif!important
+}
+
+/* LX HUMAN: approved dark/gold atlas palette; preserve shared portal layout. */
+body:has(.atlas-layout) {
+  --bg:#080E12;--panel:#1C1F24;--panel2:#2E2A24;
+  --gold:#B08A56;--muted:#D9C6A7;--text:#F5F1E8;--line:#4D4031;
+  background:#080E12;
+}
+body:has(.atlas-layout) .topbar {background:#080E12f2}
+body:has(.atlas-layout) .sidebar,
+body:has(.atlas-layout) .stat,
+body:has(.atlas-layout) .results,
+body:has(.atlas-layout) .dialog,
+body:has(.atlas-layout) .detail-grid div {background:#151B1F;border-color:#514333}
+body:has(.atlas-layout) .field input,
+body:has(.atlas-layout) .field select {background:#080E12;border-color:#514333}
+body:has(.atlas-layout) .record:hover {background:#29261F}
+#map {position:relative;overflow:hidden;isolation:isolate;background:#24282A;min-width:0}
+#map .leaflet-pane,#map .leaflet-control-container {max-width:none}
+.atlas-layout > section {min-width:0;overflow:hidden}
+@media(max-width:800px){#map{height:360px}.atlas-layout{gap:12px}}
+
+/* Brand foundations: portal is cosmic black / navy / warm gold; platform-specific palette remains scoped. */
+body:not(:has(.atlas-layout)) .hero h1 {color:#F1E8D7;text-shadow:0 0 44px #D4AF7C20}
+body:not(:has(.atlas-layout)) .portal-card {box-shadow:0 14px 44px #00000033}
+body:not(:has(.atlas-layout)) .portal-card:hover {box-shadow:0 20px 50px #00000066}
+body:has(.atlas-layout) .banner {border-color:#B08A56;background:#2E2A2459;color:#D9C6A7}
+body:has(.atlas-layout) .field label,body:has(.atlas-layout) .map-note {color:#D9C6A7}
+body:has(.atlas-layout) .stat strong {color:#D9C6A7}
+
+/* Leaflet 1.9 layout fallback: fixes floating map tiles if external CDN stylesheet fails. */
+.leaflet-container {position:relative;overflow:hidden;outline:0;touch-action:pan-x pan-y;background:#24282a}
+.leaflet-container .leaflet-map-pane,.leaflet-container .leaflet-pane,
+.leaflet-container .leaflet-tile,.leaflet-container .leaflet-marker-icon,
+.leaflet-container .leaflet-marker-shadow,.leaflet-container .leaflet-tile-container,
+.leaflet-container .leaflet-pane>svg,.leaflet-container .leaflet-pane>canvas,
+.leaflet-container .leaflet-zoom-box,.leaflet-container .leaflet-image-layer,
+.leaflet-container .leaflet-layer {position:absolute;left:0;top:0}
+.leaflet-container .leaflet-tile {width:256px;height:256px;border:0;visibility:hidden;user-select:none;pointer-events:none}
+.leaflet-container .leaflet-tile-loaded {visibility:inherit}
+.leaflet-container .leaflet-tile-container {pointer-events:none}
+.leaflet-container .leaflet-pane {z-index:400}
+.leaflet-container .leaflet-tile-pane {z-index:200}
+.leaflet-container .leaflet-overlay-pane {z-index:400}
+.leaflet-container .leaflet-shadow-pane {z-index:500}
+.leaflet-container .leaflet-marker-pane {z-index:600}
+.leaflet-container .leaflet-tooltip-pane {z-index:650}
+.leaflet-container .leaflet-popup-pane {z-index:700}
+.leaflet-container .leaflet-map-pane canvas {z-index:100}
+.leaflet-container .leaflet-map-pane svg {z-index:200}
+.leaflet-container .leaflet-control {position:relative;z-index:800;pointer-events:auto}
+.leaflet-container .leaflet-top,.leaflet-container .leaflet-bottom {position:absolute;z-index:1000;pointer-events:none}
+.leaflet-container .leaflet-top {top:0}
+.leaflet-container .leaflet-bottom {bottom:0}
+.leaflet-container .leaflet-left {left:0}
+.leaflet-container .leaflet-right {right:0}
+.leaflet-container .leaflet-control-zoom {margin:10px}
+.leaflet-container .leaflet-control-zoom a {display:block;width:30px;height:30px;line-height:30px;text-align:center;background:#101820;color:#D9C6A7;border:1px solid #665641}
+.leaflet-container .leaflet-control-attribution {background:#080E12c9;color:#D9C6A7;font-size:10px;padding:1px 5px}
+.leaflet-container .leaflet-control-attribution a {color:#D9C6A7}
+.leaflet-container .leaflet-popup {position:absolute;text-align:center;margin-bottom:20px}
+.leaflet-container .leaflet-popup-content-wrapper {background:#151B1F;color:#F5F1E8;border:1px solid #B08A56;border-radius:8px;padding:10px}
+.leaflet-container .leaflet-popup-content {margin:4px 8px}
+.leaflet-container .leaflet-popup-tip-container {display:none}
+.leaflet-container .leaflet-interactive {cursor:pointer}
+.leaflet-container .leaflet-zoom-animated {transform-origin:0 0}
+.leaflet-container img {max-width:none!important;max-height:none!important}
+
+/* LX HUMAN visual system: heritage black, antique gold, editorial masthead */
+.atlas-hero{position:relative;isolation:isolate;min-height:280px;overflow:hidden;margin:28px 0 20px;border:1px solid #665139;border-radius:18px;background:radial-gradient(ellipse at 28% 50%,#263544 0%,#121B27 42%,#080E12 82%);display:flex;align-items:center;padding:32px 7%}
+.atlas-hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,#080E1288 74%),repeating-linear-gradient(0deg,transparent 0 39px,#D4AF7C07 40px)}
+.atlas-hero-content{position:relative;z-index:2;max-width:720px}
+.atlas-hero .eyebrow{letter-spacing:2px;color:#D4AF7C;font-size:12px;margin:14px 0}
+.atlas-hero h1{font-size:clamp(30px,4vw,51px);line-height:1.4;margin:8px 0;color:#F5F1E8;text-shadow:0 3px 20px #000}
+.atlas-hero p{color:#D9C6A7;font-size:15px;margin:6px 0 18px}
+.atlas-hero-rule{width:135px;height:2px;background:linear-gradient(90deg,#B08A56,transparent)}
+.atlas-emblem{display:inline-flex;align-items:baseline;gap:8px;font:bold 38px Georgia,serif;letter-spacing:-4px;color:#D4AF7C;text-shadow:0 2px 22px #B08A5644}
+.atlas-emblem span{font:bold 14px Tahoma,system-ui,sans-serif;letter-spacing:4px;color:#F5F1E8}
+.atlas-hero-orbit{position:absolute;z-index:1;left:6%;top:50%;transform:translateY(-50%);width:260px;height:260px;border-radius:50%;border:1px solid #D4AF7C75;background:radial-gradient(circle at 35% 28%,#C7A97C55,transparent 25%),radial-gradient(circle at 65% 72%,#0D2535,#060A10 72%);box-shadow:0 0 55px #D4AF7C18,inset -26px -14px 48px #000a;opacity:.75}
+.atlas-hero-orbit:before,.atlas-hero-orbit:after{content:"";position:absolute;inset:15% 0;border:1px solid #D4AF7C35;border-radius:50%;transform:rotate(-26deg)}
+.atlas-hero-orbit:after{inset:0 30%;transform:rotate(27deg)}
+.atlas-orbit-one,.atlas-orbit-two,.atlas-orbit-three{position:absolute;border:1px solid #D4AF7C3d;border-radius:50%;inset:30% 0;transform:rotate(28deg)}
+.atlas-orbit-two{inset:0 30%;transform:rotate(-28deg)}
+.atlas-orbit-three{inset:49% 0;transform:none}
+body:has(.atlas-layout) .brandmark{border-color:#B08A56;color:#D4AF7C}
+body:has(.atlas-layout) .stats .stat{border-radius:9px;border-color:#544633}
+body:has(.atlas-layout) .record-item{border-bottom:1px solid #514333}
+body:has(.atlas-layout) .record-item:last-child{border-bottom:0}
+body:has(.atlas-layout) .record-expand{appearance:none;width:100%;text-align:start;background:transparent;color:#F5F1E8;border:0;border-radius:0;align-items:center}
+body:has(.atlas-layout) .record-expand:hover,body:has(.atlas-layout) .record-expand[aria-expanded="true"]{background:#27251F}
+body:has(.atlas-layout) .record-right{display:flex;flex-direction:column;align-items:flex-end;gap:9px}
+body:has(.atlas-layout) .record-hint{color:#D9C6A7;white-space:nowrap}
+body:has(.atlas-layout) .inline-detail{padding:17px 18px 20px;background:#0B1119;border-top:1px solid #514333}
+body:has(.atlas-layout) .inline-detail[hidden]{display:none}
+.inline-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.inline-detail-cell{border:1px solid #3B352D;border-radius:7px;padding:11px;background:#171B20;overflow-wrap:anywhere}
+.inline-detail-cell b{display:block;color:#D4AF7C;font-size:12px;margin-bottom:7px}
+.inline-detail-cell span{color:#F5F1E8;font-size:13px}
+.study-actions{margin-top:16px}
+.study-link{display:inline-flex;border:1px solid #B08A56;color:#F5F1E8;background:#342C20;padding:10px 15px;border-radius:8px;font-size:13px;font-weight:bold}
+.study-link:hover{background:#55422A}
+.study-unavailable{color:#D9C6A7;font-size:13px}
+@media(max-width:800px){.atlas-hero{min-height:250px;padding:26px 6%}.atlas-hero-orbit{left:-80px;width:225px;height:225px;opacity:.35}.inline-detail-grid{grid-template-columns:1fr}.record-right{min-width:110px}}
+
+.map-selection{margin:14px 0;padding:18px;border:1px solid #B08A56;border-radius:12px;background:#101820}
+.map-selection[hidden]{display:none}
+.map-selection-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.map-selection-head h3{margin:0;color:#D4AF7C;font-size:18px}
+
+/* Authentic LX HUMAN supplied artwork; uploaded to /public/assets. */
+body:has(.atlas-layout) .atlas-hero-image{display:block;padding:0;min-height:0;aspect-ratio:1536/526;max-height:450px;background:#080E12;border:1px solid #4C3928;border-radius:14px;overflow:hidden}
+body:has(.atlas-layout) .atlas-hero-image:after{display:none}
+.atlas-hero-image>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.atlas-hero-image-fallback{padding:48px 25px;background:linear-gradient(120deg,#090e15,#242018);color:#F5F1E8;text-align:center}
+.atlas-hero-image-fallback h1{font-size:clamp(26px,4vw,42px);margin:0 0 8px}
+.atlas-nav-logo{display:block;width:112px;height:48px;object-fit:cover;object-position:15% 60%;border-radius:5px}
+.atlas-logo-fallback{font-weight:bold;color:#D4AF7C}
+.atlas-stats-cover{padding:24px 18px 18px;margin:0 0 16px;border:1px solid #665139;border-radius:12px;background:linear-gradient(270deg,#080E12 0%,#080E12E8 35%,#080E12A0 100%),url('/assets/atlas-skull.webp') left center/auto 100% no-repeat,#14181c}
+.atlas-stats-title h2{margin:0;color:#F5F1E8;font-size:25px}
+.atlas-stats-title p{margin:4px 0 17px;color:#D4AF7C;font-size:11px;letter-spacing:2px}
+.atlas-stats-cover .stats{margin:0}
+.atlas-stats-cover .stat{background:#0C1118D9;backdrop-filter:blur(3px)}
+@media(max-width:700px){.atlas-stats-cover{padding:16px 10px}.atlas-nav-logo{width:88px;height:38px}.atlas-stats-title h2{font-size:20px}body:has(.atlas-layout) .atlas-hero-image{aspect-ratio:1536/650}body:has(.atlas-layout) .atlas-hero-image>img{object-position:40% center}}
+
+/* Image sizing verified against supplied files: 1536x526 banner, 308x300 atlas emblem. */
+body:has(.atlas-layout) .atlas-nav-logo{width:66px;height:64px;object-fit:contain;object-position:center;border-radius:0;flex-shrink:0}
+body:has(.atlas-layout) .atlas-hero-image>img{object-fit:contain;object-position:center}
+@media(max-width:700px){
+ body:has(.atlas-layout) .atlas-nav-logo{width:54px;height:52px}
+ body:has(.atlas-layout) .atlas-hero-image{aspect-ratio:1536/526;min-height:0;max-height:none}
+ body:has(.atlas-layout) .atlas-hero-image>img{object-fit:contain;object-position:center}
+}
+
+
+/* LX HUMAN: side-by-side searchable remains and scholarly sources */
+.atlas-records-workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(310px,.9fr);gap:14px;align-items:start;direction:rtl}
+.atlas-records-workspace .results{min-width:0}
+.record-detail-panel{min-width:0;background:#151B1F;border:1px solid #665641;border-radius:15px;overflow:hidden;position:sticky;top:92px;max-height:calc(100vh - 110px);display:flex;flex-direction:column}
+.record-detail-head{padding:14px 16px;border-bottom:1px solid #665641;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.record-detail-head h3{font-size:17px;margin:0;color:#D9C6A7}
+.record-detail-head .btn{padding:7px 11px}
+.record-detail-body{overflow:auto;padding:14px;overflow-wrap:anywhere}
+.record-detail-body .inline-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.record-detail-body .inline-detail-cell{background:#0B1018;border:1px solid #514333;border-radius:9px;padding:10px;min-width:0}
+.record-detail-body .inline-detail-cell b{display:block;font-size:11px;color:#D4AF7C;margin-bottom:5px}
+.record-detail-body .inline-detail-cell span{font-size:12px;line-height:1.7;color:#F1E8D7;white-space:pre-wrap;overflow-wrap:anywhere}
+.record-detail-panel .research-heading{font-size:16px;color:#D4AF7C;border-bottom:1px solid #665641;padding-bottom:8px;margin:20px 0 10px}
+.record-detail-panel .research-item{border:1px solid #514333;border-radius:10px;padding:12px;margin:9px 0;background:#0B1018}
+.record-detail-panel .research-item strong{display:block;line-height:1.7;font-size:13px}
+.record-detail-panel .research-item small{display:block;color:#C8BBA8;margin-top:6px;line-height:1.7}
+.record-detail-panel .research-item a{display:inline-block;color:#D4AF7C;margin-top:8px;text-decoration:underline;overflow-wrap:anywhere}
+.record-detail-panel .research-item .unverified{display:block;font-size:12px;color:#C8BBA8;margin-top:7px}
+.record-expand[aria-selected="true"]{background:#302a20;border-right:3px solid #D4AF7C}
+@media(max-width:1150px){.atlas-records-workspace{grid-template-columns:1fr}.record-detail-panel{position:static;max-height:none}.record-detail-body{max-height:650px}}
+@media(max-width:600px){.record-detail-body .inline-detail-grid{grid-template-columns:1fr}}
+
+/* Restore the prominent atlas masthead logo rather than cropping it */
+body:has(.atlas-layout) .atlas-brand{display:flex;align-items:center;gap:14px;letter-spacing:normal;min-width:0}
+body:has(.atlas-layout) .atlas-nav-logo{display:block;width:130px;height:66px;object-fit:contain;object-position:center;background:transparent;border-radius:0;flex-shrink:0}
+body:has(.atlas-layout) .atlas-brand-title{display:flex;flex-direction:column;gap:4px;font-size:17px;line-height:1.3;color:#D4AF7C;font-weight:700}
+body:has(.atlas-layout) .atlas-brand-title small{font-size:9px;letter-spacing:1.3px;color:#C8BBA8;font-weight:400}
+body:has(.atlas-layout) .atlas-logo-fallback{font-family:Georgia,serif;font-size:24px;white-space:nowrap}
+@media(max-width:700px){body:has(.atlas-layout) .atlas-nav-logo{width:100px;height:53px}body:has(.atlas-layout) .atlas-brand-title{font-size:12px}body:has(.atlas-layout) .atlas-brand-title small{font-size:8px;letter-spacing:0}body:has(.atlas-layout) .atlas-brand{gap:7px}body:has(.atlas-layout) .topinner{gap:5px}body:has(.atlas-layout) .nav .pill{font-size:9px;padding:5px}}
+
+/* Persistent visible LX HAZZAA wordmark in both mastheads */
+body:has(.atlas-layout) .atlas-brand-wordmark{display:block;font-family:Georgia,serif;font-size:clamp(18px,2.1vw,27px);line-height:1.1;letter-spacing:1px;color:#E3C992;text-shadow:0 1px 12px #000;font-weight:900;white-space:nowrap}
+body:has(.atlas-layout) .atlas-brand-title{display:flex;flex-direction:column;gap:2px}
+body:has(.atlas-layout) .atlas-brand-title>span{font-size:13px}
+.home-brand-wordmark{display:inline-block;color:#E3C992;font-weight:900;letter-spacing:2px;white-space:nowrap}
+@media(max-width:700px){body:has(.atlas-layout) .atlas-nav-logo{width:65px;height:48px}body:has(.atlas-layout) .atlas-brand-wordmark{font-size:18px}body:has(.atlas-layout) .atlas-brand-title>span{font-size:11px}body:has(.atlas-layout) .atlas-brand-title small{display:none}.home-brand-wordmark{font-size:17px;letter-spacing:1px}}
+
+
+/* LXHAZZAA master universe: orbit-centered brand home */
+body:has(.universe-main){background:#080b10;color:#f1e8d7}
+body:has(.universe-main) .topbar{background:#080b10e8;border-color:#caa07155}
+body:has(.universe-main) .topinner{min-height:80px}
+body:has(.universe-main) .brand{display:flex;align-items:baseline;gap:12px;letter-spacing:normal}
+.header-lx{font-family:Georgia,Times New Roman,serif;font-size:47px;font-weight:500;letter-spacing:-5px;line-height:1;background:linear-gradient(145deg,#fff0d0,#d4af7c 46%,#805132 75%,#f4d7a5);color:transparent;background-clip:text;-webkit-background-clip:text}
+.header-hazzaa{font-family:Georgia,serif;font-size:14px;letter-spacing:3px;color:#d4af7c}
+body:has(.universe-main) .nav{gap:16px}
+body:has(.universe-main) .nav button,body:has(.universe-main) .nav select{border:1px solid #b18b62;border-radius:28px;padding:10px 17px;background:#0c1016;color:#f1e8d7}
+.universe-main{width:100%;overflow:hidden}
+.universe-stage{position:relative;isolation:isolate;min-height:1160px;max-width:1700px;margin:auto;padding:28px 20px 55px;background:radial-gradient(ellipse at 51% 45%,#1a2b3b 0%,#0b1723 28%,#080b10 70%)}
+.universe-stars{position:absolute;inset:0;z-index:-1;opacity:.48;background-image:radial-gradient(1px 1px at 8% 20%,#ffe1ac 99%,transparent),radial-gradient(1px 1px at 28% 8%,#fff 99%,transparent),radial-gradient(2px 2px at 78% 18%,#e2c393 99%,transparent),radial-gradient(1px 1px at 87% 61%,#fff 99%,transparent),radial-gradient(1px 1px at 16% 83%,#e8cda6 99%,transparent),radial-gradient(2px 2px at 62% 92%,#fff 99%,transparent);background-size:370px 340px}
+.universe-intro{text-align:center;position:relative;z-index:3}
+.universe-intro .eyebrow{font-size:11px;letter-spacing:4px;color:#d4af7c}
+.universe-intro #heroTitle{font-size:22px;color:#e9d2a9;margin:12px 0 4px}
+.universe-intro #heroDesc{font-size:13px;color:#b7a996;margin:0}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.universe-orbit{position:relative;width:min(1060px,100%);height:920px;margin:0 auto}
+.universe-ring{position:absolute;pointer-events:none;border:1px solid #d4af7c55;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 28px #c28c4b12,inset 0 0 28px #c28c4b08}
+.ring-one{width:84%;aspect-ratio:1}
+.ring-two{width:68%;aspect-ratio:1;border-color:#d4af7c33;transform:translate(-50%,-50%) rotate(20deg)}
+.universe-globe{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(65%,680px);aspect-ratio:1;border-radius:50%;overflow:hidden;border:1px solid #c7a16c99;box-shadow:inset -65px -45px 100px #000c,0 0 80px #d8a36933,0 0 8px #ffe1a180;background:radial-gradient(circle at 72% 20%,#ffe7b49c 0%,transparent 25%),radial-gradient(ellipse at 45% 32%,#425b66 0%,#172b40 38%,#0c1826 67%,#05070d 90%);z-index:1}
+.universe-globe:before{content:"";position:absolute;inset:-2%;border-radius:50%;opacity:.93;background-image:linear-gradient(115deg,#01060b88 4%,#0b162300 40%,#02070c77 76%,#000c 100%),url('https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg');background-position:center,65% center;background-size:cover,auto 110%;background-repeat:no-repeat;filter:saturate(.63) brightness(.56) contrast(1.2);mix-blend-mode:normal}
+.universe-globe:after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 74% 22%,#fff5d855,transparent 35%),linear-gradient(110deg,transparent 40%,#02050a66 78%)}
+.globe-shine{position:absolute;inset:4%;border:1px solid #d4af7c44;border-radius:50%;transform:rotate(-22deg);z-index:2}
+.globe-brand{position:absolute;z-index:3;top:49%;left:50%;transform:translate(-50%,-35%);display:flex;flex-direction:column;align-items:center;white-space:nowrap;text-shadow:0 3px 20px #000,0 0 18px #000}
+.globe-lx{font-family:Georgia,Times New Roman,serif;font-size:clamp(100px,14vw,185px);font-weight:400;letter-spacing:-18px;line-height:.85;padding-right:18px;background:linear-gradient(150deg,#fff2d9,#d5a76d 50%,#7c4a2e 72%,#ffe2a6);background-clip:text;-webkit-background-clip:text;color:transparent}
+.globe-hazzaa{font:25px Georgia,serif;letter-spacing:11px;color:#f0c994;margin:15px 0}
+.globe-slogan{font-size:14px;color:#f2e1c8}
+.globe-brand small{font:9px Georgia,serif;letter-spacing:3px;color:#d4af7c;margin-top:7px}
+.orbit-node{position:absolute;z-index:4;width:175px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;transform:translate(-50%,-50%);color:#f6e8d2}
+.orbit-icon{width:116px;height:116px;border-radius:50%;display:grid;place-items:center;overflow:hidden;border:2px solid #d4af7c;box-shadow:0 0 0 7px #d4af7c12,0 0 26px #d4af7c66,inset 0 0 26px #d4af7c2b;background:radial-gradient(circle at 40% 20%,#66513b,#1d2228 60%,#090d12)}
+.orbit-icon img{width:100%;height:100%;object-fit:cover}
+.node-symbol{font-family:Georgia,serif;font-size:55px;color:#e5bd84;text-shadow:0 0 16px #d4af7c88}
+.orbit-node strong{font-size:14px;line-height:1.4;text-shadow:0 2px 8px #000}
+.orbit-node small{font:10px Georgia,serif;color:#c6a779;letter-spacing:1px}
+.orbit-node[href]:hover .orbit-icon{transform:scale(1.08);border-color:#ffe5b2;box-shadow:0 0 30px #e4ae62}
+.orbit-node[href]:focus-visible{outline:2px solid #f6d6a5;outline-offset:6px;border-radius:10px}
+.orbit-node.upcoming .orbit-icon{opacity:.76}
+.orbit-node.upcoming small{font-family:Tahoma,system-ui,sans-serif}
+.node-remains{left:29%;top:15%}
+.node-documents{left:70%;top:15%}
+.node-history{left:88%;top:32%}
+.node-media{left:94%;top:55%}
+.node-projects{left:84%;top:79%}
+.node-podcast{left:63%;top:92%}
+.node-production{left:36%;top:92%}
+.node-x{left:15%;top:79%}
+.node-general{left:6%;top:55%}
+.node-saudi{left:12%;top:32%}
+.universe-bottom{text-align:center;position:relative;z-index:2}
+.universe-bottom h2{font-size:21px;color:#d4af7c;margin:0 0 8px}
+.universe-bottom p{font-size:13px;color:#b9a992;margin:0}
+@media(max-width:1050px){.universe-stage{min-height:1030px}.universe-orbit{height:800px}.orbit-icon{width:90px;height:90px}.orbit-node{width:135px}.orbit-node strong{font-size:12px}.orbit-node small{font-size:9px}.node-symbol{font-size:43px}.globe-hazzaa{font-size:18px;letter-spacing:7px}.globe-slogan{font-size:11px}.globe-brand small{font-size:8px}}
+@media(max-width:700px){body:has(.universe-main) .topinner{min-height:64px}.header-lx{font-size:34px}.header-hazzaa{font-size:10px;letter-spacing:1px}body:has(.universe-main) .nav{gap:5px}body:has(.universe-main) .nav button,body:has(.universe-main) .nav select{padding:8px;font-size:11px;max-width:100px}.universe-stage{padding:22px 12px 38px;min-height:0}.universe-intro .eyebrow{font-size:9px;letter-spacing:2px}.universe-intro #heroTitle{font-size:18px}.universe-intro #heroDesc{font-size:11px;line-height:1.7}.universe-orbit{height:auto;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 8px;padding-top:350px;padding-bottom:32px}.universe-globe{width:min(320px,86vw);top:168px}.universe-ring{top:168px;width:min(350px,96vw)}.ring-two{width:min(290px,80vw)}.globe-lx{font-size:95px;letter-spacing:-9px;padding-right:9px}.globe-hazzaa{font-size:14px;letter-spacing:5px;margin:9px 0}.globe-slogan{font-size:10px}.globe-brand small{font-size:7px;letter-spacing:1px}.orbit-node{position:relative;top:auto;left:auto;transform:none;width:100%;gap:6px}.orbit-icon{width:96px;height:96px}.orbit-node strong{font-size:12px}.orbit-node small{font-size:9px}.universe-bottom{padding:0 12px 20px}}
+@media(prefers-reduced-motion:no-preference){.ring-one{animation:lx-orbit-rotate 120s linear infinite}.ring-two{animation:lx-orbit-rotate-reverse 150s linear infinite}@keyframes lx-orbit-rotate{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}@keyframes lx-orbit-rotate-reverse{from{transform:translate(-50%,-50%) rotate(360deg)}to{transform:translate(-50%,-50%) rotate(0)}}}
+
+
+/* Active platforms only: two orbiting destinations until further launches */
+body:has(.universe-main) .node-remains{left:18%;top:56%}
+body:has(.universe-main) .node-documents{left:82%;top:56%}
+@media(max-width:700px){
+ body:has(.universe-main) .universe-orbit{grid-template-columns:repeat(2,minmax(0,1fr));padding-top:350px;gap:14px 8px}
+ body:has(.universe-main) .node-remains,body:has(.universe-main) .node-documents{left:auto;top:auto}
+}
+
+/* LXHAZZAA globe: deep cinematic navy, no atlas banner or embedded lettering */
+body:has(.universe-main) .universe-globe{background:radial-gradient(circle at 75% 21%,#d4a4676b 0%,transparent 27%),radial-gradient(ellipse at 47% 32%,#1b3241 0%,#0c1928 48%,#03070e 84%);box-shadow:inset -100px -65px 110px #000e,inset 12px 9px 28px #d4af7c3a,0 0 56px #c48e5133,0 0 3px #f4d7a7}
+body:has(.universe-main) .universe-globe:after{background:radial-gradient(ellipse at 75% 17%,#f1c38d70 0%,#d9a75d1c 15%,transparent 36%),radial-gradient(ellipse at 48% 60%,transparent 33%,#01050bbd 96%),linear-gradient(115deg,#02071133 10%,transparent 46%,#01050b99 88%)}
+body:has(.universe-main) .globe-brand{text-shadow:0 4px 18px #000,0 0 28px #000}
+body:has(.universe-main) .universe-ring{border-color:#b8895266;box-shadow:0 0 22px #d4af7c16}
+
+
+/* LXHAZZAA home: approved dark-gold cinematic globe composition */
+body:has(.universe-main){background:#05080b;color:#f4e8d7}
+body:has(.universe-main) .topbar{background:#06080bbf;backdrop-filter:blur(9px);border-bottom:1px solid #d4af7c30}
+body:has(.universe-main) .topinner{direction:ltr}
+body:has(.universe-main) .topinner .nav{direction:rtl}
+body:has(.universe-main) .brandmark{font:48px Georgia,serif;background:linear-gradient(125deg,#fff0c9,#d4af7c 50%,#9c6339 85%,#f5d5a0);color:transparent;-webkit-background-clip:text;background-clip:text}
+body:has(.universe-main) .home-brand-wordmark{font:16px Georgia,serif;letter-spacing:3px;color:#e5c28b}
+body:has(.universe-main) .universe-stage{min-height:1010px;padding-top:16px;background:radial-gradient(ellipse at 52% 66%,#3a2415 0%,#121317 37%,#05080b 80%)}
+body:has(.universe-main) .universe-intro{margin-bottom:0}
+body:has(.universe-main) .universe-intro .eyebrow{color:#d4af7caa}
+body:has(.universe-main) .universe-orbit{height:790px;max-width:1100px}
+body:has(.universe-main) .universe-globe{width:min(76%,790px);top:46%;background:radial-gradient(circle at 78% 25%,#fff1c7aa,transparent 23%),url('https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg') center/cover no-repeat,#0a1926;border-color:#d4af7c55;box-shadow:inset -85px -60px 100px #02050ad9,0 0 65px #d6a15c3a,0 0 0 2px #d4af7c22}
+body:has(.universe-main) .universe-globe:before{background:radial-gradient(ellipse at 74% 20%,#ffe7ac99 0%,transparent 24%),linear-gradient(135deg,#03070b55 0%,transparent 48%,#03070b66 100%);opacity:1;mix-blend-mode:screen}
+body:has(.universe-main) .universe-globe:after{background:radial-gradient(circle at 80% 19%,#ffe0a98c,transparent 22%),linear-gradient(100deg,#03060a60 0%,transparent 55%,#03060a33 100%)}
+body:has(.universe-main) .globe-brand{top:62%;text-shadow:0 2px 18px #000,0 0 30px #000}
+body:has(.universe-main) .globe-lx{font-size:clamp(120px,16vw,210px)}
+body:has(.universe-main) .universe-ring{top:46%;border-color:#e3af6955;box-shadow:0 0 25px #d4af7c19}
+body:has(.universe-main) .ring-one{width:96%}
+body:has(.universe-main) .ring-two{width:83%}
+body:has(.universe-main) .node-remains{left:19%;top:75%}
+body:has(.universe-main) .node-documents{left:81%;top:75%}
+body:has(.universe-main) .orbit-icon{width:190px;height:190px;background:radial-gradient(circle at 45% 24%,#aa7d50,#261b14 62%,#090c10);border:2px solid #f2c586;box-shadow:0 0 0 6px #d4af7c18,0 0 45px #e5a65e99,inset 0 0 28px #ffd69b35}
+body:has(.universe-main) .node-documents .orbit-icon{background:radial-gradient(circle at 50% 35%,#9a6c3f,#372519 56%,#090c10)}
+body:has(.universe-main) .node-documents .node-symbol{font-size:95px;color:#efc68d}
+body:has(.universe-main) .orbit-node{width:250px;gap:7px}
+body:has(.universe-main) .orbit-node strong{font-size:19px}
+body:has(.universe-main) .orbit-node small{font-size:11px}
+body:has(.universe-main) .universe-bottom{margin-top:-4px}
+@media(max-width:1050px) and (min-width:701px){body:has(.universe-main) .universe-orbit{height:710px}body:has(.universe-main) .orbit-icon{width:135px;height:135px}body:has(.universe-main) .orbit-node{width:190px}body:has(.universe-main) .orbit-node strong{font-size:15px}}
+@media(max-width:700px){
+ body:has(.universe-main) .universe-stage{padding:14px 8px 30px;min-height:0}
+ body:has(.universe-main) .universe-orbit{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:min(91vw,360px);height:auto}
+ body:has(.universe-main) .universe-globe{top:min(42vw,164px);width:min(94vw,360px)}
+ body:has(.universe-main) .universe-ring{top:min(42vw,164px);width:97vw}
+ body:has(.universe-main) .ring-two{width:83vw}
+ body:has(.universe-main) .globe-brand{top:62%}
+ body:has(.universe-main) .globe-lx{font-size:90px}
+ body:has(.universe-main) .orbit-node{width:100%;top:auto;left:auto;position:relative;transform:none}
+ body:has(.universe-main) .orbit-icon{width:min(38vw,150px);height:min(38vw,150px)}
+ body:has(.universe-main) .orbit-node strong{font-size:12px}
+ body:has(.universe-main) .orbit-node small{font-size:8px}
+ body:has(.universe-main) .node-documents .node-symbol{font-size:65px}
+ body:has(.universe-main) .universe-bottom{margin-top:10px}
+}
+
+
+/* Prominent navigation from the remains atlas to LXHAZZAA main portal */
+body:has(.atlas-layout) .atlas-home-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #D4AF7C;border-radius:999px;padding:10px 16px;background:linear-gradient(135deg,#31271c,#0b1018);color:#F1D5A8;font-weight:700;text-decoration:none;white-space:nowrap;box-shadow:0 0 12px #d4af7c18}
+body:has(.atlas-layout) .atlas-home-button:hover,body:has(.atlas-layout) .atlas-home-button:focus-visible{background:#5b4228;color:#fff3df;outline:2px solid #d4af7c55;outline-offset:2px}
+body:has(.atlas-layout) .atlas-home-button>span:first-child{font-size:23px;line-height:14px}
+@media(max-width:600px){body:has(.atlas-layout) .atlas-home-button{padding:8px 10px;font-size:12px;gap:5px}}
+
+
+/* Atlas masthead: identity anchored right, navigation anchored opposite left */
+body:has(.atlas-layout) .topinner{display:flex;direction:rtl;justify-content:space-between;align-items:center;gap:22px;flex-wrap:nowrap;min-height:88px}
+body:has(.atlas-layout) .atlas-brand{order:0;flex:0 1 auto;min-width:0;gap:12px;text-align:right}
+body:has(.atlas-layout) .topinner>.nav{order:1;display:flex;direction:ltr;align-items:center;justify-content:flex-start;gap:12px;flex:0 0 auto;margin-inline-start:auto}
+body:has(.atlas-layout) .topinner>.nav .pill{border:1px solid #80694d;background:#10151c;color:#d7c5a8;padding:8px 12px;border-radius:999px;font-size:11px;letter-spacing:.6px;white-space:nowrap}
+body:has(.atlas-layout) .atlas-home-button{direction:rtl;gap:8px;min-height:40px}
+@media(max-width:700px){
+ body:has(.atlas-layout) .topinner{gap:8px;min-height:72px;flex-wrap:wrap;padding-block:9px}
+ body:has(.atlas-layout) .atlas-brand{flex:1 1 175px;gap:6px}
+ body:has(.atlas-layout) .atlas-nav-logo{width:70px;height:45px}
+ body:has(.atlas-layout) .atlas-brand-wordmark{font-size:17px}
+ body:has(.atlas-layout) .atlas-brand-title>span{font-size:10px}
+ body:has(.atlas-layout) .atlas-brand-title small{font-size:7px;letter-spacing:.3px}
+ body:has(.atlas-layout) .topinner>.nav{gap:5px;margin-inline-start:auto}
+ body:has(.atlas-layout) .topinner>.nav .pill{display:none}
+ body:has(.atlas-layout) .atlas-home-button{min-height:36px;padding:7px 10px;font-size:11px}
+}
+
+
+/* Publication entries: date, scope, institution and source links */
+body:has(.atlas-layout) .research-study-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+body:has(.atlas-layout) .research-study-head strong{flex:1 1 200px;min-width:0}
+body:has(.atlas-layout) .research-year{display:inline-block;white-space:nowrap;color:#f0d5a6;border:1px solid #a47c4a;padding:4px 9px;border-radius:8px;font-size:12px}
+body:has(.atlas-layout) .research-scope{color:#c5b7a1;font-size:11px}
+
+/* LXHAZZAA map editorial label; independent of atlas data and markers */
+.lx-palestine-label{background:transparent!important;border:0!important;pointer-events:none!important;}
+.lx-palestine-label span{display:flex;align-items:center;justify-content:center;white-space:nowrap;width:130px;height:30px;background:transparent;border:0;border-radius:0;color:#464646;font:500 11px/1.2 Arial,Tahoma,sans-serif;text-shadow:0 1px 1px rgba(255,255,255,.85),0 -1px 1px rgba(255,255,255,.65);box-shadow:none;}
+
+/* Shared LXHAZZAA account interface */
+.lx-auth-overlay[hidden]{display:none!important}
+.lx-auth-overlay{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.78);display:grid;place-items:center;padding:18px;overflow:auto}
+.lx-auth-dialog{position:relative;width:min(100%,430px);padding:30px;border:1px solid #9a7848;border-radius:18px;background:#181a1c;color:#f6f0e8;box-shadow:0 20px 65px #0009;display:flex;flex-direction:column;gap:12px}
+.lx-auth-brand{color:#d6b77d;font-weight:800;letter-spacing:3px;text-align:center}
+.lx-auth-dialog h2{text-align:center;margin:5px 0}
+.lx-auth-dialog label{display:block;margin:8px 0 4px;font-size:13px}
+.lx-auth-dialog input{width:100%;box-sizing:border-box;padding:12px;border-radius:8px;border:1px solid #72644e;background:#25282b;color:#fff}
+.lx-auth-dialog form{display:flex;flex-direction:column;gap:4px}
+.lx-auth-dialog form .btn{margin-top:14px}
+.lx-auth-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.lx-auth-links button,.lx-auth-close{background:none;border:0;color:#d6b77d;cursor:pointer}
+.lx-auth-close{position:absolute;top:12px;left:12px;font-size:28px}
+#lxAuthStatus{min-height:22px;font-size:13px;line-height:1.6;color:#e5c78d}
+.footer .container{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+
+.lx-social-login{display:flex;flex-direction:column;gap:9px}
+.lx-social-login[hidden],.lx-auth-divider[hidden]{display:none!important}
+.lx-social-btn{display:flex;justify-content:center;align-items:center;gap:12px;width:100%;min-height:45px;border:1px solid #9a9a9a;border-radius:9px;background:#fff;color:#171717;font-size:14px;font-weight:700;cursor:pointer;direction:rtl}
+.lx-social-btn:nth-child(2){background:#090909;color:#fff;border-color:#777}
+.lx-social-btn:disabled{opacity:.6;cursor:wait}
+.lx-google-g{font-size:22px;font-weight:800;color:#4285f4;font-family:Arial,sans-serif}
+.lx-apple-mark{font-size:18px;color:#fff}
+.lx-auth-divider{display:flex;align-items:center;gap:12px;color:#c9c1b6;font-size:12px}
+.lx-auth-divider:before,.lx-auth-divider:after{content:"";flex:1;border-top:1px solid #666}
+
+/* Shared account panel — visible on every LXHAZZAA platform */
+.lx-account-overlay[hidden]{display:none!important}
+.lx-account-overlay{position:fixed;inset:0;z-index:100001;background:#000c;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 12px}
+.lx-account-card{position:relative;width:min(100%,690px);margin:auto;background:#13171c;border:1px solid #b28b54;border-radius:18px;padding:26px;color:#f7ecda;box-shadow:0 20px 70px #000a;box-sizing:border-box}
+.lx-account-card h2{margin:8px 0 18px;text-align:center;color:#e9c58c}
+.lx-account-close{position:absolute;top:8px;left:15px;background:transparent;border:0;color:#dfc49a;font-size:30px;cursor:pointer}
+.lx-account-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid #66523a;padding-bottom:12px}
+.lx-account-tabs button{background:#24282e;border:1px solid #66523a;border-radius:9px;color:#dfc49a;padding:10px;cursor:pointer}
+.lx-account-tabs button.active{background:#634b2c;color:#fff}
+.lx-account-identity{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.lx-account-identity strong{font-size:20px}.lx-account-identity span{border:1px solid #c5a06b;border-radius:30px;padding:5px 13px;color:#edcc95}
+.lx-account-hint{color:#c5b8a7;font-size:13px;line-height:1.9}
+#lxAccountNameForm{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
+#lxAccountNameForm label{width:100%}
+#lxAccountNameForm input{flex:1 1 190px;min-width:0;padding:12px;border:1px solid #8e744e;border-radius:8px;background:#090d12;color:white}
+.lx-account-history{display:flex;flex-direction:column;gap:7px;max-height:45vh;overflow:auto}
+.lx-history-row,.lx-member-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #5e503c;border-radius:10px;padding:12px;margin:7px 0;background:#1c2228;overflow-wrap:anywhere}
+.lx-history-row div,.lx-member-row div{min-width:0}.lx-history-row small,.lx-member-row small{display:block;color:#b6ab9e;margin-top:6px}
+.lx-history-row a{white-space:nowrap;color:#f1ce93}
+.lx-member-row select{max-width:150px;background:#12171c;color:#fff;border:1px solid #ab8955;border-radius:7px;padding:8px}
+.lx-account-footer{border-top:1px solid #554936;margin-top:24px;padding-top:18px}
+.lx-account-empty{padding:22px;color:#b8a58b;text-align:center}
+@media(max-width:550px){.lx-account-card{padding:19px 14px}.lx-account-tabs button{font-size:12px;padding:8px}.lx-member-row{flex-wrap:wrap}}
+
+/* Guest research quota notice: shown only after reaching the daily search limit. */
+.lx-guest-limit-overlay{position:fixed;inset:0;z-index:99999;background:#05070bdc;display:grid;place-items:center;padding:18px}
+.lx-guest-limit-card{width:min(460px,100%);background:#11161d;border:1px solid #c5a16c;border-radius:18px;box-shadow:0 25px 90px #000b;color:#f6e7d1;padding:28px;line-height:1.9}
+.lx-guest-limit-card h2{color:#eac48b;font-size:23px;margin:0 0 10px}.lx-guest-limit-card p{margin:0 0 22px}
+.lx-guest-limit-actions{display:flex;gap:10px;flex-wrap:wrap}.lx-guest-limit-actions button{border:1px solid #bd9760;border-radius:10px;padding:10px 15px;cursor:pointer;background:#c8a36f;color:#0b1018;font-weight:700}.lx-guest-limit-actions [data-lx-guest-dismiss]{background:transparent;color:#eac48b}
+
+.atlas-stats-title{position:relative;padding-left:54px}
+.atlas-title-share{position:absolute;left:0;top:0;display:grid;place-items:center;width:44px;height:44px;border:1px solid #b89564;border-radius:12px;background:#14191fe6;color:#d4af7c;cursor:pointer}
+.atlas-title-share:hover,.atlas-title-share:focus-visible{background:#d4af7c;color:#111820;outline:2px solid #f5f1e8;outline-offset:2px}
+.atlas-stats-title .smallnote[role=status]:empty{display:none}
+
+.atlas-export-menu{position:absolute;left:0;top:48px;z-index:1000;min-width:210px;padding:8px;border:1px solid #d4af7c;border-radius:10px;background:#0b1018;box-shadow:0 8px 25px #0008}.atlas-export-menu[hidden]{display:none}.atlas-export-menu button{display:block;width:100%;padding:11px;background:transparent;color:#f1ebd7;border:0;text-align:right;cursor:pointer}.atlas-export-menu button:hover{background:#1b2a3a}
