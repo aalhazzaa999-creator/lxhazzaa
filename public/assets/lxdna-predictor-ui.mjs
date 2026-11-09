@@ -3,6 +3,24 @@ import {importProjectCSV,selectTargetCSV} from './lxdna-csv.mjs';
 import {parseSTR} from './lxdna-str-input.mjs';
 const $=id=>document.getElementById(id),refs=$('predictorRefs'),target=$('predictorTarget'),run=$('predictorRun'),status=$('predictorResultStatus'),outcome=$('predictorOutcome'),detail=$('predictorDetail');
 let worker,lastResult;
+let projectReferenceOwner='',projectReferenceLoading=false;
+async function loadProjectReferences(){
+ const auth=window.LXAuth,user=auth?.getUser();if(auth?.getRole()!=='owner'||!user||projectReferenceLoading)return;
+ projectReferenceLoading=true;const uid=user.id;
+ try{
+  const {data,error}=await auth.client.from('lx_dna_project_reference').select('payload').eq('snp_confirmed',true).gte('marker_loci',12).order('kit_id').range(0,999);
+  if(error)throw Error('تعذر تحميل مرجع المشاريع الخاص');if(window.LXAuth.getUser()?.id!==uid||window.LXAuth.getRole()!=='owner')return;
+  const records=(data||[]).map(({payload:r})=>({kitId:r.kitId,haplogroup:r.haplogroup,snpVerified:r.snpVerified,markers:r.markers}));
+  if(!records.length)throw Error('لا توجد مراجع مؤكدة ذات 12 موضعًا مقروءًا على الأقل');
+  const source={title:'المشاريع الستة المصرح بها — تأكيد SNP الأخضر في FTDNA',url:'https://www.familytreedna.com/public/Alarab?iframe=ydna-results-overview',version:'ftdna-projects-20261109-v1',date:'2026-11-09'};
+  refs.value=JSON.stringify({schemaVersion:1,source,records});fillSource(source);$('predictorTree').value='ftdna';projectReferenceOwner=uid;
+  show('حُمّل '+records.length+' مرجعًا مؤكدًا من المشاريع المصرّح بها. الماركرات المتاحة جزئية بسبب قص PDF، والنتائج تقديرية وتحتاج تدقيقًا.');
+ }catch(e){show(e.message,'error');}finally{projectReferenceLoading=false;}
+}
+$('loadProjectReferences').onclick=loadProjectReferences;
+$('projectLookupRun').onclick=async()=>{const kit=$('projectKitLookup').value.trim();$('projectLookupResult').textContent='';if(!kit||window.LXAuth?.getRole()!=='owner')return;const uid=window.LXAuth.getUser()?.id;const {data,error}=await window.LXAuth.client.from('lx_dna_project_reference').select('payload').eq('kit_id',kit).maybeSingle();if(window.LXAuth.getUser()?.id!==uid)return;$('projectLookupResult').textContent=error?'تعذر قراءة السجل الخاص':data?JSON.stringify(data.payload,null,2):'لا توجد عينة بهذا الرقم في الملفات المستوردة';};
+function refreshProjectReferences(){if(!window.LXAuth?.getUser()||window.LXAuth?.getRole()!=='owner'){if(projectReferenceOwner){stop();clearResult();refs.value='';projectReferenceOwner='';}$('projectLookupResult').textContent='';return;}if(!refs.value&&!projectReferenceLoading)loadProjectReferences();}
+document.addEventListener('lx-auth-change',refreshProjectReferences);window.addEventListener('load',refreshProjectReferences);
 function controlView(id){
  for(const name of ['predictorLab','referenceManager'])$(name).hidden=name!==id;
  for(const button of document.querySelectorAll('.workspace-switcher button[data-control-view]')){const active=button.dataset.controlView===id;button.setAttribute('aria-pressed',String(active));button.classList.toggle('secondary',!active);}
