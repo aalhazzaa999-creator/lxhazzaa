@@ -100,6 +100,16 @@ guides = {
    '<p>يراجع المخوّل المصدر والحقوق ووصف المادة وحالة النص قبل الإتاحة. لطلب تصحيح أو اعتراض حقوقي، أرسل رقم السجل والمعلومة أو الحق محل الاعتراض والدليل إلى <a href="mailto:lxhazzaa@gmail.com">الدعم</a>. لا ترفق أصلًا سريًا في بلاغ عام.</p>',
    '<p>An authorised reviewer checks provenance, rights, description and text status before availability. For corrections or rights concerns, email <a href="mailto:lxhazzaa@gmail.com">support</a> with the record ID, disputed field or right and supporting evidence. Do not attach a confidential original to a public report.</p>')])}
 
+# Shared actions are described separately from research interpretation.
+guides['atlas'][3].insert(4, (
+ 'sharing', 'المشاركة والتصدير', 'Sharing and export',
+ '<p>من زر مشاركة النتائج اختر نسخ رابط البحث، أو تنزيل البيانات ومصادرها بصيغة JSON، أو «تصدير PDF / طباعة». في نافذة الطباعة اختر الحفظ بصيغة PDF إن رغبت. يفتح الرابط الفلاتر نفسها؛ النتائج مرتبطة بإصدار البيانات وقد تتغير بعد التحديث.</p><p>التصدير العام محدود بما تسمح به صلاحية الحساب: حتى 20 سجلًا للزائر و100 للمستخدم المسجل. اقرأ عدد السجلات المصدّرة ولا تعتبر الملف جميع نتائج البحث تلقائيًا. إذا ظهر حد البحث المجاني فالدخول بحساب يتيح المتابعة بحسب الصلاحية.</p>',
+ '<p>Use the results sharing control to copy the search URL, download records and sources as JSON, or export PDF / print. Select Save as PDF in the print dialog if desired. Shared links preserve filters; results depend on the data snapshot and can change after updates.</p><p>Public export limits follow account permissions: up to 20 records for visitors and 100 for signed-in users. Check the exported count; a download is not necessarily the complete result set. If the guest search limit appears, sign in to continue according to your permissions.</p>'))
+guides['tree'][3].insert(4, (
+ 'sharing', 'مشاركة البحث وتصدير النتائج', 'Sharing and exporting results',
+ '<p>اضغط «مشاركة» لنسخ رابط المشجرة والفلاتر الحالية. إذا تعذر النسخ يظهر الرابط لنسخه يدويًا. يفتح الرابط بحثًا في البيانات الموجودة ولا ينشر عينة جديدة.</p><p>«تصدير» ينزّل JSON يتضمن السجلات المسموح بها ومصادرها وإصدارها. حد الزائر 20 سجلًا والمسجل 100 بحسب الصلاحية؛ افصل بين العدد الكلي والعدد داخل الملف. التصدير ليس إعادة تحليل أو إثباتًا مستقلًا للنتيجة.</p>',
+ '<p>Share copies the current tree and filter URL; if clipboard access fails, copy the displayed URL manually. Opening it searches existing data and does not publish a new sample.</p><p>Export downloads permitted records, sources and snapshot metadata as JSON. Visitor exports contain up to 20 records and signed-in exports up to 100, according to permissions. Distinguish total matches from exported records. An export is not reanalysis or independent confirmation.</p>'))
+
 root = Path(__file__).resolve().parents[1]
 base = root / 'public' / 'lxhelp'
 def route(key, lang):
