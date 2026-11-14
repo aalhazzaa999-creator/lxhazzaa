@@ -89,3 +89,20 @@ body:has(.universe-main) .node-control{left:70%;top:87%}
  body:has(.universe-main) .universe-bottom h2{font-size:17px;margin-bottom:4px}
  body:has(.universe-main) .universe-bottom p{font-size:11px}
 }
+
+/* Partner destination sits beside the platform orbit, outside its navigation. */
+.universe-orbit-layout{position:relative;width:min(1180px,100%);margin:auto}
+.partner-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;width:152px;margin:auto;padding:18px 12px 14px;border:1px solid #bfcad18c;border-radius:17px;background:linear-gradient(145deg,#e5edf514,#101923d9);box-shadow:inset 0 1px 0 #eef5ff26,0 8px 28px #0003;color:#e3eaf0;text-align:center;text-decoration:none;box-sizing:border-box;transition:border-color .2s,background .2s}
+.partner-card:hover{border-color:#edf5ff;background:linear-gradient(145deg,#dce7f525,#101923f0)}
+.partner-card:focus-visible{outline:2px solid #e1eaf2;outline-offset:5px}
+.partner-emblem{position:relative;display:grid;place-items:center;width:64px;height:64px;border:1px solid #c7d1da99;border-radius:14px;background:#f4f8ff0c;box-shadow:0 0 20px #d9e8ff16}
+.partner-emblem::after{content:"✦";position:absolute;top:-10px;inset-inline-end:-9px;font-size:22px;line-height:1;color:#dae4ed;text-shadow:0 0 9px #d4e6ff80}
+.partner-emblem img{display:block;width:56px;height:56px;object-fit:contain}
+.partner-card strong{font-size:15px;line-height:1.45;font-weight:650;color:#f1f5f8}
+.partner-description{font-size:11px;line-height:1.8;color:#c5d0db}
+.partner-label{font-size:10px;line-height:1.6;color:#dce5ee;border-top:1px solid #a7b9c533;padding-top:9px;width:100%}
+@media(min-width:1051px){.universe-orbit-layout{display:grid;grid-template-columns:minmax(0,1fr) 160px;align-items:center;gap:24px}.strategic-partner{padding:0}.universe-orbit-layout .universe-orbit{width:100%!important;min-width:0}}
+@media(max-width:1050px){.strategic-partner{padding:10px 0 24px}.partner-card{width:170px;padding:15px 12px}.partner-emblem{width:56px;height:56px}.partner-emblem img{width:48px;height:48px}}
+html[data-lx-theme="light"] .partner-card{background:linear-gradient(145deg,#ffffffeb,#e5ebf2e8);border-color:#929fac;box-shadow:inset 0 1px 0 #fff,0 6px 22px #32435714}
+html[data-lx-theme="light"] .partner-card strong{color:#243747}html[data-lx-theme="light"] .partner-description,html[data-lx-theme="light"] .partner-label{color:#43596b}html[data-lx-theme="light"] .partner-emblem{background:#ffffffb0;border-color:#a9b7c3}html[data-lx-theme="light"] .partner-emblem::after{color:#788b9c}html[data-lx-theme="light"] .partner-label{border-color:#9babb8}
+@media(prefers-reduced-motion:reduce){.partner-card{transition:none}}

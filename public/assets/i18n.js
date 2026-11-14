@@ -1,6 +1,7 @@
 (()=>{'use strict';
 const KEY='lxhazzaa-language';
 const en={
+ 'الشريك الاستراتيجي':'Strategic partner','خرائط و مشجرات جغرافية':'Geographic maps and trees','شعار YPhyloGeo Explorer':'YPhyloGeo Explorer logo','YPhyloGeo Explorer — خرائط و مشجرات جغرافية — الشريك الاستراتيجي':'YPhyloGeo Explorer — Geographic maps and trees — Strategic partner',
  'العربية':'العربية','دخول / تسجيل':'Sign in / Register','الرئيسية':'Home','الرئيسية العامة':'Main portal','بوابة LXHAZZAA':'LXHAZZAA portal','العودة إلى بوابة LXHAZZAA':'Back to LXHAZZAA portal',
  'عالم واحد .. معرفة أوسع':'One world. Wider knowledge.','عالم رقمي يجمع المعرفة والتاريخ والوثائق والإبداع تحت هوية واحدة.':'A digital world bringing knowledge, history, documents and creativity together.',
  'أطلس الرفات القديمة':'Ancient Remains Atlas','أطلس الوثائق':'Documents Atlas','منصات LXHAZZAA':'LXHAZZAA platforms','اختر الدائرة للدخول إلى المنصة، وتُضاف المنصات الجديدة حول العالم عند إطلاقها.':'Choose an atlas to explore. More platforms will join after launch.',
