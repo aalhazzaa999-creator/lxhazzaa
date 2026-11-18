@@ -12,12 +12,15 @@ const lca=mt.commonAncestor(['H1','H3']);assert(lca.node);assert(mt.within(mt.fi
 assert.equal(mt.commonAncestor(['H1','MADE-UP-NODE']).status,'unplaced');
 assert.equal(mt.commonAncestor(['H1','H1']).node.id,'H1');
 for(const n of mt.nodes){assert(n.tin<n.tout);if(n.parent)assert(mt.within(n,n.parent));}
-assert.equal(records.length,27264);assert.equal(new Set(records.map(r=>r.id)).size,27264);
+const additions=read('public/data/atlas/anatolia-2026-import.json');
+const originalManifest=read('public/data/atlas/manifest.json');
+const expectedCount=originalManifest.total+additions.records.length;
+assert.equal(records.length,expectedCount);assert.equal(new Set(records.map(r=>r.id)).size,expectedCount);
 assert(records.every(r=>r.recordType==='ancient'&&(!r.personId||r.aadr?.individualId&&r.personId==='aadr:'+r.aadr.version+':'+r.aadr.individualId)),'No living records or identities inferred from name similarity');
 const mtRecords=records.filter(r=>r.mt),placed=mtRecords.filter(r=>mt.find(r.mt).node);
 assert.equal(mtRecords.length,db.sampleCount);assert.equal(placed.length,db.placedSamples);
 assert(placed.some(r=>r.sexGroup==='M'));assert(placed.some(r=>r.sexGroup==='F'));assert(placed.some(r=>r.sexGroup==='U'));
-const originalManifest=read('public/data/atlas/manifest.json'),originalById=new Map(originalManifest.parts.flatMap(p=>read('public/data/atlas/'+p)).map(r=>[r.id,r]));
+const originalById=new Map([...originalManifest.parts.flatMap(p=>read('public/data/atlas/'+p)),...additions.records].map(r=>[r.id,r]));
 for(const row of records){assert.equal(row.original.sex,readOriginalSex(row.id));assert.equal(row.original.mt,originalById.get(row.id).mt||'');}
 function readOriginalSex(id){return originalById.get(id)?.sex||''}
 // Recurrent mt events cannot become branch synonyms.
