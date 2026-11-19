@@ -1,6 +1,7 @@
 (()=>{'use strict';
 const KEY='lxhazzaa-language';
 const en={
+ 'الشركاء':'Partners','مختبر سنب سينس للدراسات الجينية':'SNPscience laboratory for genetic studies','شعار SNPscience':'SNPscience logo','SNPscience — مختبر سنب سينس للدراسات الجينية — الشريك الاستراتيجي':'SNPscience — Laboratory for genetic studies — Strategic partner',
  'الشريك الاستراتيجي':'Strategic partner','خرائط و مشجرات جغرافية':'Geographic maps and trees','شعار YPhyloGeo Explorer':'YPhyloGeo Explorer logo','YPhyloGeo Explorer — خرائط و مشجرات جغرافية — الشريك الاستراتيجي':'YPhyloGeo Explorer — Geographic maps and trees — Strategic partner',
  'العربية':'العربية','دخول / تسجيل':'Sign in / Register','الرئيسية':'Home','الرئيسية العامة':'Main portal','بوابة LXHAZZAA':'LXHAZZAA portal','العودة إلى بوابة LXHAZZAA':'Back to LXHAZZAA portal',
  'عالم واحد .. معرفة أوسع':'One world. Wider knowledge.','عالم رقمي يجمع المعرفة والتاريخ والوثائق والإبداع تحت هوية واحدة.':'A digital world bringing knowledge, history, documents and creativity together.',
