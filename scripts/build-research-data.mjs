@@ -22,6 +22,13 @@ for(const r of records){
  if(r.partnerAnalysis)r.provenance.y={source:'LXHAZZAA / SNPscience',sourceURL:r.partnerAnalysis.sourceURL,status:r.partnerAnalysis.status,evidenceStatus:r.partnerAnalysis.evidenceStatus};
  const parsed=parsedDate(r.ageText);r.dateEvidence={bp:number(r.ageBP),bpBaseline:1950,reportedRange:r.ageText||null,reportedMethod:r.dating||null,...parsed,reference:a?.date||null,status:'source-preserved'};
  if(a){const publication={title:a.publication||a.firstPublication||'AADR reference',doi:a.doi||'',source:'AADR '+annotation.source.version};if(publication.doi)r.publications=[...(r.publications||[]),publication];}
+ const membership=anatolia.studyMembership?.[r.id]||[];
+ if(membership.length){
+  r.sampleAliases=[...new Set(membership.map(x=>x.sampleId).filter(x=>x!==r.id))];
+  r.studyReportedReadings=membership.map(x=>({...x,sourceURL:anatolia.sourceURL,status:'source-preserved-not-automatic-reclassification'}));
+  r.publications=[...(r.publications||[]),{title:'دراسة الأناضول — '+anatolia.sourceTitle+' (Table S2)',url:anatolia.sourceURL,source:anatolia.sourceStatus,associationScope:'included-in-study-dataset',reviewStatus:'publisher-file-not-yet-matched'}];
+  const seenPublications=new Map();for(const pub of r.publications){const key=String(pub.url||pub.doi||pub.title).toLowerCase();seenPublications.set(key,{...seenPublications.get(key),...pub});}r.publications=[...seenPublications.values()];
+ }
  r.dataFlags=r.partnerAnalysis?['partner-analysis-report-pending']:[];if(r.yCallStatus==='reported'&&r.sexGroup==='U')r.dataFlags.push('y-with-unspecified-sex');if(r.yCallStatus==='reported'&&r.sexGroup==='F')r.dataFlags.push('y-with-female-sex-review-required');if(a?.sex&&r.sex&&a.sex!==r.sex)r.dataFlags.push('sex-source-difference');if(a?.date.meanBP!==null&&a?.date.meanBP!==undefined&&r.ageBP!==null&&Math.abs(a.date.meanBP-r.ageBP)>1)r.dataFlags.push('date-source-difference');if(a?.mt&&r.mt&&a.mt.toUpperCase()!==r.mt.toUpperCase())r.dataFlags.push('mt-source-difference');if(['critical','questionable','provisional'].includes(r.quality.status))r.dataFlags.push('reference-quality-'+r.quality.status);
  r.snapshot=snapshot;
 }
