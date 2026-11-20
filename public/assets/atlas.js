@@ -113,6 +113,9 @@
     if(!sharedIds&&pointMatch&&zoom>=1&&zoom<=17&&map){pendingGroup={lat:+pointMatch[1],lng:+pointMatch[2],zoom};map.setView([pendingGroup.lat,pendingGroup.lng],zoom);}
     pendingSharedPage=Math.max(0,Math.min(2000,(Number(initialShare.get('page'))||1)-1));
     pendingSharedRecord=(initialShare.get('record')||'').slice(0,120);
+    // A record-only link opens that sample, not a late page of the full atlas.
+    const hasSearchState=Object.values(shareKeys).some(key=>key!=='dna'&&initialShare.get(key))||['samples','point','dateFrom','dateTo','coords'].some(key=>initialShare.has(key));
+    if(pendingSharedRecord&&!hasSearchState)$('q').value=pendingSharedRecord;
     if($('mutation').value.trim())applyMutation();else filter();
   }
   function finishShareRestore(){
@@ -120,7 +123,7 @@
     const id=pendingSharedRecord;pendingSharedRecord='';
     if(id){
       const index=filtered.findIndex(r=>r.id===id);
-      if(index!==-1){page=Math.floor(index/PAGE);sharedRecordId=id;render();selectRecord(filtered[index],null,false);return;}
+      if(index!==-1){page=Math.floor(index/PAGE);pendingSharedPage=0;sharedRecordId=id;render();const recordButton=document.querySelector('.record-expand[data-idx="'+index+'"]');selectRecord(filtered[index],recordButton,false);requestAnimationFrame(()=>{const panel=$('recordDetailPanel'),heading=$('recordDetailTitle');panel.scrollIntoView({behavior:'auto',block:'start'});heading.tabIndex=-1;heading.focus({preventScroll:true});});return;}
     }
     page=Math.min(pendingSharedPage,Math.max(0,Math.ceil(filtered.length/PAGE)-1));
     pendingSharedPage=0;
