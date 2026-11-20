@@ -9451,9 +9451,8 @@
       "Y": "8032",
       "Z": "7449"
     },
-    "notice": "تسلسل قراءة Y: CT في الدراسة الأصلية لعام 2016، ثم T1a في دراسة الأناضول (الجدول التكميلي S2)، ثم T-L490 في إعادة تحليل LXHAZZAA / SNPscience المبلّغة من إدارة المنصة. المختبر هو مرجع إعادة التحليل. أُبلغ عن توافق عشر منهجيات؛ تقريرها ونشرة المختبر لم يُرفقا بعد. يظهر موضع العينة حسب نتيجة الشريك مع حفظ القراءات السابقة؛ هذا لا يعني أن المختبر الأصلي أعاد فحصها أو أن التغطية تحسنت. تصنيف E-M35 كان مسجلًا سابقًا في أطلسنا ويُحفظ كبيان سابق، وليس نتيجة الدراسة الأصلية. قراءة mt السابقة H+152، وفي الجدول H2a2a1؛ لا يغيّر تحليل Y هذا التعارض. الموقع كهف رَقِفِت.",
+    "notice": "تسلسل قراءة Y: CT في الدراسة الأصلية لعام 2016، ثم T1a في دراسة الأناضول (الجدول التكميلي S2)، ثم T-L490 في إعادة تحليل LXHAZZAA / SNPscience المبلّغة من إدارة المنصة. المختبر هو مرجع إعادة التحليل. أُبلغ عن توافق عشر منهجيات؛ تقريرها ونشرة المختبر لم يُرفقا بعد. يظهر موضع العينة حسب نتيجة الشريك مع حفظ القراءات السابقة؛ هذا لا يعني أن المختبر الأصلي أعاد فحصها أو أن التغطية تحسنت. قراءة mt السابقة H+152، وفي الجدول H2a2a1؛ لا يغيّر تحليل Y هذا التعارض. الموقع كهف رَقِفِت.",
     "original2016URL": "https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/nature19310-s4.pdf",
-    "previousY": "E-M35",
     "previousMt": "H+152",
     "original2016Y": "CT",
     "partnerAnalysis": {
@@ -9490,7 +9489,20 @@
         "url": "https://www.snpscience.com/",
         "status": "partner-reported-awaiting-report"
       }
-    ]
+    ],
+    "rejectedAtlasY": "E-M35",
+    "original2016Evidence": {
+      "table": "S6.1",
+      "tablePage": 50,
+      "discussionPage": 54,
+      "markers": [
+        "Y1462",
+        "M5723",
+        "L977"
+      ],
+      "sourceURL": "https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/nature19310-s4.pdf",
+      "rejectedAtlasYStatus": "incorrect-atlas-import-not-a-scientific-reading"
+    }
   },
   "sourceTitle": "Paleogenomics illuminates mobility and changing lifeways in Chalcolithic Anatolia",
   "sourceLabel": "دراسة الأناضول — الجدول التكميلي S2",
